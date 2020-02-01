@@ -24,13 +24,7 @@ class AdminApiController extends Controller {
 	 */
 	public function getStatistics() {
 
-		// TODO: modify my extension to add static methods for retrieving these
-		// numbers.
-		return [
-			'totalGameCount' => 0,
-			'totalGamesRunning' => 0,
-			'totalGamesStopped' => 0
-		];
+		return \Trogdor\Game::info();
 	}
 
 	/*************************************************************************/
