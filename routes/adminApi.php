@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 
 // Return generalized statistics about the game server, such as the number of
 // games running.
-Route::get('/statistics', 'AdminApiController@getStatistics');
+Route::get('/info', 'AdminApiController@getInfo');
 
 // Return a complete list of running games.
 Route::get('/games', 'AdminApiController@getGames');

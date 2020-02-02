@@ -17,12 +17,12 @@ class AdminApiController extends Controller {
 	/*************************************************************************/
 
 	/**
-	 * Return generalized statistics about the game server, such as the number
-	 * of games running.
+	 * Return generalized information and statistics about the game server,
+	 * such as the number of games running.
 	 *
 	 * @return array
 	 */
-	public function getStatistics() {
+	public function getInfo() {
 
 		return \Trogdor\Game::info();
 	}
