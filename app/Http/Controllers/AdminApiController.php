@@ -168,14 +168,20 @@ class AdminApiController extends Controller {
 	 */
 	public function getDefinitions() {
 
-		// TODO: stub
-		return [
-			[
-				'id' => 0,
-				'title' => 'Super Funtime Game',
-				'lastUploadedOn' => time()
-			]
-		];
+		$definitions = [];
+
+		foreach (\App\Models\Definition::all() as &$definition) {
+			$definitions[] = [
+				'id'           => $definition->id,
+				'title'        => $definition->title,
+				'author'       => $definition->author,
+				'createdAt'    => $definition->created_at,
+				'updatedAt'    => $definition->updated_at,
+				'lastUploaded' => $definition->last_uploaded
+			];
+		}
+
+		return $definitions;
 	}
 
 	/*************************************************************************/
