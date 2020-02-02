@@ -14,6 +14,21 @@ class AdminApiController extends Controller {
 	// into a controller action.
 	protected const DEFINITION_404_MESSAGE = 'Game definition not found';
 
+	// If we're in production mode and a query error occurs while creating a
+	// new game definition, this is the generic message we return to the user.
+	protected const CREATE_DEFINITION_QUERY_ERROR_MSG = 'An error occured. Please try your query again.';
+
+	// Instance of \Illuminate\Http\Request
+	protected $request;
+
+	/*************************************************************************/
+
+	public function __construct(
+		\Illuminate\Http\Request $request
+	) {
+		$this->request = $request;
+	}
+
 	/*************************************************************************/
 
 	/**
@@ -190,14 +205,45 @@ class AdminApiController extends Controller {
 	 * Creates a new game definition entry (must be followed by a request
 	 * resulting in a call to uploadDefinition.)
 	 *
-	 * @return array
+	 * @return array | \Illuminate\Http\Response
 	 */
 	public function createDefinition() {
 
-		// TODO: stub
-		return [
-			'id' => 0
-		];
+		try {
+
+			$definition = new \App\Models\Definition([
+				'title'  => $this->request->input('title', ''),
+				'author' => $this->request->input('author', '')
+			]);
+
+			$definition->save();
+
+			return [
+				'id' => $definition->id
+			];
+		}
+
+		catch (\Illuminate\Database\QueryException $e) {
+
+			if ('production' == config('app.env')) {
+
+				return response()->json([
+					'error' => self::CREATE_DEFINITION_QUERY_ERROR_MSG
+				], 500);
+			}
+
+			else {
+				return response()->json([
+					'error'    => $e->getMessage(),
+					'sql'      => $e->getSql(),
+					'bindings' => $e->getBindings(),
+					'code'     => $e->getCode(),
+					'file'     => $e->getFile(),
+					'line'     => $e->getLine(),
+					'trace'    => $e->getTrace()
+				], 500);
+			}
+		}
 	}
 
 	/*************************************************************************/
