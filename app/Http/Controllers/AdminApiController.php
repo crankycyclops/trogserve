@@ -14,9 +14,9 @@ class AdminApiController extends Controller {
 	// into a controller action.
 	protected const DEFINITION_404_MESSAGE = 'Game definition not found';
 
-	// If we're in production mode and a query error occurs while creating a
-	// new game definition, this is the generic message we return to the user.
-	protected const CREATE_DEFINITION_QUERY_ERROR_MSG = 'An error occured. Please try your query again.';
+	// If we're in production mode and a query error occurs, this is the
+	// generic message we should return to the user.
+	protected const GENERIC_500_MESSAGE = 'An error occured. Please try your query again in a few minutes.';
 
 	// Instance of \Illuminate\Http\Request
 	protected $request;
@@ -228,7 +228,7 @@ class AdminApiController extends Controller {
 			if ('production' == config('app.env')) {
 
 				return response()->json([
-					'error' => self::CREATE_DEFINITION_QUERY_ERROR_MSG
+					'error' => self::GENERIC_500_MESSAGE
 				], 500);
 			}
 
@@ -268,25 +268,49 @@ class AdminApiController extends Controller {
 	 */
 	public function getDefinition(int $id) {
 
-		// TODO: stub
 		try {
 
-			return [
-				'id' => 0,
-				'title' => 'Super Funtime Game',
-				'author' => 'James Colannino',
-				'createdAt' => 'TODO',
-				'updatedAt' => 'TODO',
-				'lastUploaded' => time()
-			];
+			$definition = \App\Models\Definition::find($id);
+
+			if ($definition) {
+				return [
+					'id'           => $id,
+					'title'        => $definition->title,
+					'author'       => $definition->author,
+					'createdAt'    => $definition->created_at,
+					'updatedAt'    => $definition->updated_at,
+					'lastUploaded' => $definition->last_uploaded
+				];
+			}
+
+			else {
+				return response()->json([
+					'id' => $id,
+					'error' => self::DEFINITION_404_MESSAGE
+				], 404);
+			}
 		}
 
-		// TODO: catch the appropriate exception type
-		catch (Exception $e) {
-			return response()->json([
-				'id' => $id,
-				'error' => self::DEFINITION_404_MESSAGE
-			], 404);
+		catch (\Illuminate\Database\QueryException $e) {
+
+			if ('production' == config('app.env')) {
+
+				return response()->json([
+					'error' => self::GENERIC_500_MESSAGE
+				], 500);
+			}
+
+			else {
+				return response()->json([
+					'error'    => $e->getMessage(),
+					'sql'      => $e->getSql(),
+					'bindings' => $e->getBindings(),
+					'code'     => $e->getCode(),
+					'file'     => $e->getFile(),
+					'line'     => $e->getLine(),
+					'trace'    => $e->getTrace()
+				], 500);
+			}
 		}
 	}
 
