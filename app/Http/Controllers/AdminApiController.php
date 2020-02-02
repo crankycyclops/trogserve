@@ -222,7 +222,10 @@ class AdminApiController extends Controller {
 			return [
 				'id' => 0,
 				'title' => 'Super Funtime Game',
-				'lastUploadedOn' => time()
+				'author' => 'James Colannino',
+				'createdAt' => 'TODO',
+				'updatedAt' => 'TODO',
+				'lastUploaded' => time()
 			];
 		}
 
