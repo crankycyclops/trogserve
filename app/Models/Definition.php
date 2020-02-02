@@ -14,14 +14,6 @@ class Definition extends Model {
 	protected $table = 'definitions';  
 
 	/**
-	 * We'll let the database set and update our timestamps directly (see
-	 * migrations/2020_02_02_062438_api_definitions.php.)
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
 	 * Attributes that are mass assignable.
 	 *
 	 * @var array

@@ -366,21 +366,39 @@ class AdminApiController extends Controller {
 	 */
 	public function updateDefinition(int $id): \Illuminate\Http\JsonResponse {
 
-		// TODO: stub
 		try {
-			return response()->json([
-				'id' => 0,
-				'title' => 'Super Funtime Game',
-				'author' => 'James Colannino'
-			]);
+
+			$definition = \App\Models\Definition::find($id);
+
+			if ($definition) {
+
+				$definition->title = $this->request->input('title', $definition->title);
+				$definition->author = $this->request->input('author', $definition->author);
+
+				if ($definition->isDirty()) {
+					$definition->save();
+				}
+
+				return response()->json([
+					'id'           => $definition->id,
+					'title'        => $definition->title,
+					'author'       => $definition->author,
+					'createdAt'    => $definition->created_at,
+					'updatedAt'    => $definition->updated_at,
+					'lastUploaded' => $definition->last_uploaded
+				]);
+			}
+
+			else {
+				return response()->json([
+					'id' => $id,
+					'error' => self::DEFINITION_404_MESSAGE
+				], 404);
+			}
 		}
 
-		// TODO: catch the appropriate exception type
-		catch (Exception $e) {
-			return response()->json([
-				'id' => $id,
-				'error' => self::DEFINITION_404_MESSAGE
-			], 404);
+		catch (\Illuminate\Database\QueryException $e) {
+			return $this->throwQueryExceptionAsJson($e);
 		}
 	}
 }
