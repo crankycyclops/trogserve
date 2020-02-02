@@ -40,8 +40,14 @@ Route::get('/games/{id}/stop', 'AdminApiController@stopGame')
 // Returns a list of all currently uploaded game definition
 Route::get('/definitions', 'AdminApiController@getDefinitions');
 
-// Uploads a new game definition
-Route::post('/definitions', 'AdminApiController@uploadDefinition');
+// Creates a new game definition entry (must be followed by a POST to
+// /definitions/{id}/upload.)
+Route::post('/definitions', 'AdminApiController@createDefinition');
+
+// Uploads a game definition file once an entry for it has been created
+// (accomplished by a previous POST to /definitions.)
+Route::post('/definitions/{id}/upload', 'AdminApiController@uploadDefinition')
+	->where('id', '\d+');
 
 // Return details of a particular game definition
 Route::get('/definitions/{id}', 'AdminApiController@getDefinition')
@@ -51,11 +57,6 @@ Route::get('/definitions/{id}', 'AdminApiController@getDefinition')
 Route::delete('/definitions/{id}', 'AdminApiController@deleteDefinition')
 	->where('id', '\d+');
 
-// Update one or more meta details of a game definition, or replace the file.
-// Using POST here instead of PATCH because of an embarassing PHP issue that
-// should have been addressed a long time ago and I'm not going to resort to the
-// super lame _method cheat. Seriously, PHP, in 2020? Seriously?
-// See: https://github.com/laravel/framework/issues/13457
-// And: https://bugs.php.net/bug.php?id=55815
-Route::post('/definitions/{id}', 'AdminApiController@modifyDefinition')
+// Update one or more meta details of a game definition.
+Route::patch('/definitions/{id}', 'AdminApiController@updateDefinition')
 	->where('id', '\d+');

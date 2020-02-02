@@ -41,7 +41,8 @@ class AdminApiController extends Controller {
 		foreach (\Trogdor\Game::getAll() as &$game) {
 			$data[] = [
 				'id' => $game->getPersistentId(),
-				'title' => $game->getMeta('title')
+				'title' => $game->getMeta('title'),
+				'author' => $game->getMeta('author')
 			];
 		}
 
@@ -76,7 +77,8 @@ class AdminApiController extends Controller {
 
 			return [
 				'id' => $id,
-				'title' => $game->getMeta('title')
+				'title' => $game->getMeta('title'),
+				'author' => $game->getMeta('author')
 			];
 		}
 
@@ -179,16 +181,30 @@ class AdminApiController extends Controller {
 	/*************************************************************************/
 
 	/**
-	 * Uploads a game definition along with associated meta data.
+	 * Creates a new game definition entry (must be followed by a request
+	 * resulting in a call to uploadDefinition.)
 	 *
 	 * @return array
 	 */
-	public function uploadDefinition() {
+	public function createDefinition() {
 
 		// TODO: stub
 		return [
 			'id' => 0
 		];
+	}
+
+	/*************************************************************************/
+
+	/**
+	 * Uploads a game definition once an entry for it has been created.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function uploadDefinition(int $id) {
+
+		// TODO: stub
+		return response()->json([], 204);
 	}
 
 	/*************************************************************************/
@@ -245,18 +261,19 @@ class AdminApiController extends Controller {
 	/*************************************************************************/
 
 	/**
-	 * Modify a game definition.
+	 * Modify a game definition's associated meta data (to upload a new file,
+	 * make a request that results in a call to uploadDefinition.)
 	 *
 	 * @return array | \Illuminate\Http\Response
 	 */
-	public function modifyDefinition(int $id) {
+	public function updateDefinition(int $id) {
 
 		// TODO: stub
 		try {
 			return [
 				'id' => 0,
 				'title' => 'Super Funtime Game',
-				'lastUploadedOn' => time()
+				'author' => 'James Colannino'
 			];
 		}
 
