@@ -36,13 +36,16 @@ class AdminApiController extends Controller {
 	 */
 	public function getGames() {
 
-		// TODO: stub
-		return [
-			[
-				'id' => 0,
-				'title' => 'Super Funtime Game'
-			]
-		];
+		$data = [];
+
+		foreach (\Trogdor\Game::getAll() as &$game) {
+			$data[] = [
+				'id' => $game->getPersistentId(),
+				'title' => $game->getMeta('title')
+			];
+		}
+
+		return $data;
 	}
 
 	/*************************************************************************/
