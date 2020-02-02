@@ -23,6 +23,39 @@ class AdminApiController extends Controller {
 
 	/*************************************************************************/
 
+	/**
+	 * Utility method that "throws" an exception as JSON to the client. This
+	 * makes more sense for an API, which expects a JSON result.
+	 *
+	 * @param \Illuminate\Database\QueryException $e Exception that was thrown
+	 * @return \Illuminate\Http\JsonResponse
+	*/
+	protected function throwQueryExceptionAsJson(
+		 \Illuminate\Database\QueryException $e
+	): \Illuminate\Http\JsonResponse {
+
+		if ('production' == config('app.env')) {
+
+			return response()->json([
+				'error' => self::GENERIC_500_MESSAGE
+			], 500);
+		}
+
+		else {
+			return response()->json([
+				'error'    => $e->getMessage(),
+				'sql'      => $e->getSql(),
+				'bindings' => $e->getBindings(),
+				'code'     => $e->getCode(),
+				'file'     => $e->getFile(),
+				'line'     => $e->getLine(),
+				'trace'    => $e->getTrace()
+			], 500);
+		}
+	}
+
+	/*************************************************************************/
+
 	public function __construct(
 		\Illuminate\Http\Request $request
 	) {
@@ -35,11 +68,11 @@ class AdminApiController extends Controller {
 	 * Return generalized information and statistics about the game server,
 	 * such as the number of games running.
 	 *
-	 * @return array
+	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function getInfo() {
+	public function getInfo(): \Illuminate\Http\JsonResponse {
 
-		return \Trogdor\Game::info();
+		return response()->json(\Trogdor\Game::info());
 	}
 
 	/*************************************************************************/
@@ -47,9 +80,9 @@ class AdminApiController extends Controller {
 	/**
 	 * Return a list of all currently persistent games.
 	 *
-	 * @return array
+	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function getGames() {
+	public function getGames(): \Illuminate\Http\JsonResponse {
 
 		$data = [];
 
@@ -61,7 +94,7 @@ class AdminApiController extends Controller {
 			];
 		}
 
-		return $data;
+		return response()->json($data);
 	}
 
 	/*************************************************************************/
@@ -69,14 +102,14 @@ class AdminApiController extends Controller {
 	/**
 	 * Create a new persistent game.
 	 *
-	 * @return array
+	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function createGame() {
+	public function createGame(): \Illuminate\Http\JsonResponse {
 
 		// TODO: stub
-		return [
+		return response()->json([
 			'id' => 0
-		];
+		]);
 	}
 
 	/*************************************************************************/
@@ -84,17 +117,18 @@ class AdminApiController extends Controller {
 	/**
 	 * Return the details of a persistent game.
 	 *
-	 * @return array | \Illuminate\Http\Response
+	 * @param int $id Game ID
+	 * @return Illuminate\Http\JsonResponse
 	 */
-	public function getGame(int $id) {
+	public function getGame(int $id): \Illuminate\Http\JsonResponse {
 
 		if ($game = \Trogdor\Game::get($id)) {
 
-			return [
+			return response()->json([
 				'id' => $id,
 				'title' => $game->getMeta('title'),
 				'author' => $game->getMeta('author')
-			];
+			]);
 		}
 
 		else {
@@ -110,9 +144,10 @@ class AdminApiController extends Controller {
 	/**
 	 * Destroy a persistent game.
 	 *
-	 * @return \Illuminate\Http\Response
+	 * @param int $id Game ID
+	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function destroyGame(int $id) {
+	public function destroyGame(int $id): \Illuminate\Http\JsonResponse {
 
 		// Depersisting a game causes the underlying C++ game object to be
 		// destroyed when $game goes out of scope
@@ -134,9 +169,10 @@ class AdminApiController extends Controller {
 	/**
 	 * Start or restart a game.
 	 *
-	 * @return \Illuminate\Http\Response
+	 * @param int $id Game ID
+	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function startGame(int $id) {
+	public function startGame(int $id): \Illuminate\Http\JsonResponse {
 
 		if ($game = \Trogdor\Game::get($id)) {
 			$game->start();
@@ -156,9 +192,10 @@ class AdminApiController extends Controller {
 	/**
 	 * Stop a game.
 	 *
-	 * @return \Illuminate\Http\Response
+	 * @param int $id Game ID
+	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function stopGame(int $id) {
+	public function stopGame(int $id): \Illuminate\Http\JsonResponse {
 
 		if ($game = \Trogdor\Game::get($id)) {
 			$game->stop();
@@ -179,9 +216,9 @@ class AdminApiController extends Controller {
 	 * Return a list of all currently uploaded game definitions (XML files that
 	 * define the properties of and the entities in the game.)
 	 *
-	 * @return array
+	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function getDefinitions() {
+	public function getDefinitions(): \Illuminate\Http\JsonResponse {
 
 		$definitions = [];
 
@@ -196,7 +233,7 @@ class AdminApiController extends Controller {
 			];
 		}
 
-		return $definitions;
+		return response()->json($definitions);
 	}
 
 	/*************************************************************************/
@@ -205,9 +242,9 @@ class AdminApiController extends Controller {
 	 * Creates a new game definition entry (must be followed by a request
 	 * resulting in a call to uploadDefinition.)
 	 *
-	 * @return array | \Illuminate\Http\Response
+	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function createDefinition() {
+	public function createDefinition(): \Illuminate\Http\JsonResponse {
 
 		try {
 
@@ -218,31 +255,13 @@ class AdminApiController extends Controller {
 
 			$definition->save();
 
-			return [
+			return response()->json([
 				'id' => $definition->id
-			];
+			]);
 		}
 
 		catch (\Illuminate\Database\QueryException $e) {
-
-			if ('production' == config('app.env')) {
-
-				return response()->json([
-					'error' => self::GENERIC_500_MESSAGE
-				], 500);
-			}
-
-			else {
-				return response()->json([
-					'error'    => $e->getMessage(),
-					'sql'      => $e->getSql(),
-					'bindings' => $e->getBindings(),
-					'code'     => $e->getCode(),
-					'file'     => $e->getFile(),
-					'line'     => $e->getLine(),
-					'trace'    => $e->getTrace()
-				], 500);
-			}
+			return $this->throwQueryExceptionAsJson($e);
 		}
 	}
 
@@ -251,9 +270,10 @@ class AdminApiController extends Controller {
 	/**
 	 * Uploads a game definition once an entry for it has been created.
 	 *
-	 * @return \Illuminate\Http\Response
+	 * @param int $id Game Definition ID
+	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function uploadDefinition(int $id) {
+	public function uploadDefinition(int $id): \Illuminate\Http\JsonResponse {
 
 		// TODO: stub
 		return response()->json([], 204);
@@ -264,23 +284,24 @@ class AdminApiController extends Controller {
 	/**
 	 * Return details associated with an uploaded game definition.
 	 *
-	 * @return array | \Illuminate\Http\Response
+	 * @param int $id Game Definition ID
+	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function getDefinition(int $id) {
+	public function getDefinition(int $id): \Illuminate\Http\JsonResponse {
 
 		try {
 
 			$definition = \App\Models\Definition::find($id);
 
 			if ($definition) {
-				return [
+				return response()->json([
 					'id'           => $id,
 					'title'        => $definition->title,
 					'author'       => $definition->author,
 					'createdAt'    => $definition->created_at,
 					'updatedAt'    => $definition->updated_at,
 					'lastUploaded' => $definition->last_uploaded
-				];
+				]);
 			}
 
 			else {
@@ -292,25 +313,7 @@ class AdminApiController extends Controller {
 		}
 
 		catch (\Illuminate\Database\QueryException $e) {
-
-			if ('production' == config('app.env')) {
-
-				return response()->json([
-					'error' => self::GENERIC_500_MESSAGE
-				], 500);
-			}
-
-			else {
-				return response()->json([
-					'error'    => $e->getMessage(),
-					'sql'      => $e->getSql(),
-					'bindings' => $e->getBindings(),
-					'code'     => $e->getCode(),
-					'file'     => $e->getFile(),
-					'line'     => $e->getLine(),
-					'trace'    => $e->getTrace()
-				], 500);
-			}
+			return $this->throwQueryExceptionAsJson($e);
 		}
 	}
 
@@ -319,21 +322,36 @@ class AdminApiController extends Controller {
 	/**
 	 * Deletes a game definition.
 	 *
-	 * @return \Illuminate\Http\Response
+	 * @param int $id Game Definition ID
+	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function deleteDefinition(int $id) {
+	public function deleteDefinition(int $id): \Illuminate\Http\JsonResponse {
 
-		// TODO: stub
 		try {
-			return response()->json([], 204);
+
+			// I checked to see if this would be more optimal with a call to
+			// Model::destroy rather than calling Model::find first and then
+			// calling Model::delete if it's found in the database, but after
+			// digging through the source (6.13 at the time of this writing),
+			// that function is retrieving the model before deleting anyway,
+			// so it doesn't make a whit of difference either way.
+			$definition = \App\Models\Definition::find($id);
+
+			if ($definition) {
+				$definition->delete();
+				return response()->json([], 204);
+			}
+
+			else {
+				return response()->json([
+					'id' => $id,
+					'error' => self::DEFINITION_404_MESSAGE
+				], 404);
+			}
 		}
 
-		// TODO: catch the appropriate exception type
-		catch (Exception $e) {
-			return response()->json([
-				'id' => $id,
-				'error' => self::DEFINITION_404_MESSAGE
-			], 404);
+		catch (\Illuminate\Database\QueryException $e) {
+			return $this->throwQueryExceptionAsJson($e);
 		}
 	}
 
@@ -343,17 +361,18 @@ class AdminApiController extends Controller {
 	 * Modify a game definition's associated meta data (to upload a new file,
 	 * make a request that results in a call to uploadDefinition.)
 	 *
-	 * @return array | \Illuminate\Http\Response
+	 * @param int $id Game Definition ID
+	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function updateDefinition(int $id) {
+	public function updateDefinition(int $id): \Illuminate\Http\JsonResponse {
 
 		// TODO: stub
 		try {
-			return [
+			return response()->json([
 				'id' => 0,
 				'title' => 'Super Funtime Game',
 				'author' => 'James Colannino'
-			];
+			]);
 		}
 
 		// TODO: catch the appropriate exception type
