@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AdminApiController extends Controller {
+
+	// Path where game definition uploads should be stored (relative to /storage/app.)
+	protected const DEFINITIONS_PATH = 'definitions';
 
 	// What error message to display when a non-existent game ID is passed into
 	// a controller action.
@@ -14,9 +19,26 @@ class AdminApiController extends Controller {
 	// into a controller action.
 	protected const DEFINITION_404_MESSAGE = 'Game definition not found';
 
+	// What error message to display when attempting to create a game using a
+	// definition that hasn't actually been uploaded yet.
+	protected const DEFINITION_MISSING_FILE = "An entry for the definition exists, but a file hasn't been uploaded.";
+
 	// If we're in production mode and a query error occurs, this is the
 	// generic message we should return to the user.
 	protected const GENERIC_500_MESSAGE = 'An error occured. Please try your query again in a few minutes.';
+
+	// Validation rule => error message mapping for game definition file uploads
+	protected const DEFINITION_UPLOAD_ERRORS = [
+		'mimetypes' => 'Game definition must be valid XML',
+		'required'  => 'Missing game definition file',
+		'file'      => 'Missing game definition file'
+	];
+
+	// Validation rule => error message mapping for game creation input parameters
+	protected const CREATE_GAME_INPUT_ERRORS = [
+		'regex'     => 'Please input a valid game definition ID',
+		'required'  => 'Missing one or more required parameters',
+	];
 
 	// Instance of \Illuminate\Http\Request
 	protected $request;
@@ -88,8 +110,9 @@ class AdminApiController extends Controller {
 
 		foreach (\Trogdor\Game::getAll() as &$game) {
 			$data[] = [
-				'id' => $game->getPersistentId(),
-				'title' => $game->getMeta('title'),
+				'id'     => $game->getPersistentId(),
+				'name'   => $game->getMeta('name'),
+				'title'  => $game->getMeta('title'),
 				'author' => $game->getMeta('author')
 			];
 		}
@@ -106,10 +129,69 @@ class AdminApiController extends Controller {
 	 */
 	public function createGame(): \Illuminate\Http\JsonResponse {
 
-		// TODO: stub
-		return response()->json([
-			'id' => 0
-		]);
+		$validator = Validator::make($this->request->all(), [
+			'name' => 'bail|required',
+			'definition' => 'bail|required|regex:/^\d+$/'
+		], self::CREATE_GAME_INPUT_ERRORS);
+
+		if ($validator->fails()) {
+			return response()->json([
+				'error' => $validator->errors()->first()
+			], 400);
+		}
+
+		try {
+
+			$definitionId = $this->request->post('definition');
+			$definition = \App\Models\Definition::find($definitionId);
+
+			if (!$definition) {
+				return response()->json([
+					'error' => self::DEFINITION_404_MESSAGE
+				], 404);
+			}
+
+			else if (!$definition->path) {
+				return response()->json([
+					'error' => self::DEFINITION_MISSING_FILE
+				], 400);
+			}
+
+			$game = new \Trogdor\Game(
+				Storage::disk('local')->path($definition->path)
+			);
+
+			if ($definition->title) {
+				$game->setMeta('title', $definition->title);
+			}
+
+			if ($definition->author) {
+				$game->setMeta('author', $definition->author);
+			}
+
+			$game->setMeta('name', $this->request->post('name'));
+			$game->persist();
+
+			// Admin has specified that the game should begin running
+			// immediately after instantiation
+			if (false !== $this->request->post('autostart', false)) {
+				$game->start();
+			}
+
+			return response()->json([
+				'id' => $game->getPersistentId()
+			]);
+		}
+
+		catch (\Illuminate\Database\QueryException $e) {
+			return $this->throwQueryExceptionAsJson($e);
+		}
+
+		catch (\Trogdor\Exception $e) {
+			return response()->json([
+				'error' => $e->getMessage()
+			], 500);
+		}
 	}
 
 	/*************************************************************************/
@@ -125,15 +207,17 @@ class AdminApiController extends Controller {
 		if ($game = \Trogdor\Game::get($id)) {
 
 			return response()->json([
-				'id' => $id,
-				'title' => $game->getMeta('title'),
-				'author' => $game->getMeta('author')
+				'id'     => $id,
+				'name'   => $game->getMeta('name'),
+				'title'  => $game->getMeta('title'),
+				'author' => $game->getMeta('author'),
+				'time'   => $game->getTime()
 			]);
 		}
 
 		else {
 			return response()->json([
-				'id' => $id,
+				'id'    => $id,
 				'error' => self::GAME_404_MESSAGE
 			], 404);
 		}
@@ -158,7 +242,7 @@ class AdminApiController extends Controller {
 
 		else {
 			return response()->json([
-				'id' => $id,
+				'id'    => $id,
 				'error' => self::GAME_404_MESSAGE
 			], 404);
 		}
@@ -181,7 +265,7 @@ class AdminApiController extends Controller {
 
 		else {
 			return response()->json([
-				'id' => $id,
+				'id'    => $id,
 				'error' => self::GAME_404_MESSAGE
 			], 404);
 		}
@@ -204,7 +288,7 @@ class AdminApiController extends Controller {
 
 		else {
 			return response()->json([
-				'id' => $id,
+				'id'    => $id,
 				'error' => self::GAME_404_MESSAGE
 			], 404);
 		}
@@ -275,8 +359,45 @@ class AdminApiController extends Controller {
 	 */
 	public function uploadDefinition(int $id): \Illuminate\Http\JsonResponse {
 
-		// TODO: stub
-		return response()->json([], 204);
+		$validator = Validator::make($this->request->all(), [
+			'definition' => 'bail|required|file|mimetypes:text/xml,application/xml'
+		], self::DEFINITION_UPLOAD_ERRORS);
+
+		if ($validator->fails()) {
+			return response()->json([
+				'id'    => $id,
+				'error' => $validator->errors()->first()
+			], 400);
+		}
+
+		try {
+
+			$definition = \App\Models\Definition::find($id);
+
+			if ($definition) {
+
+				$path = $this->request->file('definition')->storeAs(
+					self::DEFINITIONS_PATH, "$id.xml"
+				);
+
+				$definition->path = $path;
+				$definition->last_uploaded = date("Y-m-d H:m:s");
+				$definition->save();
+
+				return response()->json([], 204);
+			}
+
+			else {
+				return response()->json([
+					'id'    => $id,
+					'error' => self::DEFINITION_404_MESSAGE
+				], 404);
+			}
+		}
+
+		catch (\Illuminate\Database\QueryException $e) {
+			return $this->throwQueryExceptionAsJson($e);
+		}
 	}
 
 	/*************************************************************************/
@@ -306,7 +427,7 @@ class AdminApiController extends Controller {
 
 			else {
 				return response()->json([
-					'id' => $id,
+					'id'    => $id,
 					'error' => self::DEFINITION_404_MESSAGE
 				], 404);
 			}
@@ -339,12 +460,13 @@ class AdminApiController extends Controller {
 
 			if ($definition) {
 				$definition->delete();
+				Storage::delete(self::DEFINITIONS_PATH . "/$id.xml");
 				return response()->json([], 204);
 			}
 
 			else {
 				return response()->json([
-					'id' => $id,
+					'id'    => $id,
 					'error' => self::DEFINITION_404_MESSAGE
 				], 404);
 			}
@@ -391,7 +513,7 @@ class AdminApiController extends Controller {
 
 			else {
 				return response()->json([
-					'id' => $id,
+					'id'    => $id,
 					'error' => self::DEFINITION_404_MESSAGE
 				], 404);
 			}
