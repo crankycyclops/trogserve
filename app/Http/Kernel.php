@@ -27,6 +27,8 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middlewareGroups = [
+
+        // Middleware group for non-admin web routes.
         'web' => [
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
@@ -37,7 +39,22 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
-        'api' => [
+        // Middleware for admin web routes. The CreateFreshApiToken sets a token
+        // cookie that allows the admin to consume the admin api without
+        // explicitly sending an access token.
+        'adminweb' => [
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            // \Illuminate\Session\Middleware\AuthenticateSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \Laravel\Passport\Http\Middleware\CreateFreshApiToken::class
+        ],
+
+        // Middleware for admin api routes.
+        'adminapi' => [
             'throttle:60,1',
             'auth:adminapi',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,

@@ -31,7 +31,7 @@ class AuthServiceProvider extends ServiceProvider {
 		// userland api that's separate from the admin in the future, in which
 		// case I'll have to revisit my options.) One would have hoped that
 		// Laravel Passport would support authentication using multiple
-		// providers, but alas, it does not.
+		// providers already, but alas, it does not.
 		// See: https://github.com/laravel/passport/issues/161
 		// And: https://github.com/laravel/passport/issues/982
 		// Workaround is based on this: https://stackoverflow.com/a/52369355/4683164
