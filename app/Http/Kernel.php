@@ -29,7 +29,7 @@ class Kernel extends HttpKernel
     protected $middlewareGroups = [
 
         // Middleware group for non-admin web routes.
-        'web' => [
+        'public' => [
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
@@ -41,12 +41,15 @@ class Kernel extends HttpKernel
 
         // Middleware for admin web routes. The CreateFreshApiToken sets a token
         // cookie that allows the admin to consume the admin api without
-        // explicitly sending an access token.
-        'adminweb' => [
+        // explicitly sending an access token. The AuthenticateSession class,
+        // meanwhile, will forcibly logout an admin if that admin's password
+        // has changed mid-session.
+        'admin' => [
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
-            // \Illuminate\Session\Middleware\AuthenticateSession::class,
+            'adminauth:adminweb',
+            \Illuminate\Session\Middleware\AuthenticateSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
@@ -56,7 +59,7 @@ class Kernel extends HttpKernel
         // Middleware for admin api routes.
         'adminapi' => [
             'throttle:60,1',
-            'auth:adminapi',
+            'adminauth:adminapi',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
@@ -70,6 +73,7 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
+        'adminauth' => \App\Http\Middleware\AdminAuthenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
