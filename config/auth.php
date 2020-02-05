@@ -69,13 +69,8 @@ return [
 
         'admins' => [
             'driver' => 'eloquent',
-            'model' => App\Admin::class,
+            'model' => App\Models\Admin::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
@@ -115,4 +110,30 @@ return [
 
     'password_timeout' => 10800,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Oauth Configuration (via Laravel Passport)
+    |--------------------------------------------------------------------------
+    |
+    | Configuration options governing how Oauth is performed.
+    |
+    */
+
+    'oauth' => [
+
+        'expires_in' => [
+
+            // How many hours tokens are good for until they expire. Default
+            // is one year (24 * 365 = 8760)
+            'tokens' => 8760,
+
+            // How many hours refresh tokens are good for until they expire. Default
+            // is one year (24 * 365 = 8760)
+            'refresh_tokens' => 8760,
+
+            // How many hours access tokens are good for until they expire. Default
+            // is one year (24 * 365 = 8760)
+            'personal_access_tokens' => 8760,
+        ],
+    ],
 ];

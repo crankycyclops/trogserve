@@ -27,4 +27,11 @@ class Admin extends Authenticatable {
 	protected $hidden = [
 		'password'
 	];
+
+	// Laravel Passport uses this method to find the admin by username instead
+	// of by email (the default.)
+	public function findForPassport($username) {
+
+		return $this->where('username', $username)->first();
+	}
 }
