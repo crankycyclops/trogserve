@@ -2,10 +2,12 @@
 
 <html>
 
+	<title>Trogserve Admin</title>
+
 	<head>
 		<!-- TODO: Generate critical CSS (see: https://laravel-mix.com/extensions/criticalcss) -->
-		<link rel="stylesheet" type="text/css" href="{{ mix('/css/admin/app.css') }}" >
-		<link rel="stylesheet" type="text/css" href="/css/vuetify.min.css" >
+		<link rel="stylesheet" type="text/css" href="{{ mix('/css/admin/app.css') }}">
+		<link rel="stylesheet" type="text/css" href="/css/vuetify.min.css">
 	</head>
 
 	<body>

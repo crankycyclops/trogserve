@@ -14,7 +14,7 @@ else {
 
 	console.log(
 		'\x1b[41m%s\x1b[0m',
-		'Provide correct --section argument to build command: admin, api'
+		'Provide correct --section argument to build command: admin, app'
 	);
 
 	throw new Error('Provide correct --section argument to build command!')
