@@ -21,3 +21,4 @@ public/js/manifest.js
 public/js/vendor.js
 public/js/vendor.js.LICENSE.txt
 public/mix-manifest.json
+/public/*/*.map

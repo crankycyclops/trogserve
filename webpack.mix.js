@@ -13,4 +13,10 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/js')
 	.sass('resources/sass/app.scss', 'public/css')
-	.extract();
+	.extract()
+	.sourceMaps();
+
+// Version files in production for cache-busting purposes
+if (mix.inProduction()) {
+	mix.version();
+}
