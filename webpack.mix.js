@@ -1,22 +1,16 @@
-const mix = require('laravel-mix');
+// For an explanation of what I'm doing here, see:
+// http://www.compulsivecoders.com/tech/how-to-build-multiple-vendors-using-laravel-mix/
+// Requires: npm install laravel-mix-merge-manifest --save
+if (['admin', 'app'].includes(process.env.npm_config_section)) {
+	require(`${__dirname}/webpack.${process.env.npm_config_section}.mix.js`);
+}
 
-/*
- |--------------------------------------------------------------------------
- | Mix Asset Management
- |--------------------------------------------------------------------------
- |
- | Mix provides a clean, fluent API for defining some Webpack build steps
- | for your Laravel application. By default, we are compiling the Sass
- | file for the application as well as bundling up all the JS files.
- |
- */
+else {
 
-mix.js('resources/js/app.js', 'public/js')
-	.sass('resources/sass/app.scss', 'public/css')
-	.extract()
-	.sourceMaps();
+	console.log(
+		'\x1b[41m%s\x1b[0m',
+		'Provide correct --section argument to build command: admin, api'
+	);
 
-// Version files in production for cache-busting purposes
-if (mix.inProduction()) {
-	mix.version();
+	throw new Error('Provide correct --section argument to build command!')
 }
