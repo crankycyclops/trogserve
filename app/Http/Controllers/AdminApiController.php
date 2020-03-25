@@ -82,6 +82,10 @@ class AdminApiController extends Controller {
 		\Illuminate\Http\Request $request
 	) {
 		$this->request = $request;
+		$this->trogdord = new \Trogdord(
+			config('trogdord.host'),
+			config('trogdord.port')
+		);
 	}
 
 	/*************************************************************************/
@@ -94,36 +98,25 @@ class AdminApiController extends Controller {
 	 */
 	public function getInfo(): \Illuminate\Http\JsonResponse {
 
-		return response()->json(\Trogdor\Game::info());
+		return response()->json($this->trogdord->statistics());
 	}
 
 	/*************************************************************************/
 
 	/**
-	 * Return a list of all currently persistent games.
+	 * Return a list of all currently existing games.
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function getGames(): \Illuminate\Http\JsonResponse {
 
-		$data = [];
-
-		foreach (\Trogdor\Game::getAll() as &$game) {
-			$data[] = [
-				'id'     => $game->getPersistentId(),
-				'name'   => $game->getMeta('name'),
-				'title'  => $game->getMeta('title'),
-				'author' => $game->getMeta('author')
-			];
-		}
-
-		return response()->json($data);
+		return response()->json($this->trogdord->games());
 	}
 
 	/*************************************************************************/
 
 	/**
-	 * Create a new persistent game.
+	 * Create a new game.
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
@@ -131,7 +124,7 @@ class AdminApiController extends Controller {
 
 		$validator = Validator::make($this->request->all(), [
 			'name' => 'bail|required',
-			'definition' => 'bail|required|regex:/^\d+$/'
+			'definition' => 'bail|required'
 		], self::CREATE_GAME_INPUT_ERRORS);
 
 		if ($validator->fails()) {
@@ -142,35 +135,10 @@ class AdminApiController extends Controller {
 
 		try {
 
-			$definitionId = $this->request->post('definition');
-			$definition = \App\Models\Definition::find($definitionId);
-
-			if (!$definition) {
-				return response()->json([
-					'error' => self::DEFINITION_404_MESSAGE
-				], 404);
-			}
-
-			else if (!$definition->path) {
-				return response()->json([
-					'error' => self::DEFINITION_MISSING_FILE
-				], 400);
-			}
-
-			$game = new \Trogdor\Game(
-				Storage::disk('local')->path($definition->path)
+			$game = $this->trogdord->newGame(
+				$this->request->post('name'),
+				$this->request->post('definition')
 			);
-
-			if ($definition->title) {
-				$game->setMeta('title', $definition->title);
-			}
-
-			if ($definition->author) {
-				$game->setMeta('author', $definition->author);
-			}
-
-			$game->setMeta('name', $this->request->post('name'));
-			$game->persist();
 
 			// Admin has specified that the game should begin running
 			// immediately after instantiation
@@ -179,17 +147,20 @@ class AdminApiController extends Controller {
 			}
 
 			return response()->json([
-				'id' => $game->getPersistentId()
+				'id' => $game->id
 			]);
 		}
 
-		catch (\Illuminate\Database\QueryException $e) {
-			return $this->throwQueryExceptionAsJson($e);
-		}
-
-		catch (\Trogdor\Exception $e) {
+		catch (\Trogdord\NetworkException $e) {
 			return response()->json([
 				'error' => $e->getMessage()
+			], 500);
+		}
+
+		catch (\Trogdord\RequestException $e) {
+			return response()->json([
+				'error' => $e->getMessage(),
+				'code'  => $e->getCode()
 			], 500);
 		}
 	}
@@ -318,86 +289,6 @@ class AdminApiController extends Controller {
 		}
 
 		return response()->json($definitions);
-	}
-
-	/*************************************************************************/
-
-	/**
-	 * Creates a new game definition entry (must be followed by a request
-	 * resulting in a call to uploadDefinition.)
-	 *
-	 * @return \Illuminate\Http\JsonResponse
-	 */
-	public function createDefinition(): \Illuminate\Http\JsonResponse {
-
-		try {
-
-			$definition = new \App\Models\Definition([
-				'title'  => $this->request->input('title', ''),
-				'author' => $this->request->input('author', '')
-			]);
-
-			$definition->save();
-
-			return response()->json([
-				'id' => $definition->id
-			]);
-		}
-
-		catch (\Illuminate\Database\QueryException $e) {
-			return $this->throwQueryExceptionAsJson($e);
-		}
-	}
-
-	/*************************************************************************/
-
-	/**
-	 * Uploads a game definition once an entry for it has been created.
-	 *
-	 * @param int $id Game Definition ID
-	 * @return \Illuminate\Http\JsonResponse
-	 */
-	public function uploadDefinition(int $id): \Illuminate\Http\JsonResponse {
-
-		$validator = Validator::make($this->request->all(), [
-			'definition' => 'bail|required|file|mimetypes:text/xml,application/xml'
-		], self::DEFINITION_UPLOAD_ERRORS);
-
-		if ($validator->fails()) {
-			return response()->json([
-				'id'    => $id,
-				'error' => $validator->errors()->first()
-			], 400);
-		}
-
-		try {
-
-			$definition = \App\Models\Definition::find($id);
-
-			if ($definition) {
-
-				$path = $this->request->file('definition')->storeAs(
-					self::DEFINITIONS_PATH, "$id.xml"
-				);
-
-				$definition->path = $path;
-				$definition->last_uploaded = date("Y-m-d H:m:s");
-				$definition->save();
-
-				return response()->json([], 204);
-			}
-
-			else {
-				return response()->json([
-					'id'    => $id,
-					'error' => self::DEFINITION_404_MESSAGE
-				], 404);
-			}
-		}
-
-		catch (\Illuminate\Database\QueryException $e) {
-			return $this->throwQueryExceptionAsJson($e);
-		}
 	}
 
 	/*************************************************************************/
