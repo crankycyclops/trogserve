@@ -110,7 +110,7 @@ class AdminApiController extends Controller {
 	 */
 	public function getGames(): \Illuminate\Http\JsonResponse {
 
-		return response()->json($this->trogdord->games());
+		return response()->json($this->trogdord->games(["title", "author"]));
 	}
 
 	/*************************************************************************/
@@ -135,9 +135,20 @@ class AdminApiController extends Controller {
 
 		try {
 
+			$meta = [];
+
+			if ($this->request->post('title')) {
+				$meta['title'] = $this->request->post('title');
+			}
+
+			if ($this->request->post('author')) {
+				$meta['author'] = $this->request->post('author');
+			}
+
 			$game = $this->trogdord->newGame(
 				$this->request->post('name'),
-				$this->request->post('definition')
+				$this->request->post('definition'),
+				$meta
 			);
 
 			// Admin has specified that the game should begin running
