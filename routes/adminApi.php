@@ -39,15 +39,3 @@ Route::get('/games/{id}/stop', 'AdminApiController@stopGame')
 
 // Returns a list of all currently uploaded game definition
 Route::get('/definitions', 'AdminApiController@getDefinitions');
-
-// Return details of a particular game definition
-Route::get('/definitions/{id}', 'AdminApiController@getDefinition')
-	->where('id', '\d+');
-
-// Delete a particular game definition
-Route::delete('/definitions/{id}', 'AdminApiController@deleteDefinition')
-	->where('id', '\d+');
-
-// Update one or more meta details of a game definition.
-Route::patch('/definitions/{id}', 'AdminApiController@updateDefinition')
-	->where('id', '\d+');

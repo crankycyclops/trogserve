@@ -7,6 +7,10 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler {
 
+	// If we're in production mode and a network error occurs, this is the
+	// generic message we should return to the user.
+	protected const GENERIC_500_MESSAGE = 'An error occured. Please try your query again in a few minutes.';
+
 	/**
 	 * A list of the exception types that are not reported.
 	 *
@@ -50,6 +54,26 @@ class Handler extends ExceptionHandler {
 	 */
 	public function render($request, Throwable $exception) {
 
-		return parent::render($request, $exception);
+		if ($exception instanceof \Trogdord\NetworkException) {
+
+			return response()->json([
+				'error' => 'production' == config('app.env') ?
+					self::GENERIC_500_MESSAGE : $exception->getMessage()
+			], 500);
+		}
+
+		else if ($exception instanceof \Trogdord\RequestException) {
+
+			$code = 404 == $exception->getCode() ? 404 : 500;
+
+			return response()->json([
+				'error' => $exception->getMessage(),
+				'code'  => $exception->getCode()
+			], $code);
+		}
+
+		else {
+			return parent::render($request, $exception);
+		}
 	}
 }
