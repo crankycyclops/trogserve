@@ -112,23 +112,16 @@ class AdminApiController extends Controller {
 	 */
 	public function getGame(int $id): \Illuminate\Http\JsonResponse {
 
-		if ($game = \Trogdor\Game::get($id)) {
+		$game = $this->trogdord->getGame($id);
+		$meta = $game->getMeta(["title", "author"]);
 
-			return response()->json([
-				'id'     => $id,
-				'name'   => $game->getMeta('name'),
-				'title'  => $game->getMeta('title'),
-				'author' => $game->getMeta('author'),
-				'time'   => $game->getTime()
-			]);
-		}
-
-		else {
-			return response()->json([
-				'id'    => $id,
-				'error' => self::GAME_404_MESSAGE
-			], 404);
-		}
+		return response()->json([
+			'id'     => $game->id,
+			'name'   => $game->name,
+			'title'  => $meta['title'],
+			'author' => $meta['author'],
+			// TODO: add current game time and whether or not game is started
+		]);
 	}
 
 	/*************************************************************************/
