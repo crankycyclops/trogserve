@@ -183,19 +183,6 @@ class AdminApiController extends Controller {
 	 */
 	public function getDefinitions(): \Illuminate\Http\JsonResponse {
 
-		$definitions = [];
-
-		foreach (\App\Models\Definition::all() as &$definition) {
-			$definitions[] = [
-				'id'           => $definition->id,
-				'title'        => $definition->title,
-				'author'       => $definition->author,
-				'createdAt'    => $definition->created_at,
-				'updatedAt'    => $definition->updated_at,
-				'lastUploaded' => $definition->last_uploaded
-			];
-		}
-
-		return response()->json($definitions);
+		return response()->json($this->trogdord->definitions());
 	}
 }
