@@ -17,13 +17,6 @@ class RouteServiceProvider extends ServiceProvider {
 	protected $namespace = 'App\Http\Controllers';
 
 	/**
-	 * The path to the "home" route for your application.
-	 *
-	 * @var string
-	 */
-	public const HOME = '/home';
-
-	/**
 	 * Define your route model bindings, pattern filters, etc.
 	 *
 	 * @return void
@@ -68,7 +61,15 @@ class RouteServiceProvider extends ServiceProvider {
 	 */
 	protected function mapAdminRoutes() {
 
-		Route::middleware('admin')
+		// Admin authentication pages
+		Route::prefix('admin')
+			->middleware('public')
+			->namespace($this->namespace)
+			->group(base_path('routes/adminAuth.php'));
+
+		// Admin pages requiring prior authentication
+		Route::prefix('admin')
+			->middleware('admin')
 			->namespace($this->namespace)
 			->group(base_path('routes/admin.php'));
 	}

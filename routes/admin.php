@@ -9,6 +9,7 @@
 |
 */
 
-Route::get('/admin', function () {
+// Admin homepage
+Route::get('/', function () {
 	return view('admin/index');
 });
