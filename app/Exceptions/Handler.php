@@ -54,22 +54,29 @@ class Handler extends ExceptionHandler {
 	 */
 	public function render($request, Throwable $exception) {
 
-		if ($exception instanceof \Trogdord\NetworkException) {
+		if ($request->is('admin/api/*')) {
 
-			return response()->json([
-				'error' => 'production' == config('app.env') ?
-					self::GENERIC_500_MESSAGE : $exception->getMessage()
-			], 500);
-		}
+			if ($exception instanceof \Trogdord\NetworkException) {
 
-		else if ($exception instanceof \Trogdord\RequestException) {
+				return response()->json([
+					'error' => 'production' == config('app.env') ?
+						self::GENERIC_500_MESSAGE : $exception->getMessage()
+				], 500);
+			}
 
-			$code = 404 == $exception->getCode() ? 404 : 500;
+			else if ($exception instanceof \Trogdord\RequestException) {
 
-			return response()->json([
-				'error' => $exception->getMessage(),
-				'code'  => $exception->getCode()
-			], $code);
+				$code = 404 == $exception->getCode() ? 404 : 500;
+
+				return response()->json([
+					'error' => $exception->getMessage(),
+					'code'  => $exception->getCode()
+				], $code);
+			}
+
+			else {
+				return parent::render($request, $exception);
+			}
 		}
 
 		else {
