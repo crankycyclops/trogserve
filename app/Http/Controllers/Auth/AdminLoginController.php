@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
+use App\Http\Controllers\Controller;
 
 class AdminLoginController extends Controller {
 
@@ -12,7 +14,21 @@ class AdminLoginController extends Controller {
 	 *
 	 * @var string
 	 */
-	protected $defaultRedirect = '/admin';
+	static protected $defaultRedirect = '/admin';
+
+	/**
+	 * Database field containing the username.
+	 *
+	 * @var string
+	 */
+	static protected $usernameField = 'username';
+
+	/**
+	 * Database field containing the password.
+	 *
+	 * @var string
+	 */
+	static protected $passwordField = 'password';
 
 	/**
 	 * Create a new controller instance.
@@ -22,7 +38,6 @@ class AdminLoginController extends Controller {
 	public function __construct() {
 
 		$this->guard = Auth::guard('adminweb');
-		$this->middleware('adminauth')->except(['login', 'logout']);
 	}
 
 	/**
@@ -34,22 +49,20 @@ class AdminLoginController extends Controller {
 	 */
 	public function auth(Request $request) {
 
-		$credentials = $request->only('username', 'password');
+		$credentials = $request->only(self::$usernameField, self::$passwordField);
 
 		if ($this->guard->attempt($credentials)) {
-			return redirect()->intended($defaultRedirect);
+			return redirect()->intended(self::$defaultRedirect);
 		}
 
 		else {
-			// TODO: set flash error message
+			$request->session()->flash('error', trans('auth.failed'));
 			return redirect()->route('admin.login');
 		}
 	}
 
 	/**
 	 * Prompt an admin to login.
-	 *
-	 * @param  \Illuminate\Http\Request $request
 	 *
 	 * @return Response
 	 */
@@ -65,10 +78,10 @@ class AdminLoginController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function logout() {
+	public function logout(Request $request) {
 
 		if ($this->guard->check()) {
-			// TODO: set flash notification message
+			$request->session()->flash('notification', trans('auth.loggedOut'));
 			$this->guard->logout();
 		}
 
