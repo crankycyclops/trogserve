@@ -1,0 +1,44 @@
+// Variables
+@import 'variables';
+@import 'mixins';
+
+
+main {
+
+	@include grid-block-on-mobile;
+
+	grid-template-columns: 35% 65%;
+	grid-column-gap: 20px;
+	justify-content: center;
+}
+
+.login-panel {
+	display: block;
+	box-sizing: border-box;
+	padding: 0 15px 0 15px;
+}
+
+.side-matter {
+	@include block-hidden-on-mobile;
+}
+
+#login-prompt {
+
+	.field {
+
+		width: 100%;
+
+		&:not(:first-child) {
+			margin-top: 15px;
+		}
+
+		&:not(:last-child) {
+			margin-bottom: 15px;
+		}
+
+		input {
+			width: 100%;
+			max-width: 400px;
+		}
+	}
+}

@@ -1,0 +1,23 @@
+/* Display as block on mobile and grid on desktop */
+@mixin grid-block-on-mobile {
+
+	@media #{$mobile} {
+		display: block;
+	}
+
+	@media #{$desktop} {
+		display: grid;
+	}
+}
+
+/* Don't display on mobile and display as block on desktop */
+@mixin block-hidden-on-mobile {
+
+	@media #{$mobile} {
+		display: none;
+	}
+
+	@media #{$desktop} {
+		display: block;
+	}
+}
