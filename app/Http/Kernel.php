@@ -53,7 +53,7 @@ class Kernel extends HttpKernel {
 			\Illuminate\View\Middleware\ShareErrorsFromSession::class,
 			\App\Http\Middleware\VerifyCsrfToken::class,
 			\Illuminate\Routing\Middleware\SubstituteBindings::class,
-			\Laravel\Passport\Http\Middleware\CreateFreshApiToken::class
+			\Laravel\Passport\Http\Middleware\CreateFreshApiToken::class // must be last!
 		],
 
 		// Middleware for admin api routes.

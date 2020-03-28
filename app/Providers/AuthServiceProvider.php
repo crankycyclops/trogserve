@@ -38,6 +38,7 @@ class AuthServiceProvider extends ServiceProvider {
 		config(['auth.guards.api' => config('auth.guards.adminapi')]);
 
 		$this->registerPolicies();
+		Passport::cookie('laravel_admin_token');
 		Passport::routes(null, ['prefix' => 'admin/api/oauth']);
 
 		$config = config('auth.oauth');
