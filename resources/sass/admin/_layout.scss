@@ -1,0 +1,134 @@
+@import "node_modules/reset-css/reset";
+
+body {
+	min-height: 100vh;
+	padding: 20px;
+	box-sizing: border-box;
+	font-size: 0.9rem;
+	line-height: 1.6;
+	color: $primary-color;
+	background-color: $darkest-bg;
+}
+
+h1, h2, h3 {
+	padding-bottom: 1rem;
+	color: $heading-color;
+}
+
+h1 {
+
+	@media #{$desktop} {
+		font-size: 3.3rem;
+	}
+
+	@media #{$mobile} {
+		font-size: 2.7rem;
+	}
+}
+
+h2 {
+	@media #{$desktop} {
+		font-size: 2.3rem;
+	}
+
+	@media #{$mobile} {
+		font-size: 1.7rem;
+	}
+}
+
+h3 {
+	@media #{$desktop} {
+		font-size: 1.3rem;
+	}
+
+	@media #{$mobile} {
+		font-size: 1.2rem;
+	}
+}
+
+.alert {
+	margin: 10px 0 15px 0;
+}
+
+input, textarea {
+
+	padding: 8px;
+	background-color: $white;
+	outline: none;
+	margin: 5px 1px 3px 0px;
+	border: 1px solid #dddddd;
+
+	border-radius: 7px;
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+
+	box-shadow: 1px 1px 10px 0px #000000;
+	-webkit-box-shadow: 1px 1px 10px 0px #000000;
+	-moz-box-shadow: 1px 1px 10px 0px #000000;
+	text-shadow: 1px 1px 20px #000000;
+
+	-webkit-transition: all 0.30s ease-in-out;
+	-moz-transition: all 0.30s ease-in-out;
+	-ms-transition: all 0.30s ease-in-out;
+	-o-transition: all 0.30s ease-in-out;
+	transition: all 0.30s ease-in-out;
+
+	// Chrome, Firefox, Opera, Safari 10.1+
+	&::placeholder {
+		color: #000000;
+	}
+
+	// Internet Explorer 10-11
+	&:-ms-input-placeholder {
+		color: #000000;
+	}
+
+	// Microsoft Edge
+	&::-ms-input-placeholder {
+		color: #000000;
+	}
+
+	&:focus {
+		box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+		margin: 5px 1px 3px 0px;
+		border: 1px solid rgba(81, 203, 238, 1);
+	}
+}
+
+button {
+
+	background: #3d94f6;
+	background-image: -webkit-linear-gradient(top, #3d94f6, #1e62d0);
+	background-image: -moz-linear-gradient(top, #3d94f6, #1e62d0);
+	background-image: -ms-linear-gradient(top, #3d94f6, #1e62d0);
+	background-image: -o-linear-gradient(top, #3d94f6, #1e62d0);
+	background-image: linear-gradient(to bottom, #3d94f6, #1e62d0);
+
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	border-radius: 7px;
+
+	box-shadow: 1px 1px 10px 0px #000000;
+	-webkit-box-shadow: 1px 1px 10px 0px #000000;
+	-moz-box-shadow: 1px 1px 10px 0px #000000;
+	text-shadow: 1px 1px 20px #000000;
+
+	color: $white;
+	padding: 8px 20px 8px 20px;
+
+	border: solid #337fed 0px;
+	text-decoration: none;
+	display: inline-block;
+	cursor: pointer;
+	text-align: center;
+
+	&:hover {
+		background: #1e62d0;
+		text-decoration: none;
+	}
+
+	&:active {
+		background: #0e52c0;
+		text-decoration: none;
+	}
+}

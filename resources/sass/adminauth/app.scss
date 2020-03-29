@@ -1,28 +1,44 @@
-// Variables
-@import 'variables';
-@import 'mixins';
+@import '../admin/variables';
+@import '../admin/mixins';
+@import '../admin/layout';
 
+
+$login-prompt-width: 400px;
 
 main {
 
 	@include grid-block-on-mobile;
 
+	width: 100%;
 	grid-template-columns: 35% 65%;
-	grid-column-gap: 20px;
+	box-sizing: border-box;
 	justify-content: center;
+	background-color: $darkest-bg;
 }
 
 .login-panel {
 	display: block;
-	box-sizing: border-box;
-	padding: 0 15px 0 15px;
 }
 
 .side-matter {
 	@include block-hidden-on-mobile;
+	padding-left: 15px;
 }
 
 #login-prompt {
+
+	border: 1px solid $lightest-bg;
+	background-color: $light-bg;
+	max-width: $login-prompt-width;
+	padding: 15px;
+
+	border-radius: 7px;
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+
+	.login-fields {
+		margin-bottom: 30px;
+	}
 
 	.field {
 
@@ -38,7 +54,8 @@ main {
 
 		input {
 			width: 100%;
-			max-width: 400px;
+			max-width: $login-prompt-width;
+			box-sizing: border-box;
 		}
 	}
 }
