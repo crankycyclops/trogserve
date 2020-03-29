@@ -20,7 +20,7 @@
 
 			<article class="login-panel">
 
-				<h2>Trogserve Admin</h2>
+				<h1>Trogserve Admin</h1>
 
 				@if (Session::has('error'))
 					<div class="alert alert-error">
@@ -63,7 +63,7 @@
 			</article>
 
 			<aside class="side-matter">
-				TODO: side matter
+				<!-- TODO: side matter -->
 			</aside>
 
 		</main>

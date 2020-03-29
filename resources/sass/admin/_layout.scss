@@ -1,48 +1,53 @@
 @import "node_modules/reset-css/reset";
+// @import url('https://fonts.googleapis.com/css?family=Oswald:300|Inconsolata:400|Open+Sans:400&display=swap&subset=latin-ext');
+@import url('https://fonts.googleapis.com/css?family=Dosis:200|Inconsolata:400|Roboto:300,400&display=swap&subset=latin-ext');
 
 body {
 	min-height: 100vh;
 	padding: 20px;
 	box-sizing: border-box;
-	font-size: 0.9rem;
+	font-size: 1.15rem;
 	line-height: 1.6;
 	color: $primary-color;
 	background-color: $darkest-bg;
+	font-family: $body-font;
 }
 
 h1, h2, h3 {
 	padding-bottom: 1rem;
 	color: $heading-color;
+	font-family: $heading-font;
+	font-weight: 200;
 }
 
 h1 {
 
 	@media #{$desktop} {
-		font-size: 3.3rem;
+		font-size: 3.4rem;
 	}
 
 	@media #{$mobile} {
-		font-size: 2.7rem;
+		font-size: 2.8rem;
 	}
 }
 
 h2 {
 	@media #{$desktop} {
-		font-size: 2.3rem;
+		font-size: 2.4rem;
 	}
 
 	@media #{$mobile} {
-		font-size: 1.7rem;
+		font-size: 1.8rem;
 	}
 }
 
 h3 {
 	@media #{$desktop} {
-		font-size: 1.3rem;
+		font-size: 1.6rem;
 	}
 
 	@media #{$mobile} {
-		font-size: 1.2rem;
+		font-size: 1.5rem;
 	}
 }
 
@@ -51,6 +56,9 @@ h3 {
 }
 
 input, textarea {
+
+	font-family: $body-font;
+	font-size: 1.15rem;
 
 	padding: 8px;
 	background-color: $white;
@@ -89,13 +97,17 @@ input, textarea {
 	}
 
 	&:focus {
-		box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+		box-shadow: 0 0 9px #00ffff;
 		margin: 5px 1px 3px 0px;
-		border: 1px solid rgba(81, 203, 238, 1);
+		border: 1px solid #00ffff;
 	}
 }
 
 button {
+
+	font-family: $button-font;
+	font-weight: 400;
+	font-size: 1.08rem;
 
 	background: #3d94f6;
 	background-image: -webkit-linear-gradient(top, #3d94f6, #1e62d0);

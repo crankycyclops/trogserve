@@ -2,9 +2,14 @@
 $mobile: "screen and (max-width: 1023px)";
 $desktop: "screen and (min-width: 1024px)";
 
+$body-font: 'Inconsolata', monospace;
+$heading-font: 'Dosis', sans-serif;
+$button-font: 'Roboto', sans-serif;
+
 $white: #ffffff;
 $heading-color: #eeeeee;
-$primary-color: #dee4e7;
+//$primary-color: #dee4e7;
+$primary-color: #c9cfd2;
 
 $darkest-bg: #111418;
 $dark-bg: #191f24;
