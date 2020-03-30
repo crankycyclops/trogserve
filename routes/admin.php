@@ -10,6 +10,4 @@
 */
 
 // Admin homepage
-Route::get('/', function () {
-	return view('admin/index');
-});
+Route::get('/', 'AdminController@index');

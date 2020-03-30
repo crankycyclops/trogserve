@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Validator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class AdminApiController extends Controller {
 
@@ -40,7 +39,7 @@ class AdminApiController extends Controller {
 	 */
 	public function getInfo(): \Illuminate\Http\JsonResponse {
 
-		return response()->json($trogdord->statistics());
+		return response()->json($this->trogdord->statistics());
 	}
 
 	/*************************************************************************/
