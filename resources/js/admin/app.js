@@ -39,7 +39,10 @@ const app = new Vue({
 	vuetify: new Vuetify({
 		theme: {
 			dark: true,
-		}
+		},
+		icons: {
+			iconfont: 'md'
+		},
 	}),
 
 	components: {

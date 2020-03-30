@@ -31,7 +31,7 @@
 						<v-card>
 
 							<v-card-text>
-								TODO
+								TODO: this is placeholder text.
 							</v-card-text>
 
 						</v-card>
@@ -45,7 +45,7 @@
 		</v-content>
 
 		<v-footer app>
-			<span class="px-4">&copy; {{ new Date().getFullYear() }}</span>
+			<span class="px-4">&copy;{{ new Date().getFullYear() }} James Colannino.</span>
 		</v-footer>
 
 	</v-app>
@@ -57,7 +57,10 @@
 	export default {
 
 		computed: {
-			title: function () {console.log(window.title); return window.title;}
+			// This is how I suck data in from Laravel
+			title: function () {return window.title;},
+			lastLoginAt: function () {return window.lastLoginAt;},
+			lastLoginIp: function () {return window.lastLoginIp;}
 		},
 
 		data: function () {

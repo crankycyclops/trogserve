@@ -10,12 +10,16 @@
 		<title>{{ config('app.name') }} - Admin</title>
 
 		<!-- TODO: Generate critical CSS (see: https://laravel-mix.com/extensions/criticalcss) -->
+		<link rel="stylesheet" type="text/css" href="/css/vuetify{{ config('app.vuetifyVersion') }}.min.css">
 		<link rel="stylesheet" type="text/css" href="{{ mix('/css/admin/app.css') }}">
-		<link rel="stylesheet" type="text/css" href="/css/vuetify.min.css">
 
 		<script>
-			// This is how I'm currently passing data from PHP to Vue.js
-			window.title = "{{ config('app.name') }}";
+			// This is how I'm currently passing static data from Laravel to Vue.js
+			window.title = "{{ config('app.name') }} Admin";
+			window.lastLoginAt = <?= Auth::user() && Auth::user()->last_login_at ?
+				'"' . Auth::user()->last_login_at . '"' : 'null' ?>;
+			window.lastLoginIp = <?= Auth::user() && Auth::user()->last_login_ip ?
+				'"' . Auth::user()->last_login_ip . '"' : 'null' ?>;
 		</script>
 
 	</head>
@@ -23,7 +27,6 @@
 	<body>
 
 		<div id="app"></div>
-		<a href="{{ route('admin.logout') }}">Logout</a>
 
 		<script src="{{ mix('/js/admin/manifest.js') }}"></script>
 		<script src="{{ mix('/js/admin/vendor.js') }}"></script>

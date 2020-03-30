@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use \App\Models\Admin;
 use App\Http\Controllers\Controller;
 
 class AdminLoginController extends Controller {
@@ -41,6 +42,22 @@ class AdminLoginController extends Controller {
 	}
 
 	/**
+	 * Called after every successful authentication attempt.
+	 *
+	 * @param  \Illuminate\Http\Request $request
+	 * @param  \App\Models\Admin $admin
+	 *
+	 * @return void
+	 */
+	protected function onAuthenticate(Request $request, Admin $admin): void {
+
+		$admin->update([
+			'last_login_at' => date('Y-m-d H:i:s'),
+			'last_login_ip' => $request->getClientIp()
+		]);
+	}
+
+	/**
 	 * Handle a submitted admin authentication request.
 	 *
 	 * @param  \Illuminate\Http\Request $request
@@ -52,6 +69,7 @@ class AdminLoginController extends Controller {
 		$credentials = $request->only(self::$usernameField, self::$passwordField);
 
 		if ($this->guard->attempt($credentials)) {
+			$this->onAuthenticate($request, Auth::user());
 			return redirect()->intended(self::$defaultRedirect);
 		}
 

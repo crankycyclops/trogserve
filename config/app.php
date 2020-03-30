@@ -4,6 +4,17 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
+	| Current version of vuetify (.env value populated by Makefile)
+	|--------------------------------------------------------------------------
+	|
+	| This value is used to determine the full filename of Vuetify's separate
+	| CSS bundle.
+	|
+	*/
+	'vuetifyVersion' => env('VUETIFY_VERSION', ''),
+
+	/*
+	|--------------------------------------------------------------------------
 	| Application Name
 	|--------------------------------------------------------------------------
 	|

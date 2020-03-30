@@ -1,2 +1,27 @@
 // Variables
 @import 'variables';
+@import 'node_modules/material-design-icons-iconfont/dist/material-design-icons';
+@import url('https://fonts.googleapis.com/css?family=Dosis:200|Inconsolata:400|Roboto:300,400&display=swap&subset=latin-ext');
+
+#trogserve {
+
+	font-family: $body-font;
+	font-size: 1.15rem;
+	line-height: 1.6;
+	color: $primary-color;
+
+	h1, h2, h3, .v-toolbar__title {
+		font-family: $heading-font;
+		font-weight: 200;
+		color: $heading-color;
+	}
+
+	.v-toolbar__title {
+		font-size: 2.0rem;
+	}
+
+	.v-card__subtitle, .v-card__text {
+		font-size: 1.05rem;
+		line-height: 1.6;
+	}
+}
