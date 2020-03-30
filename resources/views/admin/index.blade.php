@@ -16,6 +16,7 @@
 		<script>
 			// This is how I'm currently passing static data from Laravel to Vue.js
 			window.title = "{{ config('app.name') }} Admin";
+			window.username = "{{ Auth::user()->username }}";
 			window.lastLoginAt = <?= Auth::user() && Auth::user()->last_login_at ?
 				'"' . Auth::user()->last_login_at . '"' : 'null' ?>;
 			window.lastLoginIp = <?= Auth::user() && Auth::user()->last_login_ip ?

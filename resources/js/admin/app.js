@@ -27,9 +27,13 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 import Vuetify from 'vuetify';
+import VueRouter from 'vue-router';
+
 import App from './App.vue';
+import Statistics from './components/Statistics.vue'
 
 Vue.use(Vuetify);
+Vue.use(VueRouter);
 
 const app = new Vue({
 
@@ -42,7 +46,20 @@ const app = new Vue({
 		},
 		icons: {
 			iconfont: 'md'
-		},
+		}
+	}),
+
+	router: new VueRouter({
+
+		mode: 'history',
+
+		routes: [
+			{
+				path: '/admin',
+				name: 'statistics',
+				component: Statistics
+			}
+		]
 	}),
 
 	components: {

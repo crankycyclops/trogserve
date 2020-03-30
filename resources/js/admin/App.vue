@@ -26,16 +26,8 @@
 
 				<v-row align="center" justify="center">
 
-					<v-col cols="10">
-
-						<v-card>
-
-							<v-card-text>
-								TODO: this is placeholder text.
-							</v-card-text>
-
-						</v-card>
-
+					<v-col cols="12" md="11">
+						<router-view></router-view>
 					</v-col>
 
 				</v-row>
@@ -59,8 +51,7 @@
 		computed: {
 			// This is how I suck data in from Laravel
 			title: function () {return window.title;},
-			lastLoginAt: function () {return window.lastLoginAt;},
-			lastLoginIp: function () {return window.lastLoginIp;}
+			username: function () {return window.username}
 		},
 
 		data: function () {
@@ -75,10 +66,6 @@
 		},
 
 		methods: {
-			//
-		},
-
-		components: {
 			//
 		}
 	};
