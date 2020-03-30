@@ -1,5 +1,4 @@
 @import "node_modules/reset-css/reset";
-// @import url('https://fonts.googleapis.com/css?family=Oswald:300|Inconsolata:400|Open+Sans:400&display=swap&subset=latin-ext');
 @import url('https://fonts.googleapis.com/css?family=Dosis:200|Inconsolata:400|Roboto:300,400&display=swap&subset=latin-ext');
 
 body {
@@ -70,11 +69,6 @@ input, textarea {
 	-webkit-border-radius: 7px;
 	-moz-border-radius: 7px;
 
-	box-shadow: 1px 1px 10px 0px #000000;
-	-webkit-box-shadow: 1px 1px 10px 0px #000000;
-	-moz-box-shadow: 1px 1px 10px 0px #000000;
-	text-shadow: 1px 1px 20px #000000;
-
 	-webkit-transition: all 0.30s ease-in-out;
 	-moz-transition: all 0.30s ease-in-out;
 	-ms-transition: all 0.30s ease-in-out;
@@ -120,9 +114,6 @@ button {
 	-moz-border-radius: 7px;
 	border-radius: 7px;
 
-	box-shadow: 1px 1px 10px 0px #000000;
-	-webkit-box-shadow: 1px 1px 10px 0px #000000;
-	-moz-box-shadow: 1px 1px 10px 0px #000000;
 	text-shadow: 1px 1px 20px #000000;
 
 	color: $white;
