@@ -30,8 +30,10 @@ import Vuetify from 'vuetify';
 import VueRouter from 'vue-router';
 
 import App from './App.vue';
+
 import Statistics from './components/Statistics.vue';
 import Games from './components/Games.vue';
+import NewGame from './components/games/New.vue';
 
 Vue.use(Vuetify);
 Vue.use(VueRouter);
@@ -66,6 +68,12 @@ const app = new Vue({
 				path: '/admin/games',
 				name: 'games',
 				component: Games
+			},
+
+			{
+				path: '/admin/games/new',
+				name: 'newGame',
+				component: NewGame
 			}
 		]
 	}),

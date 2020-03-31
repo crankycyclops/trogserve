@@ -24,7 +24,7 @@
 				<v-row align="center" justify="start" v-if="games.error">
 
 					<v-col cols="12">
-						Error fetching list of games: {{ games.error }}
+						<span class="error">Error fetching games: {{ games.error }}</span>
 					</v-col>
 
 				</v-row>
@@ -72,7 +72,16 @@
 		</v-card-text>
 
 		<v-card-actions v-if="!games.loading">
-				<v-btn text color="primary" :disabled="games.error">Create Game</v-btn>
+
+				<v-btn
+					text
+					color="primary"
+					:disabled="games.error ? true : false"
+					@click="$router.push('/admin/games/new');"
+				>
+					Create Game
+				</v-btn>
+
 		</v-card-actions>
 
 	</v-card>

@@ -50,7 +50,7 @@
 					</v-col>
 
 					<v-col cols="12">
-						Error fetching statistics: {{ statistics.loadingError }}
+						<span class="error">Error fetching statistics: {{ statistics.loadingError }}</span>
 					</v-col>
 
 				</v-row>

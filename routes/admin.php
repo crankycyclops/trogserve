@@ -13,3 +13,4 @@
 // frontend task that's handled by Vue.js.)
 Route::get('/', 'AdminController@index');
 Route::get('/games', 'AdminController@index');
+Route::get('/games/new', 'AdminController@index');
