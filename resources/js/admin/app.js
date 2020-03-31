@@ -30,7 +30,8 @@ import Vuetify from 'vuetify';
 import VueRouter from 'vue-router';
 
 import App from './App.vue';
-import Statistics from './components/Statistics.vue'
+import Statistics from './components/Statistics.vue';
+import Games from './components/Games.vue';
 
 Vue.use(Vuetify);
 Vue.use(VueRouter);
@@ -54,10 +55,17 @@ const app = new Vue({
 		mode: 'history',
 
 		routes: [
+
 			{
 				path: '/admin',
 				name: 'statistics',
 				component: Statistics
+			},
+
+			{
+				path: '/admin/games',
+				name: 'games',
+				component: Games
 			}
 		]
 	}),
