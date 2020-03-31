@@ -8,7 +8,27 @@
 			:temporary="false"
 			app
 			overflow 
-		/>
+		>
+
+			<v-list-item>
+
+				<v-list-item-content>
+
+					<v-list-item-title class="title">
+						Main Menu
+					</v-list-item-title>
+
+					<v-list-item-subtitle>
+						Welcome back, {{ username }}!
+					</v-list-item-subtitle>
+
+				</v-list-item-content>
+
+			</v-list-item>
+
+			<v-divider />
+
+		</v-navigation-drawer>
 
 		<v-app-bar :clipped-left="false" app>
 
