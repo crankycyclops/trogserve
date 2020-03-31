@@ -9,8 +9,8 @@ class AdminApiController extends Controller {
 
 	// Validation rule => error message mapping for game creation input parameters
 	protected const CREATE_GAME_INPUT_ERRORS = [
-		'regex'     => 'Please input a valid game definition ID',
-		'required'  => 'Missing one or more required parameters',
+		'required'     => 'Missing one or more required parameters',
+		'synopsis.max' => 'Synopsis cannot be longer than 1024 characters'
 	];
 
 	// Instance of \Illuminate\Http\Request
@@ -51,7 +51,7 @@ class AdminApiController extends Controller {
 	 */
 	public function getGames(): \Illuminate\Http\JsonResponse {
 
-		return response()->json($this->trogdord->games(["title", "author"]));
+		return response()->json($this->trogdord->games(["title", "author", "synopsis"]));
 	}
 
 	/*************************************************************************/
@@ -65,7 +65,8 @@ class AdminApiController extends Controller {
 
 		$validator = Validator::make($this->request->all(), [
 			'name' => 'bail|required',
-			'definition' => 'bail|required'
+			'definition' => 'bail|required',
+			'synopsis' => 'bail|nullable|max:1024'
 		], self::CREATE_GAME_INPUT_ERRORS);
 
 		if ($validator->fails()) {
@@ -76,12 +77,10 @@ class AdminApiController extends Controller {
 
 		$meta = [];
 
-		if ($this->request->post('title')) {
-			$meta['title'] = $this->request->post('title');
-		}
-
-		if ($this->request->post('author')) {
-			$meta['author'] = $this->request->post('author');
+		foreach (['title', 'author', 'synopsis'] as $metaKey) {
+			if ($this->request->post($metaKey)) {
+				$meta[$metaKey] = $this->request->post($metaKey);
+			}
 		}
 
 		$game = $this->trogdord->newGame(
@@ -112,13 +111,14 @@ class AdminApiController extends Controller {
 	public function getGame(int $id): \Illuminate\Http\JsonResponse {
 
 		$game = $this->trogdord->getGame($id);
-		$meta = $game->getMeta(["title", "author"]);
+		$meta = $game->getMeta(['title', 'author', 'synopsis']);
 
 		return response()->json([
-			'id'     => $game->id,
-			'name'   => $game->name,
-			'title'  => $meta['title'],
-			'author' => $meta['author'],
+			'id'       => $game->id,
+			'name'     => $game->name,
+			'title'    => $meta['title'],
+			'author'   => $meta['author'],
+			'synopsis' => $meta['synopsis']
 			// TODO: add current game time and whether or not game is started
 		]);
 	}
