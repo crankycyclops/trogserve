@@ -7,7 +7,7 @@
 
 	font-family: $body-font;
 	font-size: 1.15rem;
-	line-height: 1.6;
+	line-height: 1.4;
 	color: $primary-color;
 
 	h1, h2, h3, .v-toolbar__title {
@@ -21,7 +21,18 @@
 	}
 
 	.v-card__subtitle, .v-card__text {
-		font-size: 1.05rem;
-		line-height: 1.6;
+		line-height: 1.4;
+	}
+
+	.v-card__title {
+		font-size: 1.3rem;
+	}
+
+	.v-card__subtitle {
+		font-size: 0.9rem;
+	}
+
+	.v-card__text {
+		font-size: 1.10rem;
 	}
 }

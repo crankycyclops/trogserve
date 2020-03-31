@@ -14,13 +14,19 @@
 		<link rel="stylesheet" type="text/css" href="{{ mix('/css/admin/app.css') }}">
 
 		<script>
+
 			// This is how I'm currently passing static data from Laravel to Vue.js
+			window.phpVersion = "{{ phpversion() }}";
+			window.extVersion = "{{ phpversion('trogdord') }}";
+
 			window.title = "{{ config('app.name') }} Admin";
 			window.username = "{{ Auth::user()->username }}";
+
 			window.lastLoginAt = <?= Auth::user() && Auth::user()->last_login_at ?
 				'"' . Auth::user()->last_login_at . '"' : 'null' ?>;
 			window.lastLoginIp = <?= Auth::user() && Auth::user()->last_login_ip ?
 				'"' . Auth::user()->last_login_ip . '"' : 'null' ?>;
+
 		</script>
 
 	</head>

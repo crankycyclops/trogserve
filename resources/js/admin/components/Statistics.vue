@@ -34,6 +34,20 @@
 
 		<v-card-text>
 
+			<v-row align="center" justify="start">
+
+					<v-col cols="12" md="6">
+						<strong>PHP version:</strong>
+						{{ phpVersion }}
+					</v-col>
+
+					<v-col cols="12" md="6">
+						<strong>Extension version:</strong>
+						{{ extVersion }}
+					</v-col>
+
+			</v-row>
+
 			<v-row align="center" justify="start" v-if="statistics.loading">
 				<v-col cols="12">
 					<v-progress-linear :active="true" :indeterminate="true" />
@@ -83,6 +97,8 @@
 
 		computed: {
 			// This is how I suck data in from Laravel
+			phpVersion: function () {return window.phpVersion;},
+			extVersion: function () {return window.extVersion;},
 			lastLoginAt: function () {return window.lastLoginAt;},
 			lastLoginIp: function () {return window.lastLoginIp;}
 		},
@@ -123,8 +139,16 @@
 					.get('/admin/api/info')
 
 					.then(response => {
-						self.statistics.trogdordVersion = 'Test';
-						self.statistics.libtrogdorVersion = 'Test';
+
+						self.statistics.trogdordVersion =
+							response.data.version.major + '.' +
+							response.data.version.minor + '.' +
+							response.data.version.patch;
+
+						self.statistics.libtrogdorVersion =
+							response.data.lib_version.major + '.' +
+							response.data.lib_version.minor + '.' +
+							response.data.lib_version.patch;
 					})
 
 					.catch(error => {
