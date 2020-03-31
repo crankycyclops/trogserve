@@ -160,9 +160,9 @@
 					.catch(error => {
 
 						if ('undefined' !== typeof(error.response)) {
-							this.statistics.loadingError = error.response.data.error;
+							self.statistics.loadingError = error.response.data.error;
 						} else {
-							this.statistics.loadingError = error.message;
+							self.statistics.loadingError = error.message;
 						}
 					})
 
