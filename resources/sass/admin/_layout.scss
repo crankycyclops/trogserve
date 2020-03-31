@@ -12,6 +12,10 @@ body {
 	font-family: $body-font;
 }
 
+strong {
+	font-weight: bold;
+}
+
 h1, h2, h3 {
 	padding-bottom: 1rem;
 	color: $heading-color;
@@ -48,6 +52,21 @@ h3 {
 	@media #{$mobile} {
 		font-size: 1.5rem;
 	}
+}
+
+.success {
+	color: green;
+	background: none;
+}
+
+.warning {
+	color: yellow;
+	background: none;
+}
+
+.error {
+	color: red;
+	background: none;
 }
 
 .alert {

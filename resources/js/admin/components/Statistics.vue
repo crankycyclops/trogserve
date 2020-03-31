@@ -34,20 +34,6 @@
 
 		<v-card-text>
 
-			<v-row align="center" justify="start">
-
-					<v-col cols="12" md="6">
-						<strong>PHP version:</strong>
-						{{ phpVersion }}
-					</v-col>
-
-					<v-col cols="12" md="6">
-						<strong>Extension version:</strong>
-						{{ extVersion }}
-					</v-col>
-
-			</v-row>
-
 			<v-row align="center" justify="start" v-if="statistics.loading">
 				<v-col cols="12">
 					<v-progress-linear :active="true" :indeterminate="true" />
@@ -59,12 +45,32 @@
 				<v-row align="center" justify="start" v-if="statistics.loadingError">
 
 					<v-col cols="12">
-						Error: {{ statistics.loadingError }}
+						<strong>Trogdord status:</strong>
+						<span class="error">Offline</span>
+					</v-col>
+
+					<v-col cols="12">
+						Error fetching statistics: {{ statistics.loadingError }}
 					</v-col>
 
 				</v-row>
 
 				<v-row align="center" justify="start" v-else>
+
+					<v-col cols="12">
+						<strong>Trogdord status:</strong>
+						<span class="success">Online</span>
+					</v-col>
+
+					<v-col cols="12" md="6">
+						<strong>PHP version:</strong>
+						{{ phpVersion }}
+					</v-col>
+
+					<v-col cols="12" md="6">
+						<strong>Extension version:</strong>
+						{{ extVersion }}
+					</v-col>
 
 					<v-col cols="12" md="6">
 						<strong>Trogdord version:</strong>
@@ -164,10 +170,6 @@
 						self.statistics.loading = false;
 					});
 			}
-		},
-
-		components: {
-			//
 		}
 	};
 

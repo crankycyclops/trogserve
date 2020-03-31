@@ -23,13 +23,13 @@
 				<h1>Trogserve Admin</h1>
 
 				@if (Session::has('error'))
-					<div class="alert alert-error">
+					<div class="alert error">
 						{{ Session::get('error') }}
 					</div>
 				@endif
 
 				@if (Session::has('notification'))
-					<div class="alert alert-notification">
+					<div class="alert success">
 						{{ Session::get('notification') }}
 					</div>
 				@endif

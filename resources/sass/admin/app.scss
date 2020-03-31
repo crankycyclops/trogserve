@@ -16,6 +16,29 @@
 		color: $heading-color;
 	}
 
+	strong {
+		font-weight: bold;
+	}
+
+	// I have to use !important because Vuetify uses it (this was not my choice)
+	.success {
+		color: green;
+		background: none !important;
+		border: none !important;
+	}
+
+	.warning {
+		color: yellow;
+		background: none !important;
+		border: none !important;
+	}
+
+	.error {
+		color: red;
+		background: none !important;
+		border: none !important;
+	}
+
 	.v-toolbar__title {
 		font-size: 2.0rem;
 	}
