@@ -7,15 +7,6 @@ use Illuminate\Http\Request;
 
 class AdminApiController extends Controller {
 
-	// Validation rule => error message mapping for game creation input parameters
-	protected const CREATE_GAME_INPUT_ERRORS = [
-		'required'     => 'Missing one or more required parameters',
-		'name.max'     => 'Name cannot be longer than 50 characters',
-		'synopsis.max' => 'Synopsis cannot be longer than 1024 characters',
-		'title.max'    => 'Title cannot be longer than 100 characters',
-		'author.max'   => 'Author cannot be longer than 100 characters'
-	];
-
 	// Instance of \Illuminate\Http\Request
 	protected $request;
 
@@ -67,12 +58,18 @@ class AdminApiController extends Controller {
 	public function createGame(): \Illuminate\Http\JsonResponse {
 
 		$validator = Validator::make($this->request->all(), [
-			'name' => 'bail|required|max:50',
+			'name'       => 'bail|required|max:' . config('validation.newGame.nameMaxLen'),
 			'definition' => 'bail|required',
-			'title' => 'bail|max:100',
-			'author' => 'bail|max:100',
-			'synopsis' => 'bail|nullable|max:1024'
-		], self::CREATE_GAME_INPUT_ERRORS);
+			'title'      => 'bail|max:' . config('validation.newGame.titleMaxLen'),
+			'author'     => 'bail|max:' . config('validation.newGame.authorMaxLen'),
+			'synopsis'   => 'bail|nullable|max:' . config('validation.newGame.synopsisMaxLen')
+		], [
+			'required'     => 'Missing one or more required parameters',
+			'name.max'     => config('validation.newGame.nameMaxLenMsg'),
+			'synopsis.max' => config('validation.newGame.synopsisMaxLenMsg'),
+			'title.max'    => config('validation.newGame.titleMaxLenMsg'),
+			'author.max'   => config('validation.newGame.authorMaxLenMsg')
+		]);
 
 		if ($validator->fails()) {
 			return response()->json([

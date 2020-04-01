@@ -31,8 +31,8 @@
 				<v-form ref="form" v-else>
 
 					<v-text-field
-						v-model="form.name"
-						:counter="50"
+						v-model.trim="form.name"
+						:counter="nameMaxLen"
 						:rules="form.validation.name"
 						label="Name"
 						required
@@ -40,33 +40,35 @@
 					></v-text-field>
 
 					<v-select
-						:items="definitions.data"
 						v-model="form.definition"
+						:items="definitions.data"
+						:rules="form.validation.definition"
 						label="Definition"
+						required
 						outlined
 					/>
 
 					<v-text-field
-						v-model="form.title"
-						:counter="100"
+						v-model.trim="form.title"
+						:counter="titleMaxLen"
 						:rules="form.validation.title"
 						label="Title"
 						outlined
 					/>
 
 					<v-text-field
-						v-model="form.author"
-						:counter="100"
+						v-model.trim="form.author"
+						:counter="authorMaxLen"
 						:rules="form.validation.author"
 						label="Author"
 						outlined
 					/>
 
 					<v-textarea
-						label="Synopsis"
-						v-model="form.synopsis"
-						:counter="1024"
+						v-model.trim="form.synopsis"
+						:counter="synopsisMaxLen"
 						:rules="form.validation.synopsis"
+						label="Synopsis"
 						outlined
 					/>
 
@@ -96,6 +98,7 @@
 				text
 				:disabled="definitions.error || definitions.loading ? true : false"
 				color="primary"
+				@click="submit()"
 			>
 				Finish
 			</v-btn>
@@ -119,6 +122,19 @@
 
 	export default {
 
+		computed: {
+
+			nameMaxLen: function () {return window.nameMaxLen;},
+			titleMaxLen: function () {return window.titleMaxLen;},
+			authorMaxLen: function () {return window.authorMaxLen;},
+			synopsisMaxLen: function () {return window.synopsisMaxLen;},
+
+			nameMaxLenMsg: function () {return window.nameMaxLenMsg;},
+			titleMaxLenMsg: function () {return window.titleMaxLenMsg;},
+			authorMaxLenMsg: function () {return window.authorMaxLenMsg;},
+			synopsisMaxLenMsg: function () {return window.synopsisMaxLenMsg;}
+		},
+
 		mounted: function () {
 
 			this.loadDefinitions();
@@ -140,10 +156,27 @@
 
 					// Validation rules for the form fields above
 					validation: {
-						name: null, // TODO
-						title: null, // TODO
-						author: null, // TODO
-						synopsis: null
+
+						name: [
+							v => !!v || "You must give the game a name",
+							v => (v || '').length <= this.nameMaxLen || this.nameMaxLenMsg
+						],
+
+						definition: [
+							v => !!v || 'You must choose a game definition',
+						],
+
+						title:[
+							v => (v || '').length <= this.titleMaxLen || this.titleMaxLenMsg
+						],
+
+						author: [
+							v => (v || '').length <= this.authorMaxLen || this.authorMaxLenMsg
+						],
+
+						synopsis: [
+							v => (v || '').length <= this.synopsisMaxLen || this.synopsisMaxLenMsg
+						]
 					}
 				},
 
@@ -197,6 +230,30 @@
 					.finally(() => {
 						self.definitions.loading = false;
 					});
+			},
+
+
+			submit: function () {
+
+				let self = this;
+
+				if (!this.$refs.form.validate()) {
+					return false;
+				}
+
+				let data = {
+					name: this.form.name,
+					definition: this.form.definition
+				};
+
+				['title', 'author', 'synopsis'].forEach(function(field) {
+					if (field.length) {
+						data[field] = self.form[field];
+					}
+				});
+
+				axios.post('/admin/api/games', data);
+				// TODO
 			}
 		}
 	};

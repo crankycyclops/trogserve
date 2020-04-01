@@ -27,6 +27,17 @@
 			window.lastLoginIp = <?= Auth::user() && Auth::user()->last_login_ip ?
 				'"' . Auth::user()->last_login_ip . '"' : 'null' ?>;
 
+			// Used for validation
+			window.nameMaxLen = {{ config('validation.newGame.nameMaxLen') }};
+			window.titleMaxLen = {{ config('validation.newGame.titleMaxLen') }};
+			window.authorMaxLen = {{ config('validation.newGame.authorMaxLen') }};
+			window.synopsisMaxLen = {{ config('validation.newGame.synopsisMaxLen') }};
+
+			window.nameMaxLenMsg = "<?= config('validation.newGame.nameMaxLenMsg') ?>";
+			window.titleMaxLenMsg = "<?= config('validation.newGame.titleMaxLenMsg') ?>";
+			window.authorMaxLenMsg = "<?= config('validation.newGame.authorMaxLenMsg') ?>";
+			window.synopsisMaxLenMsg = "<?= config('validation.newGame.synopsisMaxLenMsg') ?>";
+
 		</script>
 
 	</head>
