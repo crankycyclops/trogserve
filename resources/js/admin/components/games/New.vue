@@ -28,13 +28,52 @@
 				</v-row>
 
 				<!-- Successfully retrieved definitions, so we can go ahead and create the game -->
-				<v-form v-else>
+				<v-form ref="form" v-else>
+
+					<v-text-field
+						v-model="form.name"
+						:counter="50"
+						:rules="form.validation.name"
+						label="Name"
+						required
+						outlined
+					></v-text-field>
 
 					<v-select
 						:items="definitions.data"
 						v-model="form.definition"
 						label="Definition"
 						outlined
+					/>
+
+					<v-text-field
+						v-model="form.title"
+						:counter="100"
+						:rules="form.validation.title"
+						label="Title"
+						outlined
+					/>
+
+					<v-text-field
+						v-model="form.author"
+						:counter="100"
+						:rules="form.validation.author"
+						label="Author"
+						outlined
+					/>
+
+					<v-textarea
+						label="Synopsis"
+						v-model="form.synopsis"
+						:counter="1024"
+						:rules="form.validation.synopsis"
+						outlined
+					/>
+
+					<v-switch
+						v-model="form.autostart"
+						class="ma-1"
+						label="Autostart the game"
 					/>
 
 				</v-form>
@@ -89,10 +128,23 @@
 
 			return {
 
-				// Controls the form data above
 				form: {
 
-					definition: null
+					// Corresponds to form values above
+					name: null,
+					definition: null,
+					title: null,
+					author: null,
+					synopsis: null,
+					autostart: null,
+
+					// Validation rules for the form fields above
+					validation: {
+						name: null, // TODO
+						title: null, // TODO
+						author: null, // TODO
+						synopsis: null
+					}
 				},
 
 				definitions: {
