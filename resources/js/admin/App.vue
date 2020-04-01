@@ -78,10 +78,18 @@
 
 			<v-container fluid>
 
+				<v-row align="center" justify="center" :style="!$store.state.error ? 'display: none;' : ''">
+					<v-col cols="12" md="11">
+						<span class="error">{{ $store.state.error }}</span>
+					</v-col>
+				</v-row>
+
 				<v-row align="center" justify="center">
 
 					<v-col cols="12" md="11">
-						<router-view></router-view>
+
+						<router-view @navigate="navigate" />
+
 					</v-col>
 
 				</v-row>
@@ -103,6 +111,7 @@
 	export default {
 
 		computed: {
+
 			// This is how I suck data in from Laravel
 			title: function () {return window.title;},
 			username: function () {return window.username}
@@ -144,10 +153,14 @@
 				return route == this.$route.path ? true : false;
 			},
 
-			// Navigate to the specified route (if we aren't already there)
+			// Navigate to the specified route (if we aren't already there.)
+			// If you have an error message you need to display at the top of
+			// the page, do not use this method. Instead, call
+			// this.$router.push() directly.
 			navigate: function (route) {
 
 				if (!this.isLinkToSelf(route)) {
+					this.$store.commit('setError', null);
 					this.$router.push(route);
 				}
 			}

@@ -23,7 +23,7 @@
 				<!-- API call failed -->
 				<v-row align="center" justify="start" v-if="definitions.error">
 					<v-col cols="12">
-						<span class="error">An error occurred: {{ definitions.error }}</span>
+						<span class="error">{{ definitions.error }}</span>
 					</v-col>
 				</v-row>
 
@@ -111,7 +111,7 @@
 				text
 				:disabled="form.submitting"
 				color="primary"
-				@click="$router.push('/admin/games')"
+				@click="$emit('navigate', '/admin/games')"
 			>
 				Go Back
 			</v-btn>
@@ -291,7 +291,7 @@
 					// form and view the game's admin console.
 					.then(response => {
 						self.reset();
-						self.$router.push('/admin/games/' + response.data.id);
+						self.$emit('navigate', '/admin/games/' + response.data.id);
 					})
 
 					.catch(error => {

@@ -28,6 +28,7 @@ window.Vue = require('vue');
  */
 import Vuetify from 'vuetify';
 import VueRouter from 'vue-router';
+import Vuex from 'vuex';
 
 import App from './App.vue';
 
@@ -38,6 +39,7 @@ import DisplayGame from './components/games/Game.vue';
 
 Vue.use(Vuetify);
 Vue.use(VueRouter);
+Vue.use(Vuex);
 
 const app = new Vue({
 
@@ -83,6 +85,27 @@ const app = new Vue({
 				component: DisplayGame
 			}
 		]
+	}),
+
+	store: new Vuex.Store({
+
+		state: {
+
+			// If set, we should display this error message at the top of the
+			// admin panel.
+			error: null
+		},
+
+		mutations: {
+
+			// Sets the error to display at the top of the admin panel.
+			setError: function (state, payload) {
+				state.error = payload;
+			}
+		},
+
+		getters: {},
+		actions: {}
 	}),
 
 	components: {

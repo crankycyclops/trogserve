@@ -23,7 +23,7 @@
 				<!-- API call failed -->
 				<v-row align="center" justify="start" v-if="games.error">
 					<v-col cols="12">
-						<span class="error">Error fetching games: {{ games.error }}</span>
+						<span class="error">{{ games.error }}</span>
 					</v-col>
 				</v-row>
 
@@ -76,7 +76,7 @@
 					text
 					color="primary"
 					:disabled="games.error ? true : false"
-					@click="$router.push('/admin/games/new');"
+					@click="$emit('navigate', '/admin/games/new');"
 				>
 					Create Game
 				</v-btn>
@@ -164,7 +164,7 @@
 			// View the specified game's admin console
 			viewGame: function (id) {
 
-				this.$router.push('/admin/games/' + id);
+				this.$emit('navigate', '/admin/games/' + id);
 			},
 
 			// Loads list of games via the API.
