@@ -22,20 +22,16 @@
 
 				<!-- API call failed -->
 				<v-row align="center" justify="start" v-if="games.error">
-
 					<v-col cols="12">
 						<span class="error">Error fetching games: {{ games.error }}</span>
 					</v-col>
-
 				</v-row>
 
 				<!-- Call was successful, but there are no games -->
 				<v-row align="center" justify="start" v-else-if="!games.data.length">
-
 					<v-col cols="12">
 						No games have been created.
 					</v-col>
-
 				</v-row>
 
 				<!-- Clickable list of games -->
