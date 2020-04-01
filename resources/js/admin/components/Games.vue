@@ -39,7 +39,10 @@
 
 					<template v-for="(game, index) in games.data">
 
-						<v-list-item link :key="game.name">
+						<v-list-item
+							link
+							:key="game.name"
+							@click="viewGame(game.id)">
 
 							<v-list-item-content>
 
@@ -156,6 +159,12 @@
 			getGameByLine(game) {
 
 				return game.author ? 'By ' + game.author : '';
+			},
+
+			// View the specified game's admin console
+			viewGame: function (id) {
+
+				this.$router.push('/admin/games/' + id);
 			},
 
 			// Loads list of games via the API.

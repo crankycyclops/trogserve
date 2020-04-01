@@ -34,6 +34,7 @@ import App from './App.vue';
 import Statistics from './components/Statistics.vue';
 import Games from './components/Games.vue';
 import NewGame from './components/games/New.vue';
+import DisplayGame from './components/games/Game.vue';
 
 Vue.use(Vuetify);
 Vue.use(VueRouter);
@@ -74,6 +75,12 @@ const app = new Vue({
 				path: '/admin/games/new',
 				name: 'newGame',
 				component: NewGame
+			},
+
+			{
+				path: '/admin/games/:id(\\d+)',
+				name: 'displayGame',
+				component: DisplayGame
 			}
 		]
 	}),
