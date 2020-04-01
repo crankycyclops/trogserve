@@ -30,7 +30,7 @@
 				<!-- Call was successful, but there are no games -->
 				<v-row align="center" justify="start" v-else-if="!games.data.length">
 					<v-col cols="12">
-						No games have been created.
+						No games have been created yet.
 					</v-col>
 				</v-row>
 
