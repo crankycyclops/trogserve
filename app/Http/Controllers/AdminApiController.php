@@ -116,12 +116,12 @@ class AdminApiController extends Controller {
 		$meta = $game->getMeta(['title', 'author', 'synopsis']);
 
 		return response()->json([
-			'id'       => $game->id,
-			'name'     => $game->name,
-			'title'    => $meta['title'],
-			'author'   => $meta['author'],
-			'synopsis' => $meta['synopsis']
-			// TODO: add current game time and whether or not game is started
+			'id'        => $game->id,
+			'name'      => $game->name,
+			'title'     => $meta['title'],
+			'author'    => $meta['author'],
+			'synopsis'  => $meta['synopsis'],
+			'isRunning' => $game->isRunning()
 		]);
 	}
 

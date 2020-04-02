@@ -104,7 +104,8 @@
 						definition: null,
 						title: null,
 						author: null,
-						synopsis: null
+						synopsis: null,
+						isRunning: null
 					}
 				}
 			};
@@ -132,7 +133,7 @@
 						this.game.data.title = response.data.title;
 						this.game.data.author = response.data.author;
 						this.game.data.synopsis = response.data.synopsis;
-						// TODO: get running status
+						this.game.data.isRunning = response.data.isRunning;
 					})
 
 					// We can't load the game, so return to the games list
