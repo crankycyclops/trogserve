@@ -31,7 +31,6 @@
 			<v-card-text>
 
 				<!-- Provide an interface for the user to edit basic game details -->
-				<!-- TODO: change definitionList prop to name of actual definition (don't include whole list, since we don't need a request for something that will never change) -->
 				<v-row align="center" justify="start" v-if="form.show">
 					<v-col cols="12">
 						<game-form
@@ -40,7 +39,7 @@
 							:title.sync="form.values.title"
 							:author.sync="form.values.author"
 							:synopsis.sync="form.values.synopsis"
-							:definitionList="['game.xml']"
+							:definitionList="[game.data.definition]"
 							:submitting="form.submitting"
 						/>
 					</v-col>
@@ -189,12 +188,18 @@
 
 					// Game's data that we've loaded via API call
 					data: {
+
 						name: null,
 						definition: null,
 						title: null,
 						author: null,
 						synopsis: null,
-						isRunning: null
+						isRunning: null,
+
+						// Statistical information associated with the game
+						statistics: {
+							numPlayers: null
+						}
 					}
 				}
 			};
@@ -227,11 +232,13 @@
 
 						// Update the game data
 						self.game.data.name = response.data.name;
-						self.game.data.definition = 'game.xml'; // TODO: set this to response.data.definition
+						self.game.data.definition = response.data.definition;
 						self.game.data.title = response.data.title;
 						self.game.data.author = response.data.author;
 						self.game.data.synopsis = response.data.synopsis;
-						self.game.data.isRunning = response.data.isRunning;
+						self.game.data.isRunning = response.data.statistics.isRunning;
+
+						self.game.data.statistics.numPlayers = response.data.statistics.numPlayers;
 
 						// Update the form data (which might be out of
 						// sync with the game data if we're updating any

@@ -57,9 +57,14 @@
 
 				<v-row align="center" justify="start" v-else>
 
-					<v-col cols="12">
+					<v-col cols="12" md="6">
 						<strong>Trogdord status:</strong>
 						<span class="success">Online</span>
+					</v-col>
+
+					<v-col cols="12" md="6">
+						<strong>Total players:</strong>
+						{{ statistics.players }}
 					</v-col>
 
 					<v-col cols="12" md="6">
@@ -127,7 +132,10 @@
 
 					// The version of libtrogdor that the current instance
 					// of trogdord was compiled against
-					libtrogdorVersion: null
+					libtrogdorVersion: null,
+
+					// The total number of players in all games
+					players: null
 				}
 			};
 		},
@@ -155,6 +163,8 @@
 							response.data.lib_version.major + '.' +
 							response.data.lib_version.minor + '.' +
 							response.data.lib_version.patch;
+
+						self.statistics.players = response.data.players;
 					})
 
 					.catch(error => {
