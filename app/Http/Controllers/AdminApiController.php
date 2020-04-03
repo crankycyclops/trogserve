@@ -201,10 +201,11 @@ class AdminApiController extends Controller {
 
 		$game = $this->trogdord->getGame($id);
 
-		// Danger, Will Robinson! This can be dangerous as this data is
-		// unsanitized. Be careful with this, and if I choose to expose this
-		// API to the public, I need to figure out how this data should be
-		// cleaned up and do it prior to setting it.
+		// *** Danger, Will Robinson! This can be dangerous as this data is
+		// unsanitized. This is okay for now, as I'm only using it in the
+		// admin panel, but if I ever call this through a public facing front
+		// end, I'll need to figure out exactly how this data should be
+		// sanitized and do that before setting it.
 		$game->setMeta($this->request->post());
 		return response()->json([], 204);
 	}
