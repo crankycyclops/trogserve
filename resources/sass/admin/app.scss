@@ -13,6 +13,17 @@
 	line-height: 1.6;
 	color: $primary-color;
 
+	footer {
+
+		font-family: $heading-font;
+		font-size: 12px;
+
+		// Saves us on really old displays like the original iPhone
+		@media screen and (max-width: 327px) {
+			font-size: 8px;
+		}
+	}
+
 	h1, h2, h3, .v-toolbar__title {
 		font-family: $heading-font;
 		font-weight: 400;

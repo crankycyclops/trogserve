@@ -2,10 +2,10 @@
 
 	<v-card flat>
 
-		<v-card-title>Players</v-card-title>
+		<v-card-title>Statistics</v-card-title>
 
 		<v-card-subtitle>
-			Manage players in the game.
+			Various per-game statistics.
 		</v-card-subtitle>
 
 		<v-card-text>

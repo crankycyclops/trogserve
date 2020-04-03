@@ -19,10 +19,10 @@
 
 		</template>
 
-		<!-- Display details of loaded game -->
+		<!-- Display card for loaded game -->
 		<template v-else>
 
-			<v-tabs :vertical="!isMobile">
+			<v-tabs :show-arrows="isMobile" :vertical="!isMobile">
 
 				<v-tab>
 					<v-icon left>videogame_asset</v-icon>
@@ -39,133 +39,32 @@
 					Players
 				</v-tab>
 
+				<!-- Details -->
 				<v-tab-item>
 
-					<v-card flat>
-
-						<v-card-title>{{ form.show ? 'Edit Details' : getGameTitleStr }}</v-card-title>
-
-						<v-card-subtitle>
-							{{ form.show ? 'Change basic details such as the game\'s title and author.' : getGameByLine }}
-						</v-card-subtitle>
-
-						<v-card-text>
-
-							<!-- Provide an interface for the user to edit basic game details -->
-							<v-row align="center" justify="start" v-if="form.show">
-								<v-col cols="12">
-									<game-form
-										:name="game.data.name"
-										:definition="game.data.definition"
-										:title.sync="form.values.title"
-										:author.sync="form.values.author"
-										:synopsis.sync="form.values.synopsis"
-										:definitionList="[game.data.definition]"
-										:submitting="form.submitting"
-									/>
-								</v-col>
-							</v-row>
-
-							<!-- Display details and stats about the game -->
-							<template v-else>
-
-								<v-row align="center" justify="start" v-if="game.data.synopsis ? true : false">
-									<v-col cols="12">
-										{{ game.data.synopsis }}
-									</v-col>
-								</v-row>
-
-								<v-row align="center" justify="start">
-									<v-col cols="12">
-										TODO: statistics about players and other game-specific stuff
-									</v-col>
-								</v-row>
-
-							</template>
-
-						</v-card-text>
-
-						<v-card-actions>
-
-							<template v-if="form.show">
-
-								<v-btn
-									text
-									color="primary"
-									@click="cancelEditDetails()"
-								>
-									Cancel
-								</v-btn>
-
-								<v-btn
-									text
-									color="primary"
-									@click="submitDetails()"
-								>
-									Finish
-								</v-btn>
-
-							</template>
-
-							<template v-else>
-
-								<v-btn
-									text
-									color="primary"
-									@click="editDetails()"
-								>
-									Edit
-								</v-btn>
-
-								<v-btn
-									text
-									color="error"
-									@click="destroy()"
-								>
-									Destroy
-								</v-btn>
-
-							</template>
-
-						</v-card-actions>
-
-					</v-card>
+					<game-details ref="details"
+						:loaded="!game.loading"
+						:name="game.data.name"
+						:definition="game.data.definition"
+						:title="game.data.title"
+						:author="game.data.author"
+						:synopsis="game.data.synopsis"
+						:isRunning="game.data.isRunning"
+					/>
 
 				</v-tab-item>
 
+				<!-- Statistics -->
 				<v-tab-item>
 
-					<v-card flat>
-
-						<v-card-title>Statistics</v-card-title>
-
-						<v-card-subtitle>
-							Various per-game statistics.
-						</v-card-subtitle>
-
-						<v-card-text>
-							TODO
-						</v-card-text>
-
-					</v-card>
+					<game-statistics />
 
 				</v-tab-item>
 
+				<!-- Players -->
 				<v-tab-item>
 
-					<v-card flat>
-
-						<v-card-title>Players</v-card-title>
-
-						<v-card-subtitle>
-							Manage players in the game.
-						</v-card-subtitle>
-
-						<v-card-text>
-							TODO
-						</v-card-text>
-
-					</v-card>
+					<game-players />
 
 				</v-tab-item>
 
@@ -190,7 +89,9 @@
 
 <script>
 
-	import GameForm from '../forms/Game.vue';
+	import Details from './tabs/Details.vue';
+	import Statistics from './tabs/Statistics.vue';
+	import Players from './tabs/Players.vue';
 
 	export default {
 
@@ -284,14 +185,6 @@
 			// API error messages that are all lowercase.)
 			capitalize: string => string.charAt(0).toUpperCase() + string.substring(1),
 
-			// Resets the form to reflect the values associated with the game
-			resetForm: function () {
-
-				this.form.values.title = this.game.data.title;
-				this.form.values.author = this.game.data.author;
-				this.form.values.synopsis = this.game.data.synopsis;
-			},
-
 			// Load the specified game
 			loadGame: function () {
 
@@ -313,11 +206,6 @@
 						self.game.data.isRunning = response.data.statistics.isRunning;
 
 						self.game.data.statistics.numPlayers = response.data.statistics.numPlayers;
-
-						// Update the form data (which might be out of
-						// sync with the game data if we're updating any
-						// fields.)
-						self.resetForm();
 					})
 
 					// We can't load the game, so return to the games list
@@ -339,44 +227,13 @@
 					.finally(() => {
 						self.game.loading = false;
 					});
-			},
-
-			// Destroy the game
-			destroy: function () {
-
-				// TODO: replace with dialog and actually destroy
-				alert('Are you sure you want to destroy this game? This action is permanent and cannot be undone.');
-				this.$emit('navigate', '/admin/games');
-			},
-
-			// Provide an interface for the user to edit the game's details
-			editDetails: function () {
-
-				this.form.show = true;
-			},
-
-			// Submit updated game details
-			submitDetails: function () {
-
-				// TODO: after update, change details saved in game.data!
-				this.form.show = false;
-			},
-
-			cancelEditDetails: function () {
-
-				this.resetForm();
-				this.form.show = false;
-			},
-
-			// Start or stop the game
-			toggleStart: function () {
-
-				alert('TODO: toggle start');
 			}
 		},
 
 		components: {
-			'game-form': GameForm
+			'game-details': Details,
+			'game-statistics': Statistics,
+			'game-players': Players
 		}
 	};
 
