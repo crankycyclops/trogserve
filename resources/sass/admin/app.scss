@@ -1,7 +1,7 @@
 // Variables
 @import 'variables';
 @import 'node_modules/material-design-icons-iconfont/dist/material-design-icons';
-@import url('https://fonts.googleapis.com/css?family=Dosis:200|Inconsolata:400|Roboto:300,400&display=swap&subset=latin-ext');
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P:400|Inconsolata:400|Roboto:300,400&display=swap&subset=latin-ext');
 
 #trogserve {
 
@@ -12,7 +12,7 @@
 
 	h1, h2, h3, .v-toolbar__title {
 		font-family: $heading-font;
-		font-weight: 200;
+		font-weight: 400;
 		color: $heading-color;
 	}
 
@@ -42,12 +42,20 @@
 	// Once again, Vuetify makes bad decisions and forces me to use !important
 	.v-navigation-drawer .v-list-item__title.title {
 		font-family: $heading-font !important;
-		font-weight: 200;
+		font-size: 1rem !important;
+		font-weight: 400;
 		color: $white;
 	}
 
 	.v-toolbar__title {
-		font-size: 2.0rem;
+
+		@media #{$desktop} {
+			font-size: 24px;
+		}
+	
+		@media #{$mobile} {
+			font-size: 16px;
+		}
 	}
 
 	.v-card__subtitle, .v-card__text {

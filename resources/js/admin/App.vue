@@ -2,7 +2,7 @@
 
 	<v-app id="trogserve">
 
-		<v-navigation-drawer
+		<v-navigation-drawer id="navigation"
 			v-model="navDrawer.open"
 			:permanent="false"
 			:temporary="false"
