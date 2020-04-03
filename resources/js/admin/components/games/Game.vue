@@ -1,6 +1,6 @@
 <template>
 
-	<v-card>
+	<v-card id="game">
 
 		<!-- Loading progress -->
 		<template v-if="game.loading">
@@ -22,105 +22,171 @@
 		<!-- Display details of loaded game -->
 		<template v-else>
 
-			<v-card-title>{{ form.show ? 'Edit Details' : getGameTitleStr }}</v-card-title>
+			<v-tabs :vertical="!isMobile">
 
-			<v-card-subtitle>
-				{{ form.show ? 'Change basic details such as the game\'s title and author.' : getGameByLine }}
-			</v-card-subtitle>
+				<v-tab>
+					<v-icon left>videogame_asset</v-icon>
+					Details
+				</v-tab>
 
-			<v-card-text>
+				<v-tab>
+					<v-icon left>bar_chart</v-icon>
+					Statistics
+				</v-tab>
 
-				<!-- Provide an interface for the user to edit basic game details -->
-				<v-row align="center" justify="start" v-if="form.show">
-					<v-col cols="12">
-						<game-form
-							:name="game.data.name"
-							:definition="game.data.definition"
-							:title.sync="form.values.title"
-							:author.sync="form.values.author"
-							:synopsis.sync="form.values.synopsis"
-							:definitionList="[game.data.definition]"
-							:submitting="form.submitting"
-						/>
-					</v-col>
-				</v-row>
+				<v-tab>
+					<v-icon left>people</v-icon>
+					Players
+				</v-tab>
 
-				<!-- Display details and stats about the game -->
-				<template v-else>
+				<v-tab-item>
 
-					<v-row align="center" justify="start" v-if="game.data.synopsis ? true : false">
-						<v-col cols="12">
-							{{ game.data.synopsis }}
-						</v-col>
-					</v-row>
+					<v-card flat>
 
-					<v-row align="center" justify="start">
-						<v-col cols="12">
-							TODO: statistics about players and other game-specific stuff
-						</v-col>
-					</v-row>
+						<v-card-title>{{ form.show ? 'Edit Details' : getGameTitleStr }}</v-card-title>
 
-				</template>
+						<v-card-subtitle>
+							{{ form.show ? 'Change basic details such as the game\'s title and author.' : getGameByLine }}
+						</v-card-subtitle>
 
-			</v-card-text>
+						<v-card-text>
 
-			<v-card-actions>
+							<!-- Provide an interface for the user to edit basic game details -->
+							<v-row align="center" justify="start" v-if="form.show">
+								<v-col cols="12">
+									<game-form
+										:name="game.data.name"
+										:definition="game.data.definition"
+										:title.sync="form.values.title"
+										:author.sync="form.values.author"
+										:synopsis.sync="form.values.synopsis"
+										:definitionList="[game.data.definition]"
+										:submitting="form.submitting"
+									/>
+								</v-col>
+							</v-row>
 
-				<template v-if="form.show">
+							<!-- Display details and stats about the game -->
+							<template v-else>
 
-					<v-btn
-						text
-						color="primary"
-						@click="cancelEditDetails()"
-					>
-						Cancel
-					</v-btn>
+								<v-row align="center" justify="start" v-if="game.data.synopsis ? true : false">
+									<v-col cols="12">
+										{{ game.data.synopsis }}
+									</v-col>
+								</v-row>
 
-					<v-btn
-						text
-						color="primary"
-						@click="submitDetails()"
-					>
-						Finish
-					</v-btn>
+								<v-row align="center" justify="start">
+									<v-col cols="12">
+										TODO: statistics about players and other game-specific stuff
+									</v-col>
+								</v-row>
 
-				</template>
+							</template>
 
-				<template v-else>
+						</v-card-text>
 
-					<v-btn
-						text
-						color="primary"
-						@click="$emit('navigate', '/admin/games')"
-					>
-						Go Back
-					</v-btn>
+						<v-card-actions>
 
-					<v-btn
-						text
-						color="primary"
-						@click="editDetails()"
-					>
-						Edit Details
-					</v-btn>
+							<template v-if="form.show">
 
-					<v-btn
-						text
-						color="error"
-						@click="destroy()"
-					>
-						Destroy Game
-					</v-btn>
+								<v-btn
+									text
+									color="primary"
+									@click="cancelEditDetails()"
+								>
+									Cancel
+								</v-btn>
 
-				</template>
+								<v-btn
+									text
+									color="primary"
+									@click="submitDetails()"
+								>
+									Finish
+								</v-btn>
 
-			</v-card-actions>
+							</template>
+
+							<template v-else>
+
+								<v-btn
+									text
+									color="primary"
+									@click="editDetails()"
+								>
+									Edit
+								</v-btn>
+
+								<v-btn
+									text
+									color="error"
+									@click="destroy()"
+								>
+									Destroy
+								</v-btn>
+
+							</template>
+
+						</v-card-actions>
+
+					</v-card>
+
+				</v-tab-item>
+
+				<v-tab-item>
+
+					<v-card flat>
+
+						<v-card-title>Statistics</v-card-title>
+
+						<v-card-subtitle>
+							Various per-game statistics.
+						</v-card-subtitle>
+
+						<v-card-text>
+							TODO
+						</v-card-text>
+
+					</v-card>
+
+				</v-tab-item>
+
+				<v-tab-item>
+
+					<v-card flat>
+
+						<v-card-title>Players</v-card-title>
+
+						<v-card-subtitle>
+							Manage players in the game.
+						</v-card-subtitle>
+
+						<v-card-text>
+							TODO
+						</v-card-text>
+
+					</v-card>
+
+				</v-tab-item>
+
+			</v-tabs>
 
 		</template>
 
 	</v-card>
 
 </template>
+
+<style scoped>
+
+@media only screen and (min-width: 1264px) {
+
+	#game .v-tab {
+		padding: 0 36px 0 20px;
+	}
+}
+
+</style>
 
 <script>
 
@@ -134,6 +200,12 @@
 		},
 
 		computed: {
+
+			// Returns true if we're on a mobile display
+			isMobile() {
+
+				return this.$vuetify.breakpoint.mdAndDown;
+			},
 
 			getGameTitleStr: function () {
 				return this.game.data.title ?
@@ -189,6 +261,7 @@
 					// Game's data that we've loaded via API call
 					data: {
 
+						id: null,
 						name: null,
 						definition: null,
 						title: null,
@@ -231,6 +304,7 @@
 					.then(response => {
 
 						// Update the game data
+						self.game.data.id = response.data.id;
 						self.game.data.name = response.data.name;
 						self.game.data.definition = response.data.definition;
 						self.game.data.title = response.data.title;

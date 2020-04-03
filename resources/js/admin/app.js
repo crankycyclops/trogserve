@@ -47,9 +47,12 @@ const app = new Vue({
 	render: h => h(App),
 
 	vuetify: new Vuetify({
+
 		theme: {
 			dark: true,
 		},
+
+		// https://jossef.github.io/material-design-icons-iconfont/
 		icons: {
 			iconfont: 'md'
 		}

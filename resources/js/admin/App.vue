@@ -51,7 +51,8 @@
 				<v-list-item link href="/admin/logout">
 
 					<v-list-item-icon>
-						<v-icon dark>exit_to_app</v-icon>
+<!--						<v-icon dark>exit_to_app</v-icon> -->
+						<v-icon dark>logout</v-icon>
 					</v-list-item-icon>
 
 					<v-list-item-content>

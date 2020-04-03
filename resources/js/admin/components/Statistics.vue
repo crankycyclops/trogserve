@@ -55,39 +55,52 @@
 
 				</v-row>
 
-				<v-row align="center" justify="start" v-else>
+				<template v-else>
 
-					<v-col cols="12" md="6">
-						<strong>Trogdord status:</strong>
-						<span class="success">Online</span>
-					</v-col>
+					<v-row align="center" justify="start">
 
-					<v-col cols="12" md="6">
-						<strong>Total players:</strong>
-						{{ statistics.players }}
-					</v-col>
+						<v-col cols="12">
+							<strong>Trogdord status:</strong>
+							<span class="success">Online</span>
+						</v-col>
 
-					<v-col cols="12" md="6">
-						<strong>PHP version:</strong>
-						{{ phpVersion }}
-					</v-col>
+					</v-row>
 
-					<v-col cols="12" md="6">
-						<strong>Extension version:</strong>
-						{{ extVersion }}
-					</v-col>
+					<v-row align="center" justify="start">
 
-					<v-col cols="12" md="6">
-						<strong>Trogdord version:</strong>
-						{{ statistics.trogdordVersion }}
-					</v-col>
+						<v-col cols="12" md="6">
+							<strong>Total games:</strong>
+							{{ statistics.games }}
+						</v-col>
 
-					<v-col cols="12" md="6">
-						<strong>Libtrogdor version:</strong>
-						{{ statistics.libtrogdorVersion }}
-					</v-col>
+						<v-col cols="12" md="6">
+							<strong>Total players:</strong>
+							{{ statistics.players }}
+						</v-col>
 
-				</v-row>
+						<v-col cols="12" md="6">
+							<strong>PHP version:</strong>
+							{{ phpVersion }}
+						</v-col>
+
+						<v-col cols="12" md="6">
+							<strong>Extension version:</strong>
+							{{ extVersion }}
+						</v-col>
+
+						<v-col cols="12" md="6">
+							<strong>Trogdord version:</strong>
+							{{ statistics.trogdordVersion }}
+						</v-col>
+
+						<v-col cols="12" md="6">
+							<strong>Libtrogdor version:</strong>
+							{{ statistics.libtrogdorVersion }}
+						</v-col>
+
+					</v-row>
+
+				</template>
 
 			</div>
 
@@ -133,6 +146,9 @@
 					// The version of libtrogdor that the current instance
 					// of trogdord was compiled against
 					libtrogdorVersion: null,
+
+					// The total number of games running in trogdord
+					games: 'TODO',
 
 					// The total number of players in all games
 					players: null

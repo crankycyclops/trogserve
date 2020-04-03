@@ -1,6 +1,9 @@
 @import "node_modules/reset-css/reset";
 @import url('https://fonts.googleapis.com/css?family=Press+Start+2P:400|Inconsolata:400|Roboto:300,400&display=swap&subset=latin-ext');
 
+// Replace the above import with this one (but I have to figure out why webpack inserts a line break in the middle of the url)
+// @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P:wght@400&family=Inconsolata:wght@400;700&family=Roboto:wght@300;400&display=swap&subset=latin-ext');
+
 body {
 	min-height: 100vh;
 	padding: 20px;
@@ -28,17 +31,17 @@ h1 {
 }
 
 .success {
-	color: green;
+	color: #00b300;
 	background: none;
 }
 
 .warning {
-	color: yellow;
+	color: #ffff00;
 	background: none;
 }
 
 .error {
-	color: red;
+	color: #ff0000;
 	background: none;
 }
 
