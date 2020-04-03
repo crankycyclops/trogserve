@@ -81,6 +81,7 @@
 <script>
 
 	import GameForm from '../forms/Game.vue';
+	import RequestMixin from '../../mixins/Request.vue';
 
 	export default {
 
@@ -187,6 +188,10 @@
 					}
 				});
 
+				if (self.form.autostart) {
+					data.autostart = self.form.autostart;
+				}
+
 				this.form.submitting = true;
 
 				axios.post('/admin/api/games', data)
@@ -199,12 +204,7 @@
 					})
 
 					.catch(error => {
-
-						if ('undefined' !== typeof(error.response)) {
-							self.form.error = error.response.data.error;
-						} else {
-							self.form.error = error.message;
-						}
+						self.form.error = self.getResponseError(error);
 					})
 
 					.finally(() => {
@@ -215,7 +215,11 @@
 
 		components: {
 			'game-form': GameForm
-		}
+		},
+
+		mixins: [
+			RequestMixin
+		]
 	};
 
 </script>

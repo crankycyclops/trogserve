@@ -171,6 +171,47 @@ class AdminApiController extends Controller {
 	/*************************************************************************/
 
 	/**
+	 * Gets one or more meta values (blank values indicate the meta value
+	 * doesn't exist.)
+	 *
+	 * @param int $id Game ID
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function getMeta(int $id): \Illuminate\Http\JsonResponse {
+
+		$game = $this->trogdord->getGame($id);
+		$keys = [];
+
+		foreach ($this->request->post() as $key) {
+			$keys[] = $key;
+		}
+
+		return response()->json($game->getMeta($keys));
+	}
+
+	/*************************************************************************/
+
+	/**
+	 * Sets (or updates) one or more meta values.
+	 *
+	 * @param int $id Game ID
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function setMeta(int $id): \Illuminate\Http\JsonResponse {
+
+		$game = $this->trogdord->getGame($id);
+
+		// Danger, Will Robinson! This can be dangerous as this data is
+		// unsanitized. Be careful with this, and if I choose to expose this
+		// API to the public, I need to figure out how this data should be
+		// cleaned up and do it prior to setting it.
+		$game->setMeta($this->request->post());
+		return response()->json([], 204);
+	}
+
+	/*************************************************************************/
+
+	/**
 	 * Return a list of all currently available game definitions (XML files
 	 * that define the properties of and the entities in the game.)
 	 *

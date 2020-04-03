@@ -35,5 +35,11 @@ Route::get('/games/{id}/start', 'AdminApiController@startGame');
 // Stop a game (can be restarted again later.)
 Route::get('/games/{id}/stop', 'AdminApiController@stopGame');
 
+// Returns the requested game meta data
+Route::get('/games/{id}/meta', 'AdminApiController@getMeta');
+
+// Sets the requested game meta data
+Route::post('/games/{id}/meta', 'AdminApiController@setMeta');
+
 // Returns a list of all currently uploaded game definition
 Route::get('/definitions', 'AdminApiController@getDefinitions');

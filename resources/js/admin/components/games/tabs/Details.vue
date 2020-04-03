@@ -10,10 +10,18 @@
 
 		<v-card-text>
 
+			<!-- If submission results in a server side error, it'll be
+				displayed here. -->
+			<v-row align="center" justify="start" v-if="form.error">
+				<v-col cols="12">
+					<span class="error">{{ form.error }}</span>
+				</v-col>
+			</v-row>
+
 			<!-- Provide an interface for the user to edit basic game details -->
 			<v-row align="center" justify="start" v-if="form.show">
 				<v-col cols="12">
-					<game-form
+					<game-form ref="form"
 						:name="name"
 						:definition="definition"
 						:title.sync="form.values.title"
@@ -28,15 +36,9 @@
 			<!-- Display details and stats about the game -->
 			<template v-else>
 
-				<v-row align="center" justify="start" v-if="synopsis ? true : false">
-					<v-col cols="12">
-						{{ synopsis }}
-					</v-col>
-				</v-row>
-
 				<v-row align="center" justify="start">
 					<v-col cols="12">
-						TODO: statistics about players and other game-specific stuff
+						{{ synopsis ? synopsis : '(No synopsis available)' }}
 					</v-col>
 				</v-row>
 
@@ -95,6 +97,7 @@
 <script>
 
 	import GameForm from '../../forms/Game.vue';
+	import RequestMixin from '../../../mixins/Request.vue';
 
 	export default {
 
@@ -171,6 +174,9 @@
 					// is complete (or there's an error.)
 					submitting: false,
 
+					// If an error occurs during submission, set it here
+					error: null,
+
 					// Whether or not to display the form for editing game
 					// meta values
 					show: false,
@@ -222,8 +228,49 @@
 			// Submit updated game details
 			submitDetails: function () {
 
-				// TODO: after update, change details saved in game.data!
-				this.form.show = false;
+				this.form.error = null;
+
+				if (!this.$refs.form.validate()) {
+					return false;
+				}
+
+				let self = this;
+				let data = {};
+
+				['title', 'author', 'synopsis'].forEach(function(field) {
+					if (self[field] !== self.form.values[field]) {
+						data[field] = self.form.values[field];
+					}
+				});
+
+				// Nothing actually needs to be updated, so we don't have to
+				// make a request :)
+				if (!Object.keys(data).length) {
+					self.form.show = false;
+					return;
+				}
+
+				this.form.submitting = true;
+
+				axios.post('/admin/api/games/' + this.$router.currentRoute.params.id + '/meta', data)
+
+					// After successful update, reset the form and hide it.
+					.then(response => {
+						self.$emit('update', {payload: data, callback: function () {
+							self.$nextTick(() => {
+								self.resetForm();
+								self.form.show = false;
+							});
+						}});
+					})
+
+					.catch(error => {
+						self.form.error = self.getResponseError(error);
+					})
+
+					.finally(() => {
+						self.form.submitting = false;
+					});
 			},
 
 			cancelEditDetails: function () {
@@ -235,7 +282,11 @@
 
 		components: {
 			'game-form': GameForm
-		}
+		},
+
+		mixins: [
+			RequestMixin
+		]
 	};
 
 </script>

@@ -25,7 +25,7 @@
 			<v-tabs :show-arrows="isMobile" :vertical="!isMobile">
 
 				<v-tab>
-					<v-icon left>videogame_asset</v-icon>
+					<v-icon left>dvr</v-icon>
 					Details
 				</v-tab>
 
@@ -50,6 +50,7 @@
 						:author="game.data.author"
 						:synopsis="game.data.synopsis"
 						:isRunning="game.data.isRunning"
+						@update="updateGameData"
 					/>
 
 				</v-tab-item>
@@ -78,12 +79,13 @@
 
 <style scoped>
 
-@media only screen and (min-width: 1264px) {
+	@media only screen and (min-width: 1264px) {
 
-	#game .v-tab {
-		padding: 0 36px 0 20px;
+		#game .v-tab {
+			padding: 0 36px 0 20px;
+			justify-content: left;
+		}
 	}
-}
 
 </style>
 
@@ -92,6 +94,8 @@
 	import Details from './tabs/Details.vue';
 	import Statistics from './tabs/Statistics.vue';
 	import Players from './tabs/Players.vue';
+
+	import RequestMixin from '../../mixins/Request.vue';
 
 	export default {
 
@@ -181,9 +185,25 @@
 
 		methods: {
 
-			// Capitalize the first letter of a string (used primarily for
-			// API error messages that are all lowercase.)
-			capitalize: string => string.charAt(0).toUpperCase() + string.substring(1),
+			// Updates the currently loaded game's data
+			updateGameData: function (updated) {
+
+				let self = this;
+
+				Object.keys(updated.payload).forEach(function (field) {
+
+					if ('undefined' !== typeof self.game.data[field]) {
+						self.game.data[field] = updated.payload[field];
+					}
+				});
+
+				// We have a callback to run after the fields have been
+				// updated
+				if (updated.callback) {
+					console.log(self.game.data.synopsis);
+					updated.callback();
+				}
+			},
 
 			// Load the specified game
 			loadGame: function () {
@@ -196,15 +216,10 @@
 
 					.then(response => {
 
-						// Update the game data
-						self.game.data.id = response.data.id;
-						self.game.data.name = response.data.name;
-						self.game.data.definition = response.data.definition;
-						self.game.data.title = response.data.title;
-						self.game.data.author = response.data.author;
-						self.game.data.synopsis = response.data.synopsis;
-						self.game.data.isRunning = response.data.statistics.isRunning;
+						// Update game data
+						self.updateGameData({payload: response.data});
 
+						// Update game statistics
 						self.game.data.statistics.numPlayers = response.data.statistics.numPlayers;
 					})
 
@@ -212,11 +227,7 @@
 					// page with an error message at the top.
 					.catch(error => {
 
-						if ('undefined' !== typeof(error.response)) {
-							self.$store.commit('setError', self.capitalize(error.response.data.error));
-						} else {
-							self.$store.commit('setError', self.capitalize(error.message));
-						}
+						self.$store.commit('setError', this.getResponseError(error));
 
 						// Don't emit a navigation event because that's
 						// going to clear the error message. Instead, use
@@ -234,7 +245,11 @@
 			'game-details': Details,
 			'game-statistics': Statistics,
 			'game-players': Players
-		}
+		},
+
+		mixins: [
+			RequestMixin
+		]
 	};
 
 </script>
