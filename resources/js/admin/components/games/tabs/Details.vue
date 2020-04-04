@@ -74,13 +74,41 @@
 				</v-col>
 			</v-row>
 
-			<!-- Display details and stats about the game -->
 			<template v-else>
 
+				<!-- Details about the game -->
 				<v-row align="center" justify="start">
 					<v-col cols="12">
 						{{ synopsis ? synopsis : '(No synopsis available)' }}
 					</v-col>
+				</v-row>
+
+				<!-- Start or stop the game -->
+				<v-row align="center" justify="start">
+
+					<v-col cols="12">
+
+						<div id="toggleStartDiv">
+							<v-switch
+								:input-value="isRunning"
+								:key="toggleStartData.state"
+								:class="isRunning ? 'started' : 'stopped'"
+								:label="isRunning ? 'Started' : 'Stopped'"
+								:disabled="!toggleStartData.enable"
+								@change="toggleStart"
+							/>
+						</div>
+
+						<div id="toggleStartDesc">
+							{{ isRunning ? toggleStartData.startedDesc : toggleStartData.stoppedDesc }}
+						</div>
+
+					</v-col>
+
+					<v-col cols="12" v-if="toggleStartData.error">
+						<span class="error">{{ toggleStartData.error }}</span>
+					</v-col>
+
 				</v-row>
 
 			</template>
@@ -134,6 +162,22 @@
 	</v-card>
 
 </template>
+
+<style>
+
+	/* I have to use !important because of poor design decisions on Vuetify's
+	part :( */
+	.started label {
+		color: #00b300 !important;
+		margin-left: 9px;
+	}
+
+	.stopped label {
+		color: #ff0000 !important;
+		margin-left: 9px;
+	}
+
+</style>
 
 <script>
 
@@ -209,6 +253,27 @@
 
 				// Toggles the "Destroy Game" confirmation dialog
 				showDestroyDialog: false,
+
+				toggleStartData: {
+
+					// This is how we force the toggle button to re-render
+					// if there's an error during the request to start or
+					// stop the game
+					state: this.isRunning,
+
+					// Disable the start/stop switch during API requests
+					enable: true,
+
+					// The last error that occurred when attempting to start
+					// or stop the game
+					error: null,
+
+					// Description of the started state
+					startedDesc: 'The timer is running and the game is accepting player commands.',
+
+					// Description of the stopped state
+					stoppedDesc: 'The timer is stopped and the game is not accepting player commands.',
+				},
 
 				// These are the bits of game data we can update
 				form: {
@@ -339,10 +404,39 @@
 					});
 			},
 
+			// The user started editing the game's details but decided to cancel
 			cancelEditDetails: function () {
 
 				this.resetForm();
 				this.form.show = false;
+			},
+
+			// Starts and stops the game
+			toggleStart: function (value) {
+
+				let self = this;
+				let uriBase = '/admin/api/games/' + this.$router.currentRoute.params.id;
+
+				this.toggleStartData.error = null;
+				this.toggleStartData.enable = false;
+				this.toggleStartData.state = value;
+
+				axios.get(uriBase + (value ? '/start' : '/stop' ))
+
+					// After successful update, notify the parent to update
+					// the game's statistic
+					.then(response => {
+						self.$emit('update:isRunning', value);
+					})
+
+					.catch(error => {
+						this.toggleStartData.state = this.isRunning;
+						this.toggleStartData.error = this.getResponseError(error);
+					})
+
+					.finally(() => {
+						self.toggleStartData.enable = true;
+					});
 			}
 		},
 

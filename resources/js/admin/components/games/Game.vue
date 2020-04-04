@@ -49,8 +49,9 @@
 						:title="game.data.title"
 						:author="game.data.author"
 						:synopsis="game.data.synopsis"
-						:isRunning="game.data.isRunning"
+						:isRunning="game.data.statistics.is_running"
 						@navigate="navigate"
+						@update:isRunning="updateIsRunning"
 						@update="updateGameData"
 					/>
 
@@ -173,11 +174,11 @@
 						title: null,
 						author: null,
 						synopsis: null,
-						isRunning: null,
 
 						// Statistical information associated with the game
 						statistics: {
-							numPlayers: null
+							is_running: null,
+							players: null
 						}
 					}
 				}
@@ -209,7 +210,6 @@
 				// We have a callback to run after the fields have been
 				// updated
 				if (updated.callback) {
-					console.log(self.game.data.synopsis);
 					updated.callback();
 				}
 			},
@@ -229,7 +229,8 @@
 						self.updateGameData({payload: response.data});
 
 						// Update game statistics
-						self.game.data.statistics.numPlayers = response.data.statistics.numPlayers;
+						self.game.data.statistics.is_running = response.data.statistics.is_running;
+						self.game.data.statistics.players = response.data.statistics.players;
 					})
 
 					// We can't load the game, so return to the games list
@@ -247,6 +248,13 @@
 					.finally(() => {
 						self.game.loading = false;
 					});
+			},
+
+			// Update the is_running statistic after the status is toggled by
+			// the "Game Details" tab
+			updateIsRunning: function (value) {
+
+				this.game.data.statistics.is_running = value;
 			}
 		},
 
