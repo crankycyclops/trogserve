@@ -2,6 +2,47 @@
 
 	<v-card flat>
 
+		<!-- Dialog to confirm deletion of a game -->
+		<v-dialog
+			v-model="showDestroyDialog"
+			overlay-opacity="0.8"
+			max-width="500px"
+			@keydown.esc="cancelDestroy()"
+		>
+
+			<v-card>
+
+				<v-card-title>Destroy Game</v-card-title>
+
+				<v-card-text>
+					Are you <strong>*sure*</strong> you want to destroy this game? This action is permanent and cannot be undone. All entities and players will be lost.
+				</v-card-text>
+
+				<v-card-actions>
+
+					<v-btn
+						text
+						color="primary"
+						@click="cancelDestroy()"
+					>
+						Cancel
+					</v-btn>
+
+					<v-btn
+						text
+						color="error"
+						@click="destroy()"
+					>
+						Destroy Game
+					</v-btn>
+
+				</v-card-actions>
+
+			</v-card>
+
+		</v-dialog>
+
+		<!-- The game details tab contents -->
 		<v-card-title>{{ form.show ? 'Edit Details' : getGameTitleStr }}</v-card-title>
 
 		<v-card-subtitle>
@@ -81,7 +122,7 @@
 				<v-btn
 					text
 					color="error"
-					@click="destroy()"
+					@click="promptDestroy()"
 				>
 					Destroy
 				</v-btn>
@@ -166,6 +207,9 @@
 
 			return {
 
+				// Toggles the "Destroy Game" confirmation dialog
+				showDestroyDialog: false,
+
 				// These are the bits of game data we can update
 				form: {
 
@@ -211,12 +255,34 @@
 				this.form.values.synopsis = this.synopsis;
 			},
 
-			// Destroy the game
+			// Prompts the user for confirmation before destroying the game
+			promptDestroy: function () {
+
+				this.showDestroyDialog = true;
+			},
+
+			// During confirmation, user decided not to destroy the game
+			cancelDestroy: function () {
+
+				this.showDestroyDialog = false;
+			},
+
+			// Call the API to destroy the game
 			destroy: function () {
 
-				// TODO: replace with dialog and actually destroy
-				alert('Are you sure you want to destroy this game? This action is permanent and cannot be undone.');
-				this.$emit('navigate', '/admin/games');
+				let self = this;
+
+				axios.delete('/admin/api/games/' + this.$router.currentRoute.params.id) 
+
+					// After successful update, reset the form and hide it.
+					.then(response => {
+						self.showDestroyDialog = false;
+						self.$emit('navigate', '/admin/games');
+					})
+
+					.catch(error => {
+						self.form.error = self.getResponseError(error);
+					});
 			},
 
 			// Provide an interface for the user to edit the game's details

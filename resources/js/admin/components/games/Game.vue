@@ -50,6 +50,7 @@
 						:author="game.data.author"
 						:synopsis="game.data.synopsis"
 						:isRunning="game.data.isRunning"
+						@navigate="navigate"
 						@update="updateGameData"
 					/>
 
@@ -184,6 +185,14 @@
 		},
 
 		methods: {
+
+			// Because emitted events are only sent to a child's parent and
+			// don't go further up the hierarchy, I have to bubble this event
+			// up. Meh.
+			navigate: function(uri) {
+
+				this.$emit('navigate', uri);
+			},
 
 			// Updates the currently loaded game's data
 			updateGameData: function (updated) {
