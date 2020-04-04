@@ -58,6 +58,7 @@ For frontend session-based authentication (headless API access is also supported
 
 - app/Http/Controllers/Auth/AdminLoginController.php
 - app/Models/Admin.php
+- routes/admin.php
 - config/auth.php
 - resources/views/admin/login.blade.php
 
@@ -70,10 +71,10 @@ For the Vue.js-based admin interface:
 
 And finally, for the build process:
 
-- webpack.mix.js, webpack.app.mix.js, webpack.adminauth.mix.js, and webpack.admin.mix.js (interesting because I had to do a little magic to separate everything out into their own separate bundles)
-- Makefile (you'll notice that in order to separate Vuetify from the main bundle, I had to resort to some Makefile magic that you might find interesting—or which you might find to be ugly, depending on your disposition.)
+- webpack.mix.js, webpack.app.mix.js, webpack.adminauth.mix.js, and webpack.admin.mix.js: interesting because I had to do a little magic to separate everything out into their own separate bundles
+- Makefile: you'll notice that in order to separate Vuetify from the main bundle, I had to resort to some Makefile magic that you might find interesting—or that you might find to be ugly, depending on your disposition ;)
 
-The default page that you'll see if you fire up http://your.domain/ is just the default Laravel page and isn't very interesting yet; all my active development right now is geared toward implementing the admin, as well as going back and fixing/enhancing trogdord to support the extra features that I need to eventually make this a viable platform.
+The default page that you'll see if you fire up http://your.domain/ is just the default Laravel page and isn't very interesting yet; all my active development right now is geared toward implementing the admin (http://your.domain/admin), as well as going back and fixing/enhancing trogdord to support the extra features that I need to eventually make this a viable platform.
 
 If you've never seen the innards of a PHP extension before, you might also find the following link interesting (written in C++17): https://github.com/crankycyclops/trogdor-pp/tree/php7-module/src/php7/trogdord
 
@@ -85,4 +86,6 @@ This project is licensed under the [GPL 3.0](https://www.gnu.org/licenses/gpl-3.
 
 James Colannino (Author)
 
-This entire project, as well as its trogdor-pp, trogdord, and PHP extension dependencies, is my own personal passion project and has been built from the ground up. I loved text adventure games growing up and always wanted to write one. As a child, my lack of programming ability frustrated me. Now, as an adult CS major, this is a bit of personal wish fulfillment :)
+This entire repo, as well as its trogdor-pp, trogdord, and PHP extension dependencies, is my own personal passion project and has been built from the ground up. I loved text adventure games growing up and always wanted to write one, but as a child, my lack of programming ability always frustrated me. Now, as an adult CS major, this is a bit of wish fulfillment on my part :)
+
+Enjoy!
