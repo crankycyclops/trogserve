@@ -2,7 +2,7 @@
 
 A Laravel + Vue.js frontend for the [trogdor-pp](https://github.com/crankycyclops/trogdor-pp "trogdor-pp") text adventure game engine, which allows for the easy creation, configuration, and management of a browser-accessible text-based [MUD](https://en.wikipedia.org/wiki/MUD "MUD") server.
 
-**WARNING:** this project is not yet in a useable state. Currently, the following features are implemented:
+**WARNING:** this project is not yet in a useable state. Currently, only the following features are implemented:
 
 1. A partially implemented REST API (accessible to admins only) for creating, querying, updating, and deleting games and players. The implemented endpoints are as follows:
  - GET /admin/api/info: for returning global information and statistics about the configured instance of trogdord
@@ -28,15 +28,14 @@ The PHP extension has been tested on and is known to build against PHP 7.2, 7.3,
 ## Installation
 
 1. Make sure you've built, installed, and configured the trogdor-pp library, trogdord daemon, and trogdord PHP extension. You can find more information about those dependencies here: https://github.com/crankycyclops/trogdor-pp
-2. cd webroot && git clone git@github.com:crankycyclops/trogserve.git
-3. cp webroot/.env.example webroot/.env and configure according to your environment
-4. composer install
-5. node install
-6. Setup .env file
-7. `php artisan migrate`
-8. `php artisan passport:keys && php artisan passport:client --password`
-10. make prod to build frontend (or make dev if not a production server)
-11. To test your installation, fire up the Laravel development server: `php artisan serve`
+2. `cd webroot && git clone git@github.com:crankycyclops/trogserve.git`
+3. `cp webroot/.env.example webroot/.env` and configure according to your environment
+4. `composer install`
+5. `node install`
+6. `php artisan migrate`
+7. `php artisan passport:keys && php artisan passport:client --password`
+8. make prod to build frontend (or make dev if not a production server)
+9. To test your installation, fire up the Laravel development server: `php artisan serve`
 
 ## Configuration
 
