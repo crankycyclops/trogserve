@@ -39,7 +39,7 @@ The PHP extension has been tested on and is known to build against PHP 7.2, 7.3,
 
 ## Configuration
 
-Before logging into the admin, you'll need to see your database with a default username and password. Do so with the following command: `php artisan db:seed`. You can then login with the default username `admin` and the default password `password`.
+Before logging into the admin, you'll need to seed your database with a default username and password. Do so with the following command: `php artisan db:seed`. You can then login with the default username `admin` and the default password `password`.
 
 You'll also need to point your configuration over to a running trogdord instance. You can find the relevant config options in `config/trogdord.php`.
 
@@ -47,7 +47,7 @@ Finally, to login, browse to: http://your.domain/admin and authenticate using th
 
 ## Exploring the code
 
-If you're looking for the interesting backend bits that exist so far (or if you're a hiring manager who wants to see what my Laravel code looks like), I suggest you examine the following files:
+If you're looking for the interesting backend bits that exist so far (or if you're a hiring manager who wants to see what my code looks like when I'm working with Laravel and Vue.js), I suggest you examine the following files:
 
 For the backend API (available to admins only):
 
