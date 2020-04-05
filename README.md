@@ -18,7 +18,7 @@ A Laravel + Vue.js frontend for the [trogdor-pp](https://github.com/crankycyclop
  - POST /admin/api/games/{id}/players: create a new player in a game
  - DELETE /admin/api/games/{id}/players: removes a player from a game
  - GET /admin/api/definitions: for returning a list of all game definition files available to our configured instance of trogdord
-2. A partially implemented admin panel that currently displays some statistics about the configured trogdord instance and that allows for the creation, modification, and deletion of individual games.
+2. A partially implemented admin panel that currently displays some statistics about the configured trogdord instance and that allows for the creation, modification, and deletion of individual games and players.
 
 This list will be updated as I complete more features.
 
