@@ -28,6 +28,10 @@ return [
 
 		// A game's synopsis cannot exceed this number of characters
 		'synopsisMaxLen' => 1024,
-		'synopsisMaxLenMsg' => 'Synopsis cannot be longer than 1024 characters'
+		'synopsisMaxLenMsg' => 'Synopsis cannot be longer than 1024 characters',
+
+		// A player's name cannot exceed this number of characters
+		'playerNameMaxLen' => 25,
+		'playerNameMaxLenMsg' => 'Player name cannot be longer than 25 characters'
 	]
 ];

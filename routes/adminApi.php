@@ -44,5 +44,8 @@ Route::post('/games/{id}/meta', 'AdminApiController@setMeta');
 // Returns a list of all players in a game
 Route::get('/games/{id}/players', 'AdminApiController@getPlayers');
 
+// Create a new player in the specified game
+Route::post('/games/{id}/players', 'AdminApiController@createPlayer');
+
 // Returns a list of all currently uploaded game definition
 Route::get('/definitions', 'AdminApiController@getDefinitions');

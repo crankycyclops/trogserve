@@ -213,7 +213,7 @@ class AdminApiController extends Controller {
 	/*************************************************************************/
 
 	/**
-	 * Sets (or updates) one or more meta values.
+	 * Gets a list of all players in the specified game.
 	 *
 	 * @param int $id Game ID
 	 * @return \Illuminate\Http\JsonResponse
@@ -221,6 +221,33 @@ class AdminApiController extends Controller {
 	public function getPlayers(int $id): \Illuminate\Http\JsonResponse {
 
 		return response()->json($this->trogdord->getGame($id)->players(), 200);
+	}
+
+	/*************************************************************************/
+
+	/**
+	 * Creates a player in the specified game with the given name.
+	 *
+	 * @param int $id Game ID
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function createPlayer(int $id): \Illuminate\Http\JsonResponse {
+
+		$validator = Validator::make($this->request->all(), [
+			'name'       => 'bail|required|max:' . config('validation.newGame.playerNameMaxLen'),
+		], [
+			'required'     => 'Missing required player name',
+			'name.max'     => config('validation.newGame.playerNameMaxLenMsg')
+		]);
+
+		if ($validator->fails()) {
+			return response()->json([
+				'error' => $validator->errors()->first()
+			], 400);
+		}
+
+		$this->trogdord->getGame($id)->createPlayer($this->request->post('name'));
+		return response()->json([], 204);
 	}
 
 	/*************************************************************************/

@@ -32,11 +32,13 @@
 			window.titleMaxLen = {{ config('validation.newGame.titleMaxLen') }};
 			window.authorMaxLen = {{ config('validation.newGame.authorMaxLen') }};
 			window.synopsisMaxLen = {{ config('validation.newGame.synopsisMaxLen') }};
+			window.playerNameMaxLen = {{ config('validation.newGame.playerNameMaxLen') }};
 
 			window.nameMaxLenMsg = "<?= config('validation.newGame.nameMaxLenMsg') ?>";
 			window.titleMaxLenMsg = "<?= config('validation.newGame.titleMaxLenMsg') ?>";
 			window.authorMaxLenMsg = "<?= config('validation.newGame.authorMaxLenMsg') ?>";
 			window.synopsisMaxLenMsg = "<?= config('validation.newGame.synopsisMaxLenMsg') ?>";
+			window.playerNameMaxLenMsg = "<?= config('validation.newGame.playerNameMaxLenMsg') ?>";
 
 		</script>
 
