@@ -22,7 +22,7 @@
 		<!-- Display card for loaded game -->
 		<template v-else>
 
-			<v-tabs :show-arrows="isMobile" :vertical="!isMobile">
+			<v-tabs v-model="activeTab" :show-arrows="isMobile" :vertical="!isMobile">
 
 				<v-tab>
 					<v-icon left>dvr</v-icon>
@@ -53,7 +53,7 @@
 						@navigate="navigate"
 						@update:isRunning="updateIsRunning"
 						@update="updateGameData"
-						@refresh="loadGame"
+						@refresh="loadGame(); activeTab = 0;"
 					/>
 
 				</v-tab-item>
@@ -61,7 +61,11 @@
 				<!-- Statistics -->
 				<v-tab-item>
 
-					<game-statistics />
+					<game-statistics
+						:created="game.data.statistics.created"
+						:players="game.data.statistics.players"
+						@refresh="loadGame(); activeTab = 1;"
+					/>
 
 				</v-tab-item>
 
@@ -140,6 +144,9 @@
 
 			return {
 
+				// Which tab is currently being displayed to the user
+				activeTab: 0,
+
 				// These are the bits of game data we can update
 				form: {
 
@@ -178,6 +185,7 @@
 
 						// Statistical information associated with the game
 						statistics: {
+							created: null,
 							is_running: null,
 							players: null
 						}
@@ -230,6 +238,7 @@
 						self.updateGameData({payload: response.data});
 
 						// Update game statistics
+						self.game.data.statistics.created = response.data.statistics.created;
 						self.game.data.statistics.is_running = response.data.statistics.is_running;
 						self.game.data.statistics.players = response.data.statistics.players;
 					})
