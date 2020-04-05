@@ -14,6 +14,7 @@ A Laravel + Vue.js frontend for the [trogdor-pp](https://github.com/crankycyclop
  - GET /admin/api/games/{id}/stop: for stopping a specific game's clock
  - GET /admin/api/games/{id}/meta: for returning meta data associated with a game
  - POST /admin/api/games/{id}/meta: for setting meta data associated with a game
+ - GET /admin/api/games/{id}/players: returns a list of all players in a game
  - GET /admin/api/definitions: for returning a list of all game definition files available to our configured instance of trogdord
 2. A partially implemented admin panel that currently displays some statistics about the configured trogdord instance and that allows for the creation, modification, and deletion of individual games.
 

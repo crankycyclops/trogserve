@@ -213,6 +213,19 @@ class AdminApiController extends Controller {
 	/*************************************************************************/
 
 	/**
+	 * Sets (or updates) one or more meta values.
+	 *
+	 * @param int $id Game ID
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function getPlayers(int $id): \Illuminate\Http\JsonResponse {
+
+		return response()->json($this->trogdord->getGame($id)->players(), 200);
+	}
+
+	/*************************************************************************/
+
+	/**
 	 * Return a list of all currently available game definitions (XML files
 	 * that define the properties of and the entities in the game.)
 	 *
