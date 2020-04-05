@@ -119,19 +119,11 @@
 
 			<template v-if="form.show">
 
-				<v-btn
-					text
-					color="primary"
-					@click="cancelEditDetails()"
-				>
+				<v-btn text color="primary" @click="cancelEditDetails()">
 					Cancel
 				</v-btn>
 
-				<v-btn
-					text
-					color="primary"
-					@click="submitDetails()"
-				>
+				<v-btn text color="primary" @click="submitDetails()">
 					Finish
 				</v-btn>
 
@@ -139,19 +131,15 @@
 
 			<template v-else>
 
-				<v-btn
-					text
-					color="primary"
-					@click="editDetails()"
-				>
+				<v-btn text color="primary" @click="$emit('refresh')">
+					Refresh
+				</v-btn>
+
+				<v-btn text color="primary" @click="editDetails()">
 					Edit
 				</v-btn>
 
-				<v-btn
-					text
-					color="error"
-					@click="promptDestroy()"
-				>
+				<v-btn text color="error" @click="promptDestroy()">
 					Destroy
 				</v-btn>
 

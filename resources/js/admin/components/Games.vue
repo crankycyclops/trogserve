@@ -72,6 +72,10 @@
 
 		<v-card-actions v-if="!games.loading">
 
+				<v-btn text color="primary" @click="loadGames()">
+					Refresh
+				</v-btn>
+
 				<v-btn
 					text
 					color="primary"

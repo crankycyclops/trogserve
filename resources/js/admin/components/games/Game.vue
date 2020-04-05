@@ -53,6 +53,7 @@
 						@navigate="navigate"
 						@update:isRunning="updateIsRunning"
 						@update="updateGameData"
+						@refresh="loadGame"
 					/>
 
 				</v-tab-item>

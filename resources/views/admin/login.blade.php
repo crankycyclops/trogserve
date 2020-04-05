@@ -41,7 +41,7 @@
 						<div class="login-fields">
 
 							<div class="field">
-								<input type="text" name="username" id="username" placeholder="Username" />
+								<input type="text" name="username" id="username" placeholder="Username" autofocus />
 							</div>
 
 							<div class="field">
