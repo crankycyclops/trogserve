@@ -234,10 +234,10 @@ class AdminApiController extends Controller {
 	public function createPlayer(int $id): \Illuminate\Http\JsonResponse {
 
 		$validator = Validator::make($this->request->all(), [
-			'name'       => 'bail|required|max:' . config('validation.newGame.playerNameMaxLen'),
+			'name'     => 'bail|required|max:' . config('validation.newGame.playerNameMaxLen'),
 		], [
-			'required'     => 'Missing required player name',
-			'name.max'     => config('validation.newGame.playerNameMaxLenMsg')
+			'required' => 'Missing required player name',
+			'name.max' => config('validation.newGame.playerNameMaxLenMsg')
 		]);
 
 		if ($validator->fails()) {
@@ -247,6 +247,39 @@ class AdminApiController extends Controller {
 		}
 
 		$this->trogdord->getGame($id)->createPlayer($this->request->post('name'));
+		return response()->json([], 204);
+	}
+
+	/*************************************************************************/
+
+	/**
+	 * Remove a player from the specified game.
+	 *
+	 * @param int $id Game ID
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function removePlayer(int $id): \Illuminate\Http\JsonResponse {
+
+		$validator = Validator::make($this->request->all(), [
+			'name'     => 'bail|required|max:' . config('validation.newGame.playerNameMaxLen'),
+		], [
+			'required' => 'Missing required player name',
+			'name.max' => config('validation.newGame.playerNameMaxLenMsg')
+		]);
+
+		if ($validator->fails()) {
+			return response()->json([
+				'error' => $validator->errors()->first()
+			], 400);
+		}
+
+		// The message the player will see before being removed from the game
+		$removalMessage = $this->request->post('message') ? $this->request->post('message') : '';
+
+		$this->trogdord->getGame($id)
+			->getPlayer($this->request->post('name'))
+			->destroy($removalMessage);
+
 		return response()->json([], 204);
 	}
 
