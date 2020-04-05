@@ -258,28 +258,12 @@ class AdminApiController extends Controller {
 	 * @param int $id Game ID
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function removePlayer(int $id): \Illuminate\Http\JsonResponse {
-
-		$validator = Validator::make($this->request->all(), [
-			'name'     => 'bail|required|max:' . config('validation.newGame.playerNameMaxLen'),
-		], [
-			'required' => 'Missing required player name',
-			'name.max' => config('validation.newGame.playerNameMaxLenMsg')
-		]);
-
-		if ($validator->fails()) {
-			return response()->json([
-				'error' => $validator->errors()->first()
-			], 400);
-		}
+	public function removePlayer(int $id, string $name): \Illuminate\Http\JsonResponse {
 
 		// The message the player will see before being removed from the game
 		$removalMessage = $this->request->post('message') ? $this->request->post('message') : '';
 
-		$this->trogdord->getGame($id)
-			->getPlayer($this->request->post('name'))
-			->destroy($removalMessage);
-
+		$this->trogdord->getGame($id)->getPlayer($name)->destroy($removalMessage);
 		return response()->json([], 204);
 	}
 

@@ -48,7 +48,7 @@ Route::get('/games/{id}/players', 'AdminApiController@getPlayers');
 Route::post('/games/{id}/players', 'AdminApiController@createPlayer');
 
 // Removes a player from the specified game
-Route::delete('/games/{id}/players', 'AdminApiController@removePlayer');
+Route::delete('/games/{id}/players/{name}', 'AdminApiController@removePlayer');
 
 // Returns a list of all currently uploaded game definition
 Route::get('/definitions', 'AdminApiController@getDefinitions');
