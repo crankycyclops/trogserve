@@ -169,7 +169,7 @@
 			loadStatistics: function () {
 
 				this.statistics.loading = true;
-				this.statistics.loadError = null;
+				this.statistics.loadingError = null;
 
 				let self = this;
 
