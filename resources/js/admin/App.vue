@@ -135,6 +135,12 @@
 						route: "/admin/games",
 						icon: "videogame_asset"
 					},
+
+					{
+						name: "Account",
+						route: "/admin/account",
+						icon: "account_box"
+					}
 				],
 
 				navDrawer: {

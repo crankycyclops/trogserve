@@ -32,6 +32,7 @@ import Vuex from 'vuex';
 
 import App from './App.vue';
 
+import Account from './components/Account.vue'
 import Statistics from './components/Statistics.vue';
 import Games from './components/Games.vue';
 import NewGame from './components/games/New.vue';
@@ -63,6 +64,12 @@ const app = new Vue({
 		mode: 'history',
 
 		routes: [
+
+			{
+				path: '/admin/account',
+				name: 'account',
+				component: Account
+			},
 
 			{
 				path: '/admin',
