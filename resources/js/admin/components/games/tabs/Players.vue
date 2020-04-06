@@ -2,9 +2,80 @@
 
 	<v-card flat>
 
+		<!-- Dialog to create a new player in the game -->
+		<v-dialog
+			v-model="createPlayerForm.showCreateDialog"
+			overlay-opacity="0.8"
+			max-width="500px"
+			@keydown.esc="cancelCreatePlayer()"
+		>
+
+			<v-card>
+
+				<v-card-title>Create Player</v-card-title>
+
+				<v-card-text>
+
+					<v-row align="center" justify="start">
+
+						<v-col cols="12">
+							Insert a new player into the game.
+						</v-col>
+
+						<v-col cols="12" v-if="createPlayerForm.error">
+							<span class="error">{{ createPlayerForm.error }}</span>
+						</v-col>
+
+						<v-col cols="12">
+
+							<v-form ref="createPlayerForm">
+
+								<v-text-field
+									v-model.trim="createPlayerForm.newPlayerName"
+									:counter="playerNameMaxLen"
+									:rules="createPlayerForm.validation.name"
+									:disabled="createPlayerForm.submitting"
+									label="Name"
+									placeholder="Player's name"
+									required
+									outlined
+								></v-text-field>
+
+							</v-form>
+
+						</v-col>
+
+					</v-row>
+
+				</v-card-text>
+
+				<v-card-actions>
+
+					<v-btn
+						text
+						color="primary"
+						@click="cancelCreatePlayer()"
+					>
+						Cancel
+					</v-btn>
+
+					<v-btn
+						text
+						color="error"
+						@click="createPlayer()"
+					>
+						Create Player
+					</v-btn>
+
+				</v-card-actions>
+
+			</v-card>
+
+		</v-dialog>
+
 		<!-- Dialog to confirm deletion of a game -->
 		<v-dialog
-			v-model="showRemoveDialog"
+			v-model="removePlayerForm.showRemoveDialog"
 			overlay-opacity="0.8"
 			max-width="500px"
 			@keydown.esc="cancelRemovePlayer()"
@@ -25,7 +96,7 @@
 					<v-row align="center" justify="start">
 						<v-col cols="12">
 							<v-textarea
-								v-model.trim="removalMessage"
+								v-model.trim="removePlayerForm.removalMessage"
 								label="Removal Message"
 								placeholder="This message will be sent to the player when they're removed from the game (optional)"
 								outlined
@@ -181,6 +252,10 @@
 					Refresh
 				</v-btn>
 
+				<v-btn text color="primary" @click="promptCreatePlayer()">
+					Create Player
+				</v-btn>
+
 			</v-card-actions>
 
 		</template>
@@ -222,10 +297,13 @@
 		mounted: function () {
 
 			this.loadPlayers();
-			console.log(this.players.data);
 		},
 
 		computed: {
+
+			// Form validation values and error messages
+			playerNameMaxLen: function () {return window.playerNameMaxLen;},
+			playerNameMaxLenMsg: function () {return window.playerNameMaxLenMsg;},
 
 			// Returns true if a player was selected (clicked on) in the list
 			playerIsSelected: function () {
@@ -237,12 +315,43 @@
 
 			return {
 
-				// Toggles the "Remove Player" dialog
-				showRemoveDialog: false,
+				removePlayerForm: {
 
-				// If set, this is the message that will be sent to a user
-				// before they're removed from the game
-				removalMessage: '',
+					// Toggles the "Remove Player" dialog
+					showRemoveDialog: false,
+
+					// If set, this is the message that will be sent to a user
+					// before they're removed from the game
+					removalMessage: ''
+				},
+
+				createPlayerForm: {
+
+					// Toggles the "Create Player" dialog
+					showCreateDialog: false,
+
+					// When creating a new player, this corresponds to
+					// the text field where the admin sets the
+					// player's name
+					newPlayerName: '',
+
+					// Set to true when we're submitting the "Create
+					// Player" form
+					submitting: false,
+
+					// If an error occurred when creating a player, set it
+					// here.
+					error: null,
+
+					// Validation for the "Create Player" form
+					validation: {
+
+						name: [
+							v => !!v || "You must give the player a name",
+							v => (v || '').length <= this.playerNameMaxLen || this.playerNameMaxLenMsg
+						]
+					}
+				},
 
 				players: {
 
@@ -258,23 +367,70 @@
 
 					// Our loaded list of players
 					data: []
-				}
+				},
 			};
 		},
 
 		methods: {
 
+			// Prompt the admin to create a new player
+			promptCreatePlayer: function () {
+
+				this.createPlayerForm.newPlayerName = '';
+				this.createPlayerForm.showCreateDialog = true;
+			},
+
+			// Cancel the creation of a player
+			cancelCreatePlayer: function () {
+
+				this.createPlayerForm.showCreateDialog = false;
+			},
+
+			// API call to create a new player
+			createPlayer: function () {
+
+				if (!this.$refs.createPlayerForm.validate()) {
+					return false;
+				}
+
+				let self = this;
+
+				let gameId = this.$router.currentRoute.params.id;
+
+				this.createPlayerForm.submitting = true;
+				this.createPlayerForm.error = null;
+
+				axios
+					.post('/admin/api/games/' + gameId + '/players', {name: this.createPlayerForm.newPlayerName})
+
+					.then(response => {
+
+						self.cancelCreatePlayer();
+						self.loadPlayers();
+					})
+
+					// We can't remove the player, so let the admin know
+					// about the error and close the dialog
+					.catch(error => {
+						self.createPlayerForm.error = self.getResponseError(error);
+					})
+
+					.finally(() => {
+						self.createPlayerForm.submitting = false;
+					});
+			},
+
 			// Prompt the admin to remove a player from the game
 			promptRemovePlayer: function () {
 
-				this.removalMessage = '';
-				this.showRemoveDialog = true;
+				this.removePlayerForm.removalMessage = '';
+				this.removePlayerForm.showRemoveDialog = true;
 			},
 
 			// Cancel the removal of a player
 			cancelRemovePlayer: function () {
 
-				this.showRemoveDialog = false;
+				this.removePlayerForm.showRemoveDialog = false;
 			},
 
 			// API call to remove player from the game
@@ -286,8 +442,8 @@
 				let gameId = this.$router.currentRoute.params.id;
 				let playerName = encodeURIComponent(this.players.data[this.players.selected].name);
 
-				if (this.removalMessage) {
-					data.message = this.removalMessage;
+				if (this.removePlayerForm.removalMessage) {
+					data.message = this.removePlayerForm.removalMessage;
 				}
 
 				this.players.loading = true;
