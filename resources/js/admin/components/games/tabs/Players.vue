@@ -213,7 +213,7 @@
 								<!-- List of players in the game -->
 								<v-list id="players" max-height="48vh" dense>
 
-									<v-subheader>Players</v-subheader>
+									<v-subheader>Current Players</v-subheader>
 
 									<v-list-item-group v-model="players.selected" color="primary">
 
@@ -378,6 +378,9 @@
 
 				this.createPlayerForm.newPlayerName = '';
 				this.createPlayerForm.showCreateDialog = true;
+				this.$nextTick(() => {
+					this.$refs.createPlayerForm.reset();
+				});
 			},
 
 			// Cancel the creation of a player
