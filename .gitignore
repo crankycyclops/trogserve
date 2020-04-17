@@ -23,4 +23,12 @@ public/js/vendor.js.LICENSE.txt
 public/mix-manifest.json
 public/js/admin
 public/css/admin
-/public/*/*.map
+public/js/adminauth
+public/css/adminauth
+public/js/pages
+public/css/pages
+public/js/app
+public/css/app
+public/*/*.map
+public/css/*.css
+public/fonts/*

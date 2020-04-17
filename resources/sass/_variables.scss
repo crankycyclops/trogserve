@@ -1,19 +1,16 @@
-// Body
-$body-bg: #f8fafc;
+// Screen sizes
+$mobile: "screen and (max-width: 1023px)";
+$desktop: "screen and (min-width: 1024px)";
 
-// Typography
-$font-family-sans-serif: sans-serif;
-$font-size-base: 0.9rem;
-$line-height-base: 1.6;
+$body-font: 'Inconsolata', monospace;
+$heading-font: 'Press Start 2P', sans-serif;
+$button-font: 'Roboto', sans-serif;
 
-// Colors
-$blue: #3490dc;
-$indigo: #6574cd;
-$purple: #9561e2;
-$pink: #f66d9b;
-$red: #e3342f;
-$orange: #f6993f;
-$yellow: #ffed4a;
-$green: #38c172;
-$teal: #4dc0b5;
-$cyan: #6cb2eb;
+$white: #ffffff;
+$heading-color: #eeeeee;
+$primary-color: #c9cfd2;
+
+$darkest-bg: #121212;
+$dark-bg: #272727;
+$light-bg: #363636;
+$lightest-bg: #4a4a4a;

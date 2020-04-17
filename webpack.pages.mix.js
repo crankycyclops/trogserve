@@ -12,13 +12,8 @@ require('laravel-mix-merge-manifest');
  |
  */
 
-mix.js('resources/js/app/app.js', 'public/js/app')
-	.sass('resources/sass/app/app.scss', 'public/css/app')
-
-	// I'm going to unbundle this so it'll remain cached when my own code changes
-	.copy('node_modules/vuetify/dist/vuetify.min.css', 'public/css/vuetify.min.css')
-	.copy('node_modules/vuetify/dist/vuetify.css.map', 'public/css/vuetify.css.map')
-
+mix.js('resources/js/pages/app.js', 'public/js/pages')
+	.sass('resources/sass/pages/app.scss', 'public/css/pages')
 	.extract()
 	.sourceMaps()
 	.mergeManifest();

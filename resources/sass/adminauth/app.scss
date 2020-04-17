@@ -1,6 +1,7 @@
-@import '../admin/variables';
-@import '../admin/mixins';
-@import '../admin/layout';
+@import "node_modules/reset-css/reset";
+@import '../variables';
+@import '../mixins';
+@import '../layout';
 
 
 $login-prompt-width: 400px;

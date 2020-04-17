@@ -11,7 +11,7 @@ class AdminController extends Controller {
 	 * All frontend page requests end up invoking this controller action (Vue.js
 	 * will handle routing within the admin SPA.)
 	 *
-	 * @return \Illuminate\Http\JsonResponse
+	 * @return \Illuminate\Http\Response
 	 */
 	public function index() {
 
