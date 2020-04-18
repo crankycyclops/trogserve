@@ -1,0 +1,96 @@
+// Variables
+@import 'variables';
+@import 'node_modules/material-design-icons-iconfont/dist/material-design-icons';
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P:400|Inconsolata:400,700|Roboto:300,400&display=swap&subset=latin-ext');
+
+// Replace the above import with this one (but I have to figure out why webpack inserts a line break in the middle of the url)
+// @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P:wght@400&family=Inconsolata:wght@400;700&family=Roboto:wght@300;400&display=swap&subset=latin-ext');
+
+#trogserve {
+
+	font-family: $body-font;
+	font-size: 1.15rem;
+	line-height: 1.6;
+	color: $primary-color;
+
+	footer {
+
+		font-family: $heading-font;
+		font-size: 12px;
+
+		// Saves us on really old displays like the original iPhone
+		@media screen and (max-width: 327px) {
+			font-size: 8px;
+		}
+	}
+
+	h1, h2, h3, .v-toolbar__title {
+		font-family: $heading-font;
+		font-weight: 400;
+		color: $heading-color;
+	}
+
+	strong {
+		font-weight: bold;
+	}
+
+	// I have to use !important because Vuetify uses it (this was not my choice)
+	.success {
+		color: #00b300;
+		background: none !important;
+		border: none !important;
+	}
+
+	.warning {
+		color: #ffff00;
+		background: none !important;
+		border: none !important;
+	}
+
+	.error {
+		color: #ff0000;
+		background: none !important;
+		border: none !important;
+	}
+
+	// Once again, Vuetify makes bad decisions and forces me to use !important
+	.v-navigation-drawer .v-list-item__title.title {
+		margin-bottom: 10px;
+		font-family: $heading-font !important;
+		font-size: 1rem !important;
+		font-weight: 400;
+		color: $white;
+	}
+
+	.v-toolbar__title {
+
+		@media #{$desktop} {
+			font-size: 24px;
+		}
+	
+		@media #{$mobile} {
+			font-size: 16px;
+		}
+	}
+
+	.v-card__subtitle, .v-card__text {
+		line-height: 1.6;
+	}
+
+	.v-card__title {
+		font-size: 1.3rem;
+	}
+
+	.v-card__subtitle {
+		font-size: 0.9rem;
+	}
+
+	.v-card__text {
+		font-size: 1.10rem;
+	}
+
+	.v-card__actions .v-btn {
+		font-size: 0.95rem;
+		font-weight: bold;
+	}
+}
