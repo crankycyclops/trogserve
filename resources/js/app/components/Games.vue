@@ -20,6 +20,11 @@
 
 	export default {
 
+		mounted: function () {
+
+			this.$store.commit('setTitle', 'Games');
+		},
+
 		data: function () {
 
 			return {

@@ -2,7 +2,7 @@
 
 	<v-card>
 
-		<v-card-title>Game</v-card-title>
+		<v-card-title>{{ title }}</v-card-title>
 
 		<v-card-subtitle>
 			TODO
@@ -19,6 +19,11 @@
 <script>
 
 	export default {
+
+		mounted: function () {
+
+			this.$store.commit('setTitle', 'Game Title');
+		},
 
 		data: function () {
 

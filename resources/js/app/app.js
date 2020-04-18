@@ -28,6 +28,7 @@ window.Vue = require('vue');
  */
 import Vuetify from 'vuetify';
 import VueRouter from 'vue-router';
+import Vuex from 'vuex';
 
 import App from './App.vue';
 
@@ -36,6 +37,7 @@ import Game from './components/Game.vue';
 
 Vue.use(Vuetify);
 Vue.use(VueRouter);
+Vue.use(Vuex);
 
 const app = new Vue({
 
@@ -72,6 +74,26 @@ const app = new Vue({
 				component: Game
 			}
 		]
+	}),
+
+	store: new Vuex.Store({
+
+		state: {
+
+			// The title we should display at the top of the application
+			title: ''
+		},
+
+		mutations: {
+
+			// Sets the title at the top of the application
+			setTitle: function (state, payload) {
+				state.title = payload;
+			}
+		},
+
+		getters: {},
+		actions: {}
 	}),
 
 	components: {

@@ -4,7 +4,7 @@
 
 		<v-app-bar :clipped-left="false" app>
 
-			<v-toolbar-title>{{ title }}</v-toolbar-title>
+			<v-toolbar-title>{{ $store.state.title }}</v-toolbar-title>
 
 		</v-app-bar>
 
@@ -37,11 +37,6 @@
 <script>
 
 	export default {
-
-		computed: {
-
-			title: function () {return 'TODO';}
-		},
 
 		data: function () {
 			return {
