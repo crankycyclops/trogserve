@@ -26,15 +26,55 @@ window.Vue = require('vue');
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+import Vuetify from 'vuetify';
+import VueRouter from 'vue-router';
+
 import App from './App.vue';
+
+import Games from './components/Games.vue';
+import Game from './components/Game.vue';
+
+Vue.use(Vuetify);
+Vue.use(VueRouter);
 
 const app = new Vue({
 
 	el: '#app',
+	render: h => h(App),
+
+	vuetify: new Vuetify({
+
+		theme: {
+			dark: true,
+		},
+
+		// https://jossef.github.io/material-design-icons-iconfont/
+		icons: {
+			iconfont: 'md'
+		}
+	}),
+
+	router: new VueRouter({
+
+		mode: 'history',
+
+		routes: [
+
+			{
+				path: '/games',
+				name: 'games',
+				component: Games
+			},
+
+			{
+				path: '/games/:id(\\d+)',
+				name: 'game',
+				component: Game
+			}
+		]
+	}),
 
 	components: {
 		App
-	},
-
-	render: h => h(App)
+	}
 });
