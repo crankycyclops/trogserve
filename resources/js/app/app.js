@@ -80,11 +80,20 @@ const app = new Vue({
 
 		state: {
 
+			// If set, we should display this error message at the top of the
+			// frontend application
+			error: null,
+
 			// The title we should display at the top of the application
 			title: ''
 		},
 
 		mutations: {
+
+			// Sets the error to display at the top of the application
+			setError: function (state, payload) {
+				state.error = payload;
+			},
 
 			// Sets the title at the top of the application
 			setTitle: function (state, payload) {
