@@ -24,7 +24,7 @@ This list will be updated as I complete more features.
 
 ## Dependencies
 
-Laravel 7, PHP 7.2+, composer, npm, Vue.js, Vuetify, [trogdord](https://github.com/crankycyclops/trogdor-pp "trogdord"), and the [trogdord PHP extension](https://github.com/crankycyclops/trogdor-pp/tree/php7-module/src/php7/trogdord "trogdord PHP extension").
+Laravel 7, PHP 7.2+, composer, npm, Vue.js, Vuetify, [trogdord](https://github.com/crankycyclops/trogdor-pp "trogdord"), and the [trogdord PHP extension](https://github.com/crankycyclops/trogdor-pp/tree/master/src/trogdord "trogdord PHP extension").
 
 The PHP extension has been tested on and is known to build against PHP 7.2, 7.3, and 7.4.
 
@@ -79,7 +79,7 @@ And finally, for the build process:
 
 The default page that you'll see if you fire up http://your.domain/ is just a placeholder; all my active development right now is geared toward implementing the admin (http://your.domain/admin), as well as going back and fixing/enhancing trogdord to support the extra features that I need to eventually make this a viable platform.
 
-If you've never seen the innards of a PHP extension before, you might also find the following link interesting (written in C++17): https://github.com/crankycyclops/trogdor-pp/tree/php7-module/src/php7/trogdord
+If you've never seen the innards of a PHP extension before, you might also find the following link interesting (written in C++17): https://github.com/crankycyclops/trogdor-pp/tree/master/src/trogdord
 
 ## License
 
