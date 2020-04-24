@@ -1,0 +1,16 @@
+{
+  "name": "SockServe",
+  "version": "0.1.0",
+  "description": "WebSocket server for Trogserve",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "James Colannino",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "redis": "^3.0.2",
+    "trogdord": "^0.1.2",
+    "ws": "^7.2.3"
+  }
+}
