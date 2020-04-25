@@ -1,5 +1,5 @@
 const HANDSHAKE_SUCCESSFUL = '{"status":"ready"}';
-const VALID_PLAYER_NAME = /^[A-Za-z0-9 -_]+$/;
+const VALID_PLAYER_NAME = /^[A-Za-z0-9 _\-]{1,25}$/;
 
 const EXIT_SUCCESS = 0;
 const EXIT_FAILURE = 1;
@@ -66,23 +66,31 @@ class SockServe {
 	 */
 	#handshake = (socket, data) => {
 
+		data = JSON.parse(data);
+
 		// If the client doesn't know how to talk to the server or sends
 		// invalid data during the handshake, don't bother trying to
 		// communicate further.
-		if (!data.gameId || !data.name ||
-		'number' != typeof data.gameId || !data.gameId.isInteger() ||
+		if (undefined == typeof data.gameId || !data.name ||
+		'number' != typeof data.gameId || !Number.isInteger(data.gameId) ||
 		!data.name.match(VALID_PLAYER_NAME)) {
 			socket.close();
+			return;
 		}
 
-		else if (sockets[data.gameId][data.name]) {
+		else if (this.#sockets[data.gameId] && this.#sockets[data.gameId][data.name]) {
 			socket.send(JSON.stringify({error: 'Player name is unavailable'}));
 			socket.close();
+			return;
 		}
 
 		// The redis subscriber's event listener will see this buffer exists
 		// and stash the first few messages here until the handshake is
 		// complete and the server is ready to send the messages to the client.
+		if (!this.#messageBuffer[data.gameId]) {
+			this.#messageBuffer[data.gameId] = {};
+		}
+
 		this.#messageBuffer[data.gameId][data.name] = [];
 
 		this.#trogdord.getGame(data.gameId)
@@ -95,26 +103,29 @@ class SockServe {
 			.then(player => {
 
 				socket.player = player;
-				sockets[data.gameId][data.name] = socket;
+
+				if (!this.#sockets[data.gameId]) {
+					this.#sockets[data.gameId] = {};
+				}
+
+				this.#sockets[data.gameId][data.name] = socket;
 
 				// Socket will listen for input from the player
-				sockets.on('message', this.#processCommand);
+				socket.on('message', this.#processCommand);
 
-				// TODO: this might not work, because the redis listener
-				// might not insert until after. Have to test this. If it
-				// doesn't work, will have to figure out what kind of delay
-				// to use. HOWEVER, I think a setTimeout with 0 delay will
-				// delay the execution of this until it's ready, so try that!
+				// Retrieve the first few input messages we got when we
+				// created the player and output them
 				this.#messageBuffer[data.gameId][data.name].forEach(message => {
-					socket.send(message);
+					socket.send(JSON.stringify(message));
 				});
 
 				// See comment above
 				delete this.#messageBuffer[data.gameId][data.name];
+				socket.send(HANDSHAKE_SUCCESSFUL);
 			})
 
 			.catch(error => {
-				send(error.message);
+				socket.send(JSON.stringify({error: error.message}));
 				socket.close();
 			});
 	}
@@ -150,10 +161,8 @@ class SockServe {
 
 				// When the socket is first established, we need to negotiate the
 				// connection.
-				socket.on('connection', () => {
-					socket.once('message', message => {
-						this.#handshake(socket, message);
-					});
+				socket.once('message', message => {
+					this.#handshake(socket, message);
 				});
 
 				// When the socket is closed, remove the player from the game and
@@ -161,7 +170,7 @@ class SockServe {
 				socket.on('close', () => {
 					if (socket.game && socket.player) {
 						socket.player.destroy();
-						delete sockets[socket.game.id][socket.player.name];
+						delete this.#sockets[socket.game.id][socket.player.name];
 					}
 				});
 
@@ -195,13 +204,22 @@ class SockServe {
 		// Send output messages from trogdord to the client
 		this.#subscriber.on('message', (channel, message) => {
 
-			if (this.#sockets[message.game_id][message.entity]) {
-				this.#sockets[message.game_id][message.entity].send(message);
+			let json = JSON.parse(message);
+
+			// TODO: uncomment the below line to reproduce trogdord issue where
+			// segfaults due to data it's trying to send back that the client
+			// doesn't receive before disconnecting.
+			// process.exit(EXIT_FAILURE);
+
+			if (this.#sockets[json.game_id] &&
+			this.#sockets[json.game_id][json.entity]) {
+				this.#sockets[json.game_id][json.entity].send(message);
 			}
 	
 			// A player has just been created, resulting in messages we can't send right away
-			else if (this.#messageBuffer[message.game_id][message.entity]) {
-				this.#messageBuffer[message.game_id][message.entity].push(message);
+			else if (this.#messageBuffer[json.game_id] &&
+			this.#messageBuffer[json.game_id][json.entity]) {
+				this.#messageBuffer[json.game_id][json.entity].push(message);
 			}
 		});
 
