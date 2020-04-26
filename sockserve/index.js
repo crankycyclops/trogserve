@@ -4,8 +4,7 @@ const VALID_PLAYER_NAME = /^[A-Za-z0-9 _\-]{1,25}$/;
 const EXIT_SUCCESS = 0;
 const EXIT_FAILURE = 1;
 
-// TODO: make these configurable
-const REDIS_INPUT_CHANNEL = 'trogdord:in';
+// TODO: make this configurable
 const REDIS_OUTPUT_CHANNEL = 'trogdord:out';
 
 const Trogdord = require('trogdord');
@@ -21,9 +20,6 @@ class SockServe {
 
 	// Instance of WebSocketServer
 	#wss;
-
-	// Sends player input to trogdord
-	#publisher;
 
 	// Listens for messages from trogdord
 	#subscriber;
@@ -111,17 +107,19 @@ class SockServe {
 				this.#sockets[data.gameId][data.name] = socket;
 
 				// Socket will listen for input from the player
-				socket.on('message', this.#processCommand);
+				socket.on('message', message => {
+					this.#processCommand(socket, message);
+				});
+
+				socket.send(HANDSHAKE_SUCCESSFUL);
 
 				// Retrieve the first few input messages we got when we
 				// created the player and output them
 				this.#messageBuffer[data.gameId][data.name].forEach(message => {
-					socket.send(JSON.stringify(message));
+					socket.send(message);
 				});
 
-				// See comment above
 				delete this.#messageBuffer[data.gameId][data.name];
-				socket.send(HANDSHAKE_SUCCESSFUL);
 			})
 
 			.catch(error => {
@@ -136,8 +134,7 @@ class SockServe {
 	constructor() {
 
 		// TODO: make port and host for redis server configurable
-		this.#publisher = Redis.createClient(6379, 'localhost');
-		this.#subscriber = Redis.createClient(6379, 'localhost');;
+		this.#subscriber = Redis.createClient(6379, 'localhost');
 
 		// TODO: make hostname and port configurable, and also add
 		// configuration for connection timeout, which will use third
@@ -225,11 +222,6 @@ class SockServe {
 
 		// An error occurred when attempting to connect to redis
 		// TODO: is just exiting a good idea? Attempting to re-connect might be better
-		this.#publisher.on('error', error => {
-			console.log(error);
-			process.exit(EXIT_FAILURE);
-		});
-
 		this.#subscriber.on('error', error => {
 			console.log(error);
 			process.exit(EXIT_FAILURE);
@@ -248,7 +240,6 @@ class SockServe {
 			this.#trogdord.close();
 			this.#subscriber.unsubscribe();
 			this.#subscriber.quit();
-			this.#publisher.quit();
 		}
 	}
 };
