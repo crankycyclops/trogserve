@@ -4,13 +4,12 @@ const VALID_PLAYER_NAME = /^[A-Za-z0-9 _\-]{1,25}$/;
 const EXIT_SUCCESS = 0;
 const EXIT_FAILURE = 1;
 
-// TODO: make this configurable
-const REDIS_OUTPUT_CHANNEL = 'trogdord:out';
-
 const Trogdord = require('trogdord');
 const Redis = require('redis');
 const WebSocketServer = require('ws').Server;
 
+const Config = require('./config');
+console.log(Config);
 /*****************************************************************************/
 
 class SockServe {
@@ -21,8 +20,8 @@ class SockServe {
 	// Instance of WebSocketServer
 	#wss;
 
-	// Listens for messages from trogdord
-	#subscriber;
+	// Listens for output messages from trogdord
+	#outputSubscriber;
 
 	// Set to true if the server is running and false if it's being shutdown
 	// (this lets the event handler for trogd.on('close') determine whether or
@@ -70,6 +69,7 @@ class SockServe {
 		if (undefined == typeof data.gameId || !data.name ||
 		'number' != typeof data.gameId || !Number.isInteger(data.gameId) ||
 		!data.name.match(VALID_PLAYER_NAME)) {
+			socket.send(JSON.stringify({error: 'Invalid data'}));
 			socket.close();
 			return;
 		}
@@ -133,20 +133,19 @@ class SockServe {
 	 */
 	constructor() {
 
-		// TODO: make port and host for redis server configurable
-		this.#subscriber = Redis.createClient(6379, 'localhost');
+		this.#outputSubscriber = Redis.createClient(
+			Config.redis.output.port,
+			Config.redis.output.host
+		);
 
-		// TODO: make hostname and port configurable, and also add
-		// configuration for connection timeout, which will use third
-		// parameter
-		this.#trogdord = new Trogdord('localhost', 1040);
+		this.#trogdord = new Trogdord(Config.trogdord.host, Config.trogdord.port);
 
-		// TODO: force https and make configurable for port, certificate, etc
+		// TODO: support https
 		this.#wss = new WebSocketServer({
-			port: 9000
+			port: Config.socket.port
 		});
 
-		this.#subscriber.subscribe(REDIS_OUTPUT_CHANNEL);
+		this.#outputSubscriber.subscribe(Config.redis.output.channel);
 
 		console.log('Connecting to trogdord...');
 
@@ -199,7 +198,7 @@ class SockServe {
 		});
 
 		// Send output messages from trogdord to the client
-		this.#subscriber.on('message', (channel, message) => {
+		this.#outputSubscriber.on('message', (channel, message) => {
 
 			let json = JSON.parse(message);
 
@@ -222,7 +221,7 @@ class SockServe {
 
 		// An error occurred when attempting to connect to redis
 		// TODO: is just exiting a good idea? Attempting to re-connect might be better
-		this.#subscriber.on('error', error => {
+		this.#outputSubscriber.on('error', error => {
 			console.log(error);
 			process.exit(EXIT_FAILURE);
 		});
@@ -238,8 +237,8 @@ class SockServe {
 			this.#running = false;
 
 			this.#trogdord.close();
-			this.#subscriber.unsubscribe();
-			this.#subscriber.quit();
+			this.#outputSubscriber.unsubscribe();
+			this.#outputSubscriber.quit();
 		}
 	}
 };
