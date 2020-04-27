@@ -180,7 +180,7 @@
 				let self = this;
 
 				axios
-					.get('/admin/api/games')
+					.get('/api/games')
 
 					.then(response => {
 

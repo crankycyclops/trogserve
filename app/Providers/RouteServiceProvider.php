@@ -34,6 +34,7 @@ class RouteServiceProvider extends ServiceProvider {
 	public function map() {
 
 		$this->mapPublicRoutes();
+		$this->mapPublicApiRoutes();
 		$this->mapAdminRoutes();
 		$this->mapAdminApiRoutes();
 	}
@@ -50,6 +51,19 @@ class RouteServiceProvider extends ServiceProvider {
 		Route::middleware('public')
 			->namespace($this->namespace)
 			->group(base_path('routes/public.php'));
+	}
+
+	/**
+	 * Define routes for non-admin API calls.
+	 *
+	 * @return void
+	 */
+	protected function mapPublicApiRoutes() {
+
+		Route::prefix('api')
+			->middleware('publicapi')
+			->namespace($this->namespace)
+			->group(base_path('routes/publicApi.php'));
 	}
 
 	/**

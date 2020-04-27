@@ -62,6 +62,12 @@ class Kernel extends HttpKernel {
 			'adminauth:adminapi',
 			\Illuminate\Routing\Middleware\SubstituteBindings::class,
 		],
+
+		// Middleware for public api routes.
+		'publicapi' => [
+			'throttle:60,1',
+			\Illuminate\Routing\Middleware\SubstituteBindings::class,
+		],
     ];
 
 	/**
