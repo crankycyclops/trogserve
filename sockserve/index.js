@@ -9,7 +9,7 @@ const Redis = require('redis');
 const WebSocketServer = require('ws').Server;
 
 const Config = require('./config');
-console.log(Config);
+
 /*****************************************************************************/
 
 class SockServe {

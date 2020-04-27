@@ -11,7 +11,7 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "redis": "^3.0.2",
-    "trogdord": "^0.1.2",
-    "ws": "^7.2.3"
+    "trogdord": "^0.1.3",
+    "ws": "^7.2.5"
   }
 }
