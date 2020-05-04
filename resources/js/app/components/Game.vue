@@ -104,14 +104,14 @@
 
 	export default {
 
-		mounted: function () {
+		mounted() {
 
 			this.loadGame();
 		},
 
 		computed: {
 
-			ready: function () {
+			ready() {
 
 				// TODO: when we have code to create a player and connect
 				// websockets, include those things in this check.
@@ -119,7 +119,7 @@
 			}
 		},
 
-		data: function () {
+		data() {
 
 			return {
 
@@ -138,37 +138,40 @@
 		methods: {
 
 			// Loads the game
-			loadGame: function () {
+			loadGame() {
 
-				let self = this;
+				axios.get('/api/games/' + this.$router.currentRoute.params.id)
 
-				// TODO: need to implement userland AJAX API first. For now,
-				// I'm just mocking this up with a setTimeout so I can see
-				// and test how the page will look while things are loading.
-				setTimeout(function () {
+					.then(response => {
 
-					self.$store.commit('setTitle', 'Game Title');
-					self.game.loading = false;
+						this.$store.commit('setTitle', response.data.title);
+						this.game.loading = false;
 
-					/* TODO: if game not found, execute these lines
-						this.$store.commit('setError', 'Game not found');
+						// TODO: we'll need to create a player and then
+						// websockets before we can enable commands and the
+						// display
+					})
+
+					.catch(error => {
+
+						if (error.response && 404 == error.response.status) {
+							this.$store.commit('setError', 'Game not found');
+						} else {
+							this.$store.commit('setError', 'An internal error occurred. Please wait a few minutes and try again.');
+						}
+
 						this.$emit('navigate', '/games', true);
-					*/
-
-					// TODO: we'll need to create a player and then
-					// websockets before we can enable commands and the
-					// display
-				}, 4000);
+					});
 			},
 
 			// Clears the command input field
-			clear: function () {
+			clear() {
 
 				this.command = '';
 			},
 
 			// Sends command to the game server
-			send: function () {
+			send() {
 
 				if (this.command.length) {
 
