@@ -17,6 +17,9 @@ Route::pattern('id', '\d+');
 // games running.
 Route::get('/info', 'AdminApiController@getInfo');
 
+// Return a complete list of running games.
+Route::get('/games', 'AdminApiController@getGames');
+
 // Create a new game.
 Route::post('/games', 'AdminApiController@createGame');
 

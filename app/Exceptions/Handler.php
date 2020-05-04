@@ -54,7 +54,7 @@ class Handler extends ExceptionHandler {
 	 */
 	public function render($request, Throwable $exception) {
 
-		if ($request->is('admin/api/*')) {
+		if ($request->is('api/*') || $request->is('admin/api/*')) {
 
 			if ($exception instanceof \Trogdord\NetworkException) {
 
