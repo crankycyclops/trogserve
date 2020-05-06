@@ -76,6 +76,12 @@
 					</v-row>
 				</v-container>
 
+				<v-container>
+					<v-row v-for="(message, i) in game.console" :key="i">
+						<v-col cols="12">{{ message.content }}</v-col>
+					</v-row>
+				</v-container>
+
 			</div>
 
 			<v-row>
@@ -225,7 +231,10 @@
 
 					// Set this to true once we've successfully chosen a
 					// player name and connected to sockserve
-					connected: false
+					connected: false,
+
+					// Represents messages to be written to the console
+					console: []
 				}
 			};
 		},
@@ -327,7 +336,7 @@
 						this.game.connected = true;
 
 						this.game.socket.onmessage = event => {
-							console.log(JSON.parse(event.data));
+							this.output(JSON.parse(event.data));
 						};
 					}
 
@@ -349,9 +358,23 @@
 
 				if (this.game.command.length) {
 
-					// TODO: submit command
+					this.game.socket.send(this.game.command.trim());
 					this.clear();
 				}
+			},
+
+			// Prints a formatted output message from the game
+			output(message) {
+
+				this.game.console.push(message);
+				this.autoScroll();
+			},
+
+			// Automatically scrolls output to the bottom
+			autoScroll() {
+
+				let console = this.$el.querySelector("#output");
+				console.scrollTop = console.scrollHeight;
 			}
 		}
 	};

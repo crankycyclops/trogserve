@@ -2,7 +2,8 @@
 
 A Laravel + Vue.js frontend for the [trogdor-pp](https://github.com/crankycyclops/trogdor-pp "trogdor-pp") text adventure game engine, which allows for the easy creation, configuration, and management of a browser-accessible text-based [MUD](https://en.wikipedia.org/wiki/MUD "MUD") server.
 
-**WARNING:** this project is not yet in a useable state. Currently, only the following features are implemented:
+
+The following features have been implemented so far:
 
 1. A partially implemented REST API (accessible to admins only) for creating, querying, updating, and deleting games and players. The implemented endpoints are as follows:
  - GET /admin/api/info: for returning global information and statistics about the configured instance of trogdord
@@ -22,6 +23,7 @@ A Laravel + Vue.js frontend for the [trogdor-pp](https://github.com/crankycyclop
 3. A public REST API for listing and interacting with available games:
  - GET /api/games: for returning a list of all running and publicly available games.
  - GET /api/games/{id}: return the details of a running and publicly accessible game.
+4. Basic game play on the front end. The homepage is blank, and the list of games where you are allowed to select one to play is an empty placeholder, but manually browsing to a game's page will result in a functional experience.
 
 This list will be updated as I complete more features.
 
