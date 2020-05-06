@@ -178,8 +178,8 @@
 		computed: {
 
 			// Form validation values
-			playerNameMaxLen: function () {return window.playerNameMaxLen;},
-			playerNameMaxLenMsg: function () {return window.playerNameMaxLenMsg;}
+			playerNameMaxLen() {return window.playerNameMaxLen;},
+			playerNameMaxLenMsg() {return window.playerNameMaxLenMsg;}
 		},
 
 		data() {
@@ -293,6 +293,7 @@
 					return;
 				}
 
+				// TODO: force https and get hostname,port from config file
 				this.game.socket = new WebSocket('ws://localhost:9000/');
 
 				this.game.socket.onopen = event => {
@@ -366,15 +367,24 @@
 			// Prints a formatted output message from the game
 			output(message) {
 
-				this.game.console.push(message);
-				this.autoScroll();
+				if ('prompt' != message.channel) {
+
+					this.game.console.push(message);
+					this.autoScroll();
+				}
 			},
 
-			// Automatically scrolls output to the bottom
+			// Auto scroll the console if the user isn't currently scrolling
+			// up to read previous messages.
 			autoScroll() {
 
-				let console = this.$el.querySelector("#output");
-				console.scrollTop = console.scrollHeight;
+				let monitor = this.$el.querySelector("#output");
+
+				if (monitor.scrollTop === (monitor.scrollHeight - monitor.offsetHeight)) {
+					this.$nextTick(() => {
+						monitor.scrollTop = monitor.scrollHeight;
+					});
+				}
 			}
 		}
 	};
