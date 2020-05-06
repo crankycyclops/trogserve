@@ -2,6 +2,42 @@
 
 	<v-card>
 
+		<!-- Error message dialog -->
+		<v-dialog persistent
+			v-model="showErrorDialog"
+			overlay-opacity="0.8"
+			max-width="500px"
+			@keydown.esc="goBack()"
+		>
+
+			<v-card>
+
+				<v-card-text>
+
+					<v-row align="center" justify="center" :style="!error ? 'display: none;' : ''">
+						<v-col cols="12" md="11">
+							<span class="error">{{ error }}</span>
+						</v-col>
+					</v-row>
+
+				</v-card-text>
+
+				<v-card-actions>
+
+					<v-btn
+						text
+						color="primary"
+						@click="goBack()"
+					>
+						Back to Games
+					</v-btn>
+
+				</v-card-actions>
+
+			</v-card>
+
+		</v-dialog>
+
 		<!-- Dialog to select player name after game is loaded -->
 		<v-dialog persistent
 			v-model="showPlayerNameDialog"
@@ -77,7 +113,7 @@
 				</v-container>
 
 				<v-container>
-					<v-row v-for="(message, i) in game.console" :key="i">
+					<v-row v-for="(message, i) in game.monitor" :key="i">
 						<v-col cols="12">{{ message.content }}</v-col>
 					</v-row>
 				</v-container>
@@ -186,6 +222,9 @@
 
 			return {
 
+				// Toggles the error message dialog
+				showErrorDialog: false,
+
 				// Toggles player name selection
 				showPlayerNameDialog: false,
 
@@ -229,17 +268,30 @@
 					// Whether or not we're loading the game's data
 					loading: true,
 
+					// Set this to true once the game has been started
+					started: false,
+
 					// Set this to true once we've successfully chosen a
 					// player name and connected to sockserve
 					connected: false,
 
-					// Represents messages to be written to the console
-					console: []
+					// Represents messages to be written to the "monitor"
+					monitor: []
 				}
 			};
 		},
 
 		methods: {
+
+			// Call this if there's an error with the websocket
+			handleSocketError() {
+
+				this.error = 'A connection error occured. Refresh the page and try again.';
+
+				if (!this.showPlayerNameDialog) {
+					this.showErrorDialog = true;
+				}
+			},
 
 			// Loads the game
 			loadGame() {
@@ -303,12 +355,13 @@
 					}));
 				};
 
-				this.game.socket.onerror = error => {
-					console.log(error);
-				};
-
 				this.game.socket.onclose = () => {
+
 					this.game.connected = false;
+
+					if (this.game.started) {
+						this.handleSocketError();
+					}
 				};
 
 				this.game.socket.onmessage = event => {
@@ -317,7 +370,6 @@
 
 					if (data.error) {
 
-						this.game.error = data.error;
 						this.game.socket.close();
 
 						// Let the user know they can't use that name
@@ -334,6 +386,7 @@
 					else if (data.status && data.status == 'ready') {
 
 						this.showPlayerNameDialog = false;
+						this.game.started = true;
 						this.game.connected = true;
 
 						this.game.socket.onmessage = event => {
@@ -346,6 +399,8 @@
 						this.socket.close();
 					}
 				};
+
+				this.game.socket.onerror = this.handleSocketError;
 			},
 
 			// Clears the command input field
@@ -369,7 +424,7 @@
 
 				if ('prompt' != message.channel) {
 
-					this.game.console.push(message);
+					this.game.monitor.push(message);
 					this.autoScroll();
 				}
 			},
