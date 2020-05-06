@@ -69,13 +69,13 @@ class SockServe {
 		if (undefined == typeof data.gameId || !data.name ||
 		'number' != typeof data.gameId || !Number.isInteger(data.gameId) ||
 		!data.name.match(VALID_PLAYER_NAME)) {
-			socket.send(JSON.stringify({error: 'Invalid data'}));
+			socket.send(JSON.stringify({error: 'Invalid data', code: 400}));
 			socket.close();
 			return;
 		}
 
 		else if (this.#sockets[data.gameId] && this.#sockets[data.gameId][data.name]) {
-			socket.send(JSON.stringify({error: 'Player name is unavailable'}));
+			socket.send(JSON.stringify({error: 'Player name is unavailable', code: 409}));
 			socket.close();
 			return;
 		}
@@ -123,7 +123,10 @@ class SockServe {
 			})
 
 			.catch(error => {
-				socket.send(JSON.stringify({error: error.message}));
+
+				let message = 409 == error.status ? 'Player name is unavailable' : error.message;
+
+				socket.send(JSON.stringify({error: message, code: error.status}));
 				socket.close();
 			});
 	}

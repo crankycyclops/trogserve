@@ -16,9 +16,9 @@
 
 				<v-card-text>
 
-					<v-row align="center" justify="center" :style="!game.error ? 'display: none;' : ''">
+					<v-row align="center" justify="center" :style="!error ? 'display: none;' : ''">
 						<v-col cols="12" md="11">
-							<span class="error">{{ game.error }}</span>
+							<span class="error">{{ error }}</span>
 						</v-col>
 					</v-row>
 
@@ -83,7 +83,7 @@
 				<!-- This is where the player enters commands -->
 				<v-col cols="12">
 					<v-text-field
-						v-model="command"
+						v-model="game.command"
 						:label="game.connected ? 'What do you do now?' : ''"
 						append-outer-icon="send"
 						clear-icon="clear"
@@ -183,8 +183,12 @@
 				// Toggles player name selection
 				showPlayerNameDialog: false,
 
-				// The text currently displayed in the command input field
-				command: '',
+				// Keeps track of player names that are known to be unavailable
+				unavailableNames: new Set(),
+
+				// If an error occurs while attempting to join the game, set
+				// it here.
+				error: '',
 
 				// Validation rules for the form fields above
 				validation: {
@@ -192,12 +196,16 @@
 					playerName: [
 						v => !!v || "Select a name to continue",
 						v => (v || '').trim().length > 0 || "Select a name to continue",
-						v => (v || '').length <= this.playerNameMaxLen || this.playerNameMaxLenMsg
+						v => (v || '').length <= this.playerNameMaxLen || this.playerNameMaxLenMsg,
+						v => !this.unavailableNames.has((v || '').trim()) || "Player name is not available"
 					],
 				},
 
 				// Game data
 				game: {
+
+					// The text currently displayed in the command input field
+					command: '',
 
 					// Will contain the player's name once it's been
 					// selected
@@ -270,6 +278,8 @@
 			// Attempt to register the player's name and start the game
 			startGame() {
 
+				this.error = '';
+
 				if (!this.$refs.playerNameForm.validate()) {
 					return;
 				}
@@ -296,8 +306,19 @@
 					let data = JSON.parse(event.data);
 
 					if (data.error) {
+
 						this.game.error = data.error;
 						this.game.socket.close();
+
+						// Let the user know they can't use that name
+						if (409 == data.code) {
+							this.unavailableNames.add(this.game.playerName);
+							this.$refs.playerNameForm.validate();
+						}
+
+						else {
+							this.error = data.error;
+						}
 					}
 
 					else if (data.status && data.status == 'ready') {
@@ -320,13 +341,13 @@
 			// Clears the command input field
 			clear() {
 
-				this.command = '';
+				this.game.command = '';
 			},
 
 			// Sends command to the game server
 			send() {
 
-				if (this.command.length) {
+				if (this.game.command.length) {
 
 					// TODO: submit command
 					this.clear();
