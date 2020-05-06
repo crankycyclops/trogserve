@@ -13,6 +13,14 @@
 		<link rel="stylesheet" type="text/css" href="/css/vuetify{{ config('app.vuetifyVersion') }}.min.css">
 		<link rel="stylesheet" type="text/css" href="{{ mix('/css/app/app.css') }}">
 
+		<script>
+
+			// This is how I'm currently passing static data from Laravel to Vue.js
+			window.playerNameMaxLen = {{ config('validation.newGame.playerNameMaxLen') }};
+			window.playerNameMaxLenMsg = "<?= config('validation.newGame.playerNameMaxLenMsg') ?>";
+
+		</script>
+
 	</head>
 
 	<body>
