@@ -16,6 +16,12 @@
 
 				<v-card-text>
 
+					<v-row align="center" justify="center" :style="!game.error ? 'display: none;' : ''">
+						<v-col cols="12" md="11">
+							<span class="error">{{ game.error }}</span>
+						</v-col>
+					</v-row>
+
 					<v-form ref="playerNameForm">
 
 						<v-text-field
@@ -200,7 +206,7 @@
 					// Once the game is loaded and a player name has been
 					// selected, this will store a websocket connection to
 					// sockserve
-					websocket: null,
+					socket: null,
 
 					// Whether or not we're attempting to register the
 					// player's name and start the game
@@ -268,8 +274,47 @@
 					return;
 				}
 
-				alert('TODO');
-				// TODO: make sure to set this.game.connected = true; on success
+				this.game.socket = new WebSocket('ws://localhost:9000/');
+
+				this.game.socket.onopen = event => {
+					this.game.socket.send(JSON.stringify({
+						gameId: parseInt(this.$router.currentRoute.params.id),
+						name: this.game.playerName
+					}));
+				};
+
+				this.game.socket.onerror = error => {
+					console.log(error);
+				};
+
+				this.game.socket.onclose = () => {
+					this.game.connected = false;
+				};
+
+				this.game.socket.onmessage = event => {
+
+					let data = JSON.parse(event.data);
+
+					if (data.error) {
+						this.game.error = data.error;
+						this.game.socket.close();
+					}
+
+					else if (data.status && data.status == 'ready') {
+
+						this.showPlayerNameDialog = false;
+						this.game.connected = true;
+
+						this.game.socket.onmessage = event => {
+							console.log(JSON.parse(event.data));
+						};
+					}
+
+					else {
+						this.game.error = 'An unknown error occurred. Wait a few minutes and try again.';
+						this.socket.close();
+					}
+				};
 			},
 
 			// Clears the command input field
