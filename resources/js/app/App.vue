@@ -41,6 +41,7 @@
 	export default {
 
 		data: function () {
+
 			return {
 				// TODO
 			};

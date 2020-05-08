@@ -23,7 +23,7 @@ The following features have been implemented so far:
 3. A public REST API for listing and interacting with available games:
  - GET /api/games: for returning a list of all running and publicly available games.
  - GET /api/games/{id}: return the details of a running and publicly accessible game.
-4. Basic game play on the front end. The homepage is blank, and the list of games where you are allowed to select one to play is an empty placeholder, but manually browsing to a game's page will result in a functional experience.
+4. Basic game play on the front end as well as a homepage describing the project and its use.
 
 This list will be updated as I complete more features.
 
@@ -76,6 +76,19 @@ For the Vue.js-based admin interface:
 - resources/views/admin/index.blade.php
 - everything under resources/js/admin
 - everything under resources/css/admin
+
+For the Node.js websocket server used to send and receive messages between the browser and trogdord:
+
+- sockserve/index.js
+
+For the frontend API and SPA used to retrieve information about and play games:
+
+- app/Http/Controllers/ApiController.php
+- app/routes/publicApi.php
+- app/Http/Controllers/FrontendController.php
+- app/routes/public.php
+- resources/views/frontend/app.blade.php
+- Everything under resources/js/app
 
 And finally, for the build process:
 

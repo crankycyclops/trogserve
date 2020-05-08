@@ -63,12 +63,14 @@ const app = new Vue({
 		routes: [
 
 			{
+				// List of available games
 				path: '/games',
 				name: 'games',
 				component: Games
 			},
 
 			{
+				// Console for a specific game
 				path: '/games/:id(\\d+)',
 				name: 'game',
 				component: Game

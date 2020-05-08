@@ -1,5 +1,9 @@
 @extends('frontend.layouts.page')
 
 @section('content')
-    TODO
+
+	<h1>Trogserve</h1>
+
+	<div id="console"></div>
+
 @endsection
