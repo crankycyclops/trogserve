@@ -1,6 +1,23 @@
 import TypeIt from "typeit";
 
-let typeit = new TypeIt('#console')
+let typeit = new TypeIt('#console', {
+
+	// Make sure we scroll automatically during the animation
+	afterStep: async (step, instance) => {
+
+		window.scrollTo(0, document.body.scrollHeight);
+	},
+
+	// Remove cursor once we're done typing
+	afterComplete: async (step, instance) => {
+
+		let cursors = document.getElementsByClassName('ti-cursor');
+
+		for (let cursor of cursors) {
+			cursor.remove();
+		}
+	}
+})
 	.pause(1000)
 	.type('You sit at a polished oak desk and browse GitHub repositories on your laptop. An interesting project catches your eye.', {speed: 1})
 	.break()
@@ -23,7 +40,7 @@ let typeit = new TypeIt('#console')
 	.pause(1500)
 	.break()
 	.break()
-	.type('<a href="/games">Play a game</a>', {speed: 1})
+	.type('&nbsp;&nbsp;&nbsp;* <a href="/games">Play a game</a>', {speed: 1})
 	.break()
-	.type('<a href="https://github.com/crankycyclops/trogserve">View Trogserve on GitHub</a>', {speed: 1})
+	.type('&nbsp;&nbsp;&nbsp;* <a href="https://github.com/crankycyclops/trogserve">View Trogserve on GitHub</a>', {speed: 1})
 	.go();

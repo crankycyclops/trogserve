@@ -6,3 +6,35 @@
 .homepage-section .type {
 	margin: 1em 0 1em 0;
 }
+
+/* Console-like styling inspired (and a little copy-pasted) by this:
+https://css-tricks.com/old-timey-terminal-styling/ */
+body {
+	background-image: radial-gradient(rgba(0, 60, 0, 0.75), black 120%);
+	text-shadow: 0 0 1px #888888;
+}
+
+body::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: repeating-linear-gradient(
+		0deg,
+		rgba(black, 0.15),
+		rgba(black, 0.15) 1px,
+		transparent 1px,
+		transparent 2px
+	);
+}
+
+::selection {
+	background: #0080ff;
+	text-shadow: none;
+}
+
+h1 {
+	text-shadow: none;
+}
