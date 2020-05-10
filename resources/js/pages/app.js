@@ -19,7 +19,7 @@ let typeit = new TypeIt('#console', {
 	}
 })
 	.pause(1000)
-	.type('You sit at a polished oak desk and browse GitHub repositories on your laptop. An interesting project catches your eye.', {speed: 1})
+	.type('You sit at a polished oak desk to browse GitHub repositories on your laptop when an interesting project catches your eye.', {speed: 1})
 	.break()
 	.break()
 	.type('"Trogserve," the title reads, "A multi-player text adventure server built on top of Trogdor-pp and PHP."', {speed: 1})
@@ -31,7 +31,7 @@ let typeit = new TypeIt('#console', {
 	.pause(1500)
 	.break()
 	.break()
-	.type('Trogserve is a love letter to both the single player text adventures and text-based MUDs of the eighties and nineties. Built on top of trogdor-pp, trogdord, and PHP, Trogserve makes it easy to host online text-based multi-player games.', {speed: 1})
+	.type('Trogserve is a love letter to both the single player text adventures and text-based MUDs of the eighties and nineties. Built on top of trogdor-pp, trogdord, Node.js, and PHP, Trogserve makes it a breeze to host online text-based multi-player games.', {speed: 1})
 	.break()
 	.break()
 	.type('> ', {speed: 1})
@@ -40,7 +40,7 @@ let typeit = new TypeIt('#console', {
 	.pause(1500)
 	.break()
 	.break()
-	.type('&nbsp;&nbsp;&nbsp;* <a href="/games">Play a game</a>', {speed: 1})
+	.type('&nbsp;&nbsp;* <a href="/games">Play a game</a>', {speed: 1})
 	.break()
-	.type('&nbsp;&nbsp;&nbsp;* <a href="https://github.com/crankycyclops/trogserve">View Trogserve on GitHub</a>', {speed: 1})
+	.type('&nbsp;&nbsp;* <a href="https://github.com/crankycyclops/trogserve">View Trogserve on GitHub</a>', {speed: 1})
 	.go();

@@ -149,7 +149,11 @@
 
 	#output {
 
-		background-color: #2a2a2a;
+		/* background-color: #2a2a2a; */
+		border: 1px solid #2a2a2a;
+		background-color: #000000;
+		text-shadow: 0 0 2px #989898;
+
 		scrollbar-color: #d0d0d0 #505050;
 		scrollbar-width: auto;
 
@@ -172,6 +176,10 @@
 
 	#output::-webkit-scrollbar-thumb {
 		background: #d0d0d0;
+	}
+
+	#output .col {
+		padding: 7px;
 	}
 
 	@media only screen and (max-height: 550px) {

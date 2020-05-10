@@ -34,6 +34,8 @@
 
 		</main>
 
+		<footer><span class="text">©2020 James Colannino.</span></footer>
+
 		<script src="{{ mix('/js/pages/manifest.js') }}"></script>
 		<script src="{{ mix('/js/pages/vendor.js') }}"></script>
 		<script src="{{ mix('/js/pages/app.js') }}"></script>
