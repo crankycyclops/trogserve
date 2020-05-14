@@ -1,6 +1,6 @@
 <template>
 
-	<v-card>
+	<v-card id="game-console">
 
 		<!-- Error message dialog -->
 		<v-dialog persistent
@@ -146,6 +146,10 @@
 </template>
 
 <style scoped>
+
+	#game-console {
+		background-color: #303030;
+	}
 
 	#output {
 
