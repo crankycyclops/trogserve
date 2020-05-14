@@ -1,11 +1,11 @@
 <template>
 
-	<v-card>
+	<v-card id="games-card">
 
-		<v-card-title>Games</v-card-title>
+<!--		<v-card-title>Click or tap on a game to play.</v-card-title> -->
 
 		<v-card-subtitle>
-			Click or tap on a game to play.
+			Click or tap on a game to play it.
 		</v-card-subtitle>
 
 		<v-card-text>
@@ -99,6 +99,10 @@
 	.v-card__actions .v-btn {
 		font-size: 0.95rem;
 		font-weight: bold;
+	}
+
+	#games-card .v-card__subtitle {
+		font-size: 1.1rem;
 	}
 
 </style>
