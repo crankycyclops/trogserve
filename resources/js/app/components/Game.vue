@@ -114,7 +114,11 @@
 
 				<v-container>
 					<v-row v-for="(message, i) in game.monitor" :key="i">
-						<v-col cols="12">{{ message.content }}</v-col>
+						<v-col cols="12">
+							<span :class="'command' == message.channel ? 'bold' : ''">
+								{{ message.content }}
+							</span>
+						</v-col>
 					</v-row>
 				</v-container>
 
@@ -149,12 +153,13 @@
 
 	#game-console {
 		background-color: #303030;
+		border: 1px solid #202020;
 	}
 
 	#output {
 
 		/* background-color: #2a2a2a; */
-		border: 1px solid #2a2a2a;
+		border: 1px solid #202020;
 		background-color: #000000;
 		text-shadow: 0 0 2px #989898;
 
@@ -421,23 +426,29 @@
 				this.game.command = '';
 			},
 
+			// Prints a formatted output message from the game
+			output(message) {
+
+				if ('prompt' != message.channel) {
+					this.game.monitor.push(message);
+					this.autoScroll();
+				}
+			},
+
 			// Sends command to the game server
 			send() {
 
 				if (this.game.command.length) {
 
 					this.game.socket.send(this.game.command.trim());
+
+					// log command to the terminal so the player can see it
+					this.output({
+						channel: 'command',
+						content: '> ' + this.game.command.trim()
+					});
+
 					this.clear();
-				}
-			},
-
-			// Prints a formatted output message from the game
-			output(message) {
-
-				if ('prompt' != message.channel) {
-
-					this.game.monitor.push(message);
-					this.autoScroll();
 				}
 			},
 
@@ -447,7 +458,7 @@
 
 				let monitor = this.$el.querySelector("#output");
 
-				if (monitor.scrollTop === (monitor.scrollHeight - monitor.offsetHeight)) {
+				if (monitor.scrollTop === (monitor.scrollHeight - monitor.clientHeight)) {
 					this.$nextTick(() => {
 						monitor.scrollTop = monitor.scrollHeight;
 					});
