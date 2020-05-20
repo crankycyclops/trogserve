@@ -1,4 +1,5 @@
 @import "node_modules/reset-css/reset";
+
 @import '../variables';
 @import '../mixins';
 @import '../layout';
@@ -24,6 +25,7 @@ body::after {
 	left: 0;
 	width: 100vw;
 	height: 100vh;
+	z-index: 4;
 	background: repeating-linear-gradient(
 		0deg,
 		rgba(black, 0.15),
@@ -32,6 +34,9 @@ body::after {
 		transparent 2px
 	);
 }
+
+@import 'header';
+@import 'main';
 
 ::selection {
 	background: #0080ff;

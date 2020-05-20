@@ -20,6 +20,19 @@
 
 	<body>
 
+		<header class="header">
+
+			<a href="/" class="logo">{{ config('app.name') }}</a>
+			<input class="menu-btn" type="checkbox" id="menu-btn" />
+			<label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+
+			<ul class="menu">
+				<li><a href="/games">Play a Game</a></li>
+				<li><a href="https://github.com/crankycyclops/trogserve">View Code on GitHub</a></li>
+			</ul>
+
+		</header>
+
 		<main>
 
 			<article class="content">

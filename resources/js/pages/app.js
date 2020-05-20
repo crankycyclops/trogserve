@@ -42,5 +42,5 @@ let typeit = new TypeIt('#console', {
 	.break()
 	.type('&nbsp;&nbsp;* <a href="/games">Play a game</a>', {speed: 1})
 	.break()
-	.type('&nbsp;&nbsp;* <a href="https://github.com/crankycyclops/trogserve">View Trogserve on GitHub</a>', {speed: 1})
+	.type('&nbsp;&nbsp;* <a href="https://github.com/crankycyclops/trogserve">View Code on GitHub</a>', {speed: 1})
 	.go();

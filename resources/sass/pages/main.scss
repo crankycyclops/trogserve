@@ -1,0 +1,21 @@
+// Make sure the main content is always displayed below the header
+@media screen and (max-width: 360px) {
+
+	main {
+		margin-top: 80px;
+	}
+}
+
+@media screen and (min-width: 361px) and (max-width: 390px) {
+
+	main {
+		margin-top: 88px;
+	}
+}
+
+@media screen and (min-width: 391px) {
+
+	main {
+		margin-top: 96px;
+	}
+}
