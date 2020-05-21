@@ -1,8 +1,32 @@
+/* pointer-events: none makes it so I can click elements below on the actual page*/
+body::after {
+	display: block;
+	position: fixed;
+	pointer-events: none;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 4;
+	content: "";
+	background: repeating-linear-gradient(
+		0deg,
+		rgba(black, 0.15),
+		rgba(black, 0.15) 1px,
+		transparent 1px,
+		transparent 2px
+	);
+}
+
 // Make sure the main content is always displayed below the header
 @media screen and (max-width: 374px) {
 
 	main {
 		margin-top: 80px;
+	}
+
+	body::after {
+		top: 80px;
 	}
 }
 
@@ -11,11 +35,19 @@
 	main {
 		margin-top: 88px;
 	}
+
+	body::after {
+		top: 88px;
+	}
 }
 
 @media screen and (min-width: 430px) {
 
 	main {
 		margin-top: 96px;
+	}
+
+	body::after {
+		top: 96px;
 	}
 }

@@ -94,6 +94,13 @@
 		font-size: 1.10rem;
 	}
 
+	@media only screen and (min-height: 700px) {
+
+		.v-card__text {
+			font-size: 1.20rem;
+		}
+	}
+
 	.v-card__actions .v-btn {
 		font-size: 0.95rem;
 		font-weight: bold;

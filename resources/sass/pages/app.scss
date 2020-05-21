@@ -16,25 +16,6 @@ body {
 	padding: 20px 20px 26px 20px;
 }
 
-/* pointer-events: none makes it so I can click elements below on the actual page*/
-body::after {
-	content: "";
-	position: absolute;
-	pointer-events: none;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-	z-index: 4;
-	background: repeating-linear-gradient(
-		0deg,
-		rgba(black, 0.15),
-		rgba(black, 0.15) 1px,
-		transparent 1px,
-		transparent 2px
-	);
-}
-
 @import 'header';
 @import 'main';
 

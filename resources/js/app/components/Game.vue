@@ -98,7 +98,7 @@
 
 		</v-dialog>
 
-		<v-card-text>
+		<v-card-text id="output-container">
 
 			<div id="output">
 
@@ -149,7 +149,7 @@
 
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 
 	#game-console {
 		background-color: #303030;
@@ -158,9 +158,8 @@
 
 	#output {
 
-		/* background-color: #2a2a2a; */
 		border: 1px solid #202020;
-		background-color: #000000;
+		background-color: transparent;
 		text-shadow: 0 0 2px #989898;
 
 		scrollbar-color: #d0d0d0 #505050;
@@ -173,6 +172,9 @@
 		-webkit-hyphens: auto;
 		-moz-hyphens: auto;
 		-ms-hyphens: auto;
+
+		position: relative;
+		z-index: 1;
 	}
 
 	#output::-webkit-scrollbar {
@@ -191,23 +193,55 @@
 		padding: 7px;
 	}
 
+	// Gives the "console" a scanline effect
+	#output-container::before {
+		display: block;
+		position: absolute;
+		width: calc(100% - 32px);
+		top: 16px;
+		left: 16px;
+		content: "";
+		z-index: 4;
+		pointer-events: none;
+		background: repeating-linear-gradient(
+			0deg,
+			rgba(0, 0, 0, 0.15),
+			rgba(0, 0, 0, 0.15) 1px,
+			transparent 1px,
+			transparent 2px
+		);
+	}
+
+	// Gives the "console" a monitor glare effect
+	#output-container::after {
+		display: block;
+		position: absolute;
+		width: calc(100% - 32px);
+		top: 16px;
+		left: 16px;
+		content: "";
+		z-index: 0;
+		pointer-events: none;
+		background: radial-gradient(circle farthest-corner at 65%, #1c1c2e 15%, #000000 100%);
+	}
+
 	@media only screen and (max-height: 550px) {
 
-		#output {
+		#output, #output-container::before, #output-container::after {
 			height: 47vh;
 		}
 	}
 
 	@media only screen and (min-height: 551px) and (max-height: 699px) {
 
-		#output {
+		#output, #output-container::before, #output-container::after {
 			height: 55vh;
 		}
 	}
 
 	@media only screen and (min-height: 700px) {
 
-		#output {
+		#output, #output-container::before, #output-container::after {
 			height: 65vh;
 		}
 	}
