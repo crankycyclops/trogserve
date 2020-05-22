@@ -222,7 +222,7 @@
 		content: "";
 		z-index: 0;
 		pointer-events: none;
-		background: radial-gradient(circle farthest-corner at 65%, #1c1c2e 15%, #000000 100%);
+		background: radial-gradient(circle closest-corner at center, #121224 15%, #000000 100%);
 	}
 
 	@media only screen and (max-height: 550px) {
