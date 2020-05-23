@@ -100,6 +100,10 @@
 
 		<v-card-text id="output-container">
 
+			<div id="status-bar">
+				<span class="location">{{ game.location }}</span>
+			</div>
+
 			<div id="output">
 
 				<!-- Display this while we're waiting to load and connect 
@@ -112,7 +116,7 @@
 					</v-row>
 				</v-container>
 
-				<v-container>
+				<v-container id="output-content">
 					<v-row v-for="(message, i) in game.monitor" :key="i">
 						<v-col cols="12">
 							<span :class="'command' == message.channel ? 'bold' : ''">
@@ -156,13 +160,33 @@
 		border: 1px solid #202020;
 	}
 
+	#status-bar {
+		position: relative;
+		width: 100%;
+		height: 1.8rem;
+		padding: 0 10px 0 10px;
+		border-top: 1px solid #202020;
+		border-left: 1px solid #202020;
+		border-right: 1px solid #202020;
+		background-color: #d3d3e5;
+		color: #000000;
+		z-index: 3;
+	}
+
+	// Positions the top of the text below the status bar
+	#output-content {
+		padding-top: 0.5rem;
+	}
+
 	#output {
 
-		border: 1px solid #202020;
+		border-left: 1px solid #202020;
+		border-right: 1px solid #202020;
+		border-bottom: 1px solid #202020;
 		background-color: transparent;
 		text-shadow: 0 0 2px #989898;
 
-		scrollbar-color: #d0d0d0 #505050;
+		scrollbar-color: #d3d3e5 #505050;
 		scrollbar-width: auto;
 
 		overflow-x: hidden;
@@ -186,7 +210,7 @@
 	}
 
 	#output::-webkit-scrollbar-thumb {
-		background: #d0d0d0;
+		background: #d3d3e5;
 	}
 
 	#output .col {
@@ -222,27 +246,39 @@
 		content: "";
 		z-index: 0;
 		pointer-events: none;
-		background: radial-gradient(circle closest-corner at center, #121224 15%, #000000 100%);
+		background: radial-gradient(circle closest-corner at center, #1c1c2e 15%, #000000 100%);
 	}
 
 	@media only screen and (max-height: 550px) {
 
-		#output, #output-container::before, #output-container::after {
+		#output {
 			height: 47vh;
+		}
+
+		#output-container::before, #output-container::after {
+			height: calc(47vh + 1.8rem);
 		}
 	}
 
 	@media only screen and (min-height: 551px) and (max-height: 699px) {
 
-		#output, #output-container::before, #output-container::after {
+		#output {
 			height: 55vh;
+		}
+
+		#output-container::before, #output-container::after {
+			height: calc(55vh + 1.8rem);
 		}
 	}
 
 	@media only screen and (min-height: 700px) {
 
-		#output, #output-container::before, #output-container::after {
+		#output {
 			height: 65vh;
+		}
+
+		#output-container::before, #output-container::after {
+			height: calc(65vh + 1.8rem);
 		}
 	}
 
@@ -299,6 +335,9 @@
 
 				// Game data
 				game: {
+
+					// The player's current location as displayed in the game
+					location: '',
 
 					// The text currently displayed in the command input field
 					command: '',
@@ -464,8 +503,15 @@
 			output(message) {
 
 				if ('prompt' != message.channel) {
-					this.game.monitor.push(message);
-					this.autoScroll();
+
+					if ('location' == message.channel) {
+						this.game.location = message.content;
+					}
+
+					else {
+						this.game.monitor.push(message);
+						this.autoScroll();
+					}
 				}
 			},
 
