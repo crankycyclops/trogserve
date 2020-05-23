@@ -101,7 +101,10 @@
 		<v-card-text id="output-container">
 
 			<div id="status-bar">
-				<span class="location">{{ game.location }}</span>
+				<span class="statistic location">{{ game.status.location }}</span>
+				<span class="statistic health" v-if="game.status.maxHealth">Health
+					{{ game.status.health }}/{{ game.status.maxHealth }}
+				</span>
 			</div>
 
 			<div id="output">
@@ -161,6 +164,8 @@
 	}
 
 	#status-bar {
+		display: table;
+		table-layout: fixed;
 		position: relative;
 		width: 100%;
 		height: 1.8rem;
@@ -171,6 +176,11 @@
 		background-color: #d3d3e5;
 		color: #000000;
 		z-index: 3;
+	}
+
+	#status-bar .statistic {
+		display: table-cell;
+		width: 50%;
 	}
 
 	// Positions the top of the text below the status bar
@@ -249,6 +259,11 @@
 		background: radial-gradient(circle closest-corner at center, #1c1c2e 15%, #000000 100%);
 	}
 
+	#connecting {
+		font-weight: 700;
+		font-size: 1.5em;
+	}
+
 	@media only screen and (max-height: 550px) {
 
 		#output {
@@ -282,9 +297,16 @@
 		}
 	}
 
-	#connecting {
-		font-weight: 700;
-		font-size: 1.5em;
+	// Hide all status bar data other than location if the screen is too narrow)
+	@media only screen and (max-width: 359px) {
+
+		#status-bar .health {
+			display: none;
+		}
+
+		#status-bar .statistic {
+			width: 100%;
+		}
 	}
 
 </style>
@@ -336,8 +358,16 @@
 				// Game data
 				game: {
 
-					// The player's current location as displayed in the game
-					location: '',
+					// Information that belongs in the status bar
+					status: {
+
+						// The player's current location as displayed in the game
+						location: '',
+
+						// The player's health information
+						health: null,
+						maxHealth: null
+					},
 
 					// The text currently displayed in the command input field
 					command: '',
@@ -504,13 +534,26 @@
 
 				if ('prompt' != message.channel) {
 
-					if ('location' == message.channel) {
-						this.game.location = message.content;
-					}
+					switch (message.channel) {
 
-					else {
-						this.game.monitor.push(message);
-						this.autoScroll();
+						// Update the status bar with the player's location
+						case 'location':
+							this.game.status.location = message.content;
+							break;
+
+						// Update the status bar with the player's health
+						case 'health':
+							let json = JSON.parse(message.content);
+							this.game.status.health = json.health;
+							this.game.status.maxHealth = json.maxHealth;
+							break;
+
+						// This is an ordinary message that should be
+						// appended to the console
+						default:
+							this.game.monitor.push(message);
+							this.autoScroll();
+							break;
 					}
 				}
 			},
