@@ -210,7 +210,14 @@ class SockServe {
 			// doesn't receive before disconnecting.
 			// process.exit(EXIT_FAILURE);
 
-			if (this.#sockets[json.game_id] &&
+			// We've received a signal that the player has been removed from
+			// the game
+			if ('removed' == json.channel) {
+				this.#sockets[json.game_id][json.entity].close(1000, 'removed');
+				delete this.#sockets[json.game_id][json.entity];
+			}
+
+			else if (this.#sockets[json.game_id] &&
 			this.#sockets[json.game_id][json.entity]) {
 				this.#sockets[json.game_id][json.entity].send(message);
 			}

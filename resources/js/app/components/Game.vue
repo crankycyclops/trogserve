@@ -111,7 +111,7 @@
 
 				<!-- Display this while we're waiting to load and connect 
 				to the game-->
-				<v-container fill-height fluid v-if="!game.connected">
+				<v-container fill-height fluid v-if="!game.connected && !game.ended">
   					<v-row align="center" justify="center">
 						<v-col>
 							<p id="connecting" class="text-center">Connecting...</p>
@@ -122,7 +122,8 @@
 				<v-container id="output-content">
 					<v-row v-for="(message, i) in game.monitor" :key="i">
 						<v-col cols="12">
-							<span :class="'command' == message.channel ? 'bold' : ''">
+							<span :class="'command' == message.channel ? 'bold' :
+							'removed' == message.channel ? 'italic' : ''">
 								{{ message.content }}
 							</span>
 						</v-col>
@@ -141,7 +142,7 @@
 						append-outer-icon="send"
 						clear-icon="clear"
 						clearable
-						:disabled="!game.connected"
+						:disabled="!game.connected || game.ended"
 						@keyup.enter="send"
 						@click:append-outer="send"
 						@click:clear="clear"
@@ -391,6 +392,11 @@
 					// Set this to true once the game has been started
 					started: false,
 
+					// Set this to true if the game has been ended (using
+					// a separate variable because I have to track whether
+					// or not a game was ever started separately.)
+					ended: false,
+
 					// Set this to true once we've successfully chosen a
 					// player name and connected to sockserve
 					connected: false,
@@ -456,6 +462,14 @@
 				this.$emit('navigate', '/games');
 			},
 
+			// Clears the status bar at the top of the game
+			clearStatus() {
+
+				this.game.status.location = null;
+				this.game.status.health = null;
+				this.game.status.maxHealth = null;
+			},
+
 			// Attempt to register the player's name and start the game
 			startGame() {
 
@@ -475,12 +489,26 @@
 					}));
 				};
 
-				this.game.socket.onclose = () => {
+				this.game.socket.onclose = (e) => {
 
 					this.game.connected = false;
 
 					if (this.game.started) {
-						this.handleSocketError();
+
+						// Player's been removed from the game
+						if (e.code == 1000 && e.reason == 'removed') {
+							this.game.monitor.push({
+								channel: 'removed',
+								content: "You've been removed from the game."
+							});
+							this.autoScroll();
+							this.endGame();
+						}
+
+						// Socket closed unexpectedly
+						else {
+							this.handleSocketError();
+						}
 					}
 				};
 
@@ -521,6 +549,12 @@
 				};
 
 				this.game.socket.onerror = this.handleSocketError;
+			},
+
+			endGame() {
+
+				this.clearStatus();
+				this.game.ended = true;
 			},
 
 			// Clears the command input field

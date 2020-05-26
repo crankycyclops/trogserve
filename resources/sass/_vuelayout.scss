@@ -39,6 +39,10 @@
 		font-weight: bold;
 	}
 
+	em, .italic {
+		font-style: italic;
+	}
+
 	// I have to use !important because Vuetify uses it (this was not my choice)
 	.success {
 		color: #00b300;
