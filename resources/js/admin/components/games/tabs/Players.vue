@@ -374,7 +374,7 @@
 		methods: {
 
 			// Prompt the admin to create a new player
-			promptCreatePlayer: function () {
+			promptCreatePlayer() {
 
 				this.createPlayerForm.newPlayerName = '';
 				this.createPlayerForm.showCreateDialog = true;
@@ -384,13 +384,13 @@
 			},
 
 			// Cancel the creation of a player
-			cancelCreatePlayer: function () {
+			cancelCreatePlayer() {
 
 				this.createPlayerForm.showCreateDialog = false;
 			},
 
 			// API call to create a new player
-			createPlayer: function () {
+			createPlayer() {
 
 				if (!this.$refs.createPlayerForm.validate()) {
 					return false;
@@ -424,20 +424,20 @@
 			},
 
 			// Prompt the admin to remove a player from the game
-			promptRemovePlayer: function () {
+			promptRemovePlayer() {
 
 				this.removePlayerForm.removalMessage = '';
 				this.removePlayerForm.showRemoveDialog = true;
 			},
 
 			// Cancel the removal of a player
-			cancelRemovePlayer: function () {
+			cancelRemovePlayer() {
 
 				this.removePlayerForm.showRemoveDialog = false;
 			},
 
 			// API call to remove player from the game
-			removePlayer: function () {
+			removePlayer() {
 
 				let self = this;
 				let data = {};
@@ -453,7 +453,7 @@
 				this.players.error = null;
 
 				axios
-					.delete('/admin/api/games/' + gameId + '/players/' + playerName, data)
+					.delete('/admin/api/games/' + gameId + '/players/' + playerName, {data: data})
 
 					.then(response => {
 						this.loadPlayers();
@@ -471,7 +471,7 @@
 			},
 
 			// Loads list of players
-			loadPlayers: function () {
+			loadPlayers() {
 
 				let self = this;
 

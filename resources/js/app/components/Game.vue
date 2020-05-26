@@ -122,8 +122,7 @@
 				<v-container id="output-content">
 					<v-row v-for="(message, i) in game.monitor" :key="i">
 						<v-col cols="12">
-							<span :class="'command' == message.channel ? 'bold' :
-							'removed' == message.channel ? 'italic' : ''">
+							<span :class="message.channel">
 								{{ message.content }}
 							</span>
 						</v-col>
@@ -258,6 +257,20 @@
 		z-index: 0;
 		pointer-events: none;
 		background: radial-gradient(circle closest-corner at center, #1c1c2e 15%, #000000 100%);
+	}
+
+	// Styles for output messages on various channels
+	#output .command {
+		color: #ffffff;
+		font-weight: bold;
+	}
+
+	#output .removed {
+		font-style: italic;
+	}
+
+	#output .system {
+		color: #ffff00;
 	}
 
 	#connecting {

@@ -168,7 +168,7 @@ class SockServe {
 				// do some cleanup.
 				socket.on('close', () => {
 					if (socket.game && socket.player) {
-						socket.player.destroy();
+						socket.player.destroy().catch((e) => {});
 						delete this.#sockets[socket.game.id][socket.player.name];
 					}
 				});
@@ -212,7 +212,7 @@ class SockServe {
 
 			// We've received a signal that the player has been removed from
 			// the game
-			if ('removed' == json.channel) {
+			if ('removed' == json.channel && this.#sockets[json.game_id][json.entity]) {
 				this.#sockets[json.game_id][json.entity].close(1000, 'removed');
 				delete this.#sockets[json.game_id][json.entity];
 			}
