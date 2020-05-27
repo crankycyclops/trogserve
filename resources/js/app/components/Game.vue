@@ -628,7 +628,12 @@
 
 				let monitor = this.$el.querySelector("#output");
 
-				if (monitor.scrollTop === (monitor.scrollHeight - monitor.clientHeight)) {
+				// FINALLY, a solution that works in both Firefox and Chrome
+				// if (monitor.scrollTop === (monitor.scrollHeight - monitor.clientHeight))
+				// worked in Firefox, but was way off base for Chrome. This
+				// solution is nice because it deals gracefully with Chrome's
+				// subpixel heights.
+				if (monitor.scrollHeight - monitor.scrollTop - monitor.offsetHeight < 1) {
 					this.$nextTick(() => {
 						monitor.scrollTop = monitor.scrollHeight;
 					});
