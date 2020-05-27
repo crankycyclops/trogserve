@@ -205,11 +205,6 @@ class SockServe {
 
 			let json = JSON.parse(message);
 
-			// TODO: uncomment the below line to reproduce trogdord issue where
-			// segfaults due to data it's trying to send back that the client
-			// doesn't receive before disconnecting.
-			// process.exit(EXIT_FAILURE);
-
 			// We've received a signal that the player has been removed from
 			// the game
 			if ('removed' == json.channel && this.#sockets[json.game_id][json.entity]) {
