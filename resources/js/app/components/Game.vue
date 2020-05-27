@@ -68,6 +68,9 @@
 							placeholder="e.g. JohnDoe"
 							required
 							outlined
+							v-if="showPlayerNameDialog"
+							autofocus
+							@keydown.enter.prevent="startGame()"
 						></v-text-field>
 
 					</v-form>
@@ -145,6 +148,7 @@
 						@keyup.enter="send"
 						@click:append-outer="send"
 						@click:clear="clear"
+						autofocus
 					/>
 				</v-col>
 
