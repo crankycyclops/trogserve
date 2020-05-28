@@ -1,5 +1,5 @@
 /* pointer-events: none makes it so I can click elements below on the actual page*/
-body::after {
+main::after {
 	display: block;
 	position: fixed;
 	pointer-events: none;
@@ -18,14 +18,19 @@ body::after {
 	);
 }
 
+main {
+	padding: 0 20px 26px 20px;
+}
+
 // Make sure the main content is always displayed below the header
 @media screen and (max-width: 374px) {
 
 	main {
-		margin-top: 66px;
+		// 66px + 20px
+		padding-top: 86px;
 	}
 
-	body::after {
+	main::after {
 		// 52px for flush border
 		top: 66px;
 	}
@@ -34,10 +39,11 @@ body::after {
 @media screen and (min-width: 375px) {
 
 	main {
-		margin-top: 74px;
+		// 74px + 20px
+		padding-top: 94px;
 	}
 
-	body::after {
+	main::after {
 		// 60px for flush border
 		top: 74px;
 	}

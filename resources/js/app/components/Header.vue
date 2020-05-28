@@ -24,8 +24,8 @@
 	// I have to adjust the imported header style a little to work with the
 	// Vuetify layout
 	.header {
+	padding: 20px 20px 0 20px;
 		width: 100%;
-		padding: 20px 20px 0 20px;
 	}
 
 	.header ul {

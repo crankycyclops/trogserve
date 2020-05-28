@@ -6,13 +6,17 @@
 
 body {
 	min-height: 100vh;
-	padding: 20px;
+	padding: 0;
 	box-sizing: border-box;
 	font-size: 1.15rem;
 	line-height: 1.6;
 	color: $primary-color;
 	font-family: $body-font;
 	background-color: $darkest-bg;
+}
+
+main {
+	padding: 20px;
 }
 
 strong {
