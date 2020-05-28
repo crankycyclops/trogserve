@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+
+<game>
+
+	<manifest>
+
+		<!-- every game must include at least one room named "start" -->
+		<rooms>
+			<room name="start"></room>
+			<room name="hallway"></room>
+		</rooms>
+
+	</manifest>
+
+	<introduction>
+
+		<enabled>1</enabled>
+		<text>TODO</text>
+
+	</introduction>
+
+	<meta>
+
+		<title>Trogserve Tutorial</title>
+		<author>James Colannino</author>
+
+	</meta>
+
+	<!-- Default Player Configuration -->
+	<player>
+
+		<default>
+
+			<inventory>
+				<weight>0</weight>
+			</inventory>
+
+			<!-- The player is immortal -->
+			<maxHealth>0</maxHealth>
+
+		</default>
+
+	</player>
+
+	<!-- Room Definitions -->
+	<rooms>
+
+		<room name="start">
+
+			<title>The Classroom</title>
+
+			<description>
+TODO: Description of the classroom setting.
+
+Outside, to the west, you see a hallway lined with lockers.
+
+If at any point you want to reread this description (or the description of any other room you've previously visited), type "look".
+
+To go west and explore the hallway outside, type "go west", "west", or just "w".
+			</description>
+
+			<west>hallway</west>
+
+			<contains>
+				<!-- <object>sword</object> -->
+				<!-- <creature>teacher</creature> -->
+			</contains>
+
+		</room>
+
+		<room name="hallway">
+
+			<title>School Hallway</title>
+
+			<description>
+TODO: Description of the hallway.
+
+To return to the classroom, type "go east", "east", or just "e".
+			</description>
+
+			<east>start</east>
+
+		</room>
+
+	</rooms>
+
+</game>
