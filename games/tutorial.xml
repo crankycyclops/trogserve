@@ -4,10 +4,15 @@
 
 	<manifest>
 
-		<!-- every game must include at least one room named "start" -->
+		<objects>
+			<object name="flyer"></object>
+			<object name="ticket"></object>
+		</objects>
+
 		<rooms>
 			<room name="start"></room>
 			<room name="hallway"></room>
+			<room name="office"></room>
 		</rooms>
 
 	</manifest>
@@ -42,6 +47,90 @@
 
 	</player>
 
+	<!-- Object Definitions -->
+	<objects>
+
+		<object name="flyer">
+
+			<description>Slightly weathered at the edges, it advertises an event that will soon take place at the school. To find out more about it, type "read flyer."</description>
+
+			<short>You see a flyer hanging on the wall. Type "look at flyer" or "observe flyer" to observe it in more detail.</short>
+
+			<aliases>
+				<alias>paper</alias>
+				<alias>advertisement</alias>
+			</aliases>
+
+			<tags>
+				<tag>untakeable</tag>
+			</tags>
+
+			<meta>
+				<text>
+Graduation ceremony today in the auditorium!
+
+Congratulations, graduate! To receive your diploma and complete this tutorial, go to the office north of here (type "go north", "north", or "n"), take your ticket, and go to the auditorium, where the ceremony will take place. We look forward to honoring your academic accomplishments.
+				</text>
+			</meta>
+
+		</object>
+
+		<object name="ticket">
+
+			<description>Shiny and embossed with gold leaf, the fancy piece of paper is oddly reminiscent of the golden ticket found by Charlie Bucket in the movie, "Willy Wonka." If you'd like to know what the ticket says, type "read ticket."</description>
+
+			<short>You see a ticket sitting on the front desk. Type "take ticket" or "get ticket" to pick it up.</short>
+
+			<meta>
+				<text>
+Congratulations, recent graduate on all your accomplishments during the academic year! With this ticket, you are hereby admitted to the graduation ceremony this afternoon in the auditorium. I wish you all the best in your future endeavors.
+
+Sincerely,
+Principle Buttsavich
+				</text>
+			</meta>
+
+			<events>
+
+				<script>
+
+					-- Triggers when a player takes the ticket
+					function onTake(player, ticket)
+
+						if not player:isTagSet("ticketTaken") then
+							player:setTag("ticketTaken")
+							player:out("Congratulations, you found your ticket! Now, all you have to do to graduate and complete this tutorial is go to the auditorium and attend your ceremony. To see a list of all items you're currently carrying, type \"inventory\" or just \"inv.\" If you want to leave your ticket behind, type \"drop ticket\" (but remember that you can't complete the tutorial without it!)\n")
+							player:out("\n")
+						end
+
+						return true, true
+
+					end
+
+					-- Triggers when a player drops the ticket
+					function onDrop(player, ticket)
+
+						if not player:isTagSet("ticketDropped") then
+							player:setTag("ticketDropped")
+							player:out("If you want to leave your ticket behind, that's up to you. Just remember: you can't get into the graduation ceremony and complete this tutorial without it! To pick it up again, type \"take ticket\" or \"get ticket.\"\n")
+							player:out("\n")
+						end
+
+						return true, true
+
+					end
+
+				</script>
+
+				<event name="afterTake">onTake</event>
+				<event name="beforeDrop">onDrop</event>
+
+			</events>
+
+		</object>
+
+	</objects>
+
 	<!-- Room Definitions -->
 	<rooms>
 
@@ -52,33 +141,47 @@
 			<description>
 TODO: Description of the classroom setting.
 
-Outside, to the west, you see a hallway lined with lockers.
+Outside, to the west, you see a hallway lined with lockers. To go and explore it, type "go west", "west", or just "w."
 
-If at any point you want to reread this description (or the description of any other room you've previously visited), type "look".
-
-To go west and explore the hallway outside, type "go west", "west", or just "w".
+If at any point you want to reread this description (or the description of any other room you've previously visited), type "look."
 			</description>
 
 			<west>hallway</west>
-
-			<contains>
-				<!-- <object>sword</object> -->
-				<!-- <creature>teacher</creature> -->
-			</contains>
 
 		</room>
 
 		<room name="hallway">
 
-			<title>School Hallway</title>
+			<title>Hallway</title>
 
 			<description>
 TODO: Description of the hallway.
 
-To return to the classroom, type "go east", "east", or just "e".
+To the east you see a classroom, and to the north you see the main office.
 			</description>
 
 			<east>start</east>
+			<north>office</north>
+
+			<contains>
+				<object>flyer</object>
+			</contains>
+
+		</room>
+
+		<room name="office">
+
+			<title>Main Office</title>
+
+			<description>
+TODO: Description of the office.
+			</description>
+
+			<south>hallway</south>
+
+			<contains>
+				<object>ticket</object>
+			</contains>
 
 		</room>
 
