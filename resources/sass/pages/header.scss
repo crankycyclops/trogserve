@@ -6,7 +6,7 @@
 	box-shadow: 1px 1px 4px 0 rgba(0,0,0,.1);
 	position: fixed;
 	width: calc(100% - 40px);
-	z-index: 3;
+	z-index: 5;
 
 	ul {
 		margin: 0;
@@ -35,6 +35,11 @@
 		text-shadow: none;
 		text-decoration: none;
 		color: $heading-color;
+		line-height: 1.5;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		max-width: 77.5%;
 	}
 
 	.menu {
@@ -48,7 +53,7 @@
 		cursor: pointer;
 		display: inline-block;
 		float: right;
-		padding: 28px 20px;
+		padding: 25px 20px;
 		position: relative;
 		user-select: none;
 
@@ -128,7 +133,7 @@
 	}
 
 	.header li a {
-		padding: 20px 30px;
+		padding: 16px 25px;
 	}
 
 	.header .menu {
@@ -142,6 +147,21 @@
 	}
 }
 
+// Adjust the maximum width of the page title to look good for different screens
+@media screen and (max-width: 359px) {
+
+	.header .logo {
+		max-width: 63%;
+	}
+}
+
+@media screen and (min-width: 360px) {
+
+	.header .logo {
+		max-width: 69%;
+	}
+}
+
 // Adjust the title font size to look good on gradually smaller displays
 @media screen and (max-width: 374px) {
 
@@ -150,16 +170,9 @@
 	}
 }
 
-@media screen and (min-width: 375px) and (max-width: 429px) {
+@media screen and (min-width: 376px) {
 
 	.header .logo {
 		font-size: 24px;
-	}
-}
-
-@media screen and (min-width: 430px) {
-
-	.header .logo {
-		font-size: 32px;
 	}
 }

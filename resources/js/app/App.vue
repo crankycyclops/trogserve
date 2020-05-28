@@ -2,11 +2,7 @@
 
 	<v-app id="trogserve">
 
-		<v-app-bar :clipped-left="false" app>
-
-			<v-toolbar-title>{{ $store.state.title }}</v-toolbar-title>
-
-		</v-app-bar>
+		<AppHeader :title="$store.state.title" />
 
 		<v-content>
 
@@ -36,7 +32,44 @@
 
 </template>
 
+<style lang="scss" scoped>
+
+	// I have to use !important because Vuetify made this style inline and this
+	// is the only way I can override it from my stylesheet. Grr.
+	#trogserve main {
+		padding: 0 !important;
+	}
+
+	// Make sure the main content is always displayed below the header
+	@media screen and (max-width: 374px) {
+
+		main {
+			margin-top: 66px;
+		}
+
+		body::after {
+			// 52px for a flush border
+			top: 66px;
+		}
+	}
+
+	@media screen and (min-width: 375px) {
+
+		main {
+			margin-top: 74px;
+		}
+
+		body::after {
+			// 60px for a flush border
+			top: 74px;
+		}
+	}
+
+</style>
+
 <script>
+
+	import AppHeader from './components/Header.vue';
 
 	export default {
 
@@ -70,6 +103,10 @@
 					}
 				}
 			}
+		},
+
+		components: {
+			AppHeader
 		}
 	};
 

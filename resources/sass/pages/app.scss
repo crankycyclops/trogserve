@@ -4,6 +4,13 @@
 @import '../mixins';
 @import '../layout';
 
+// Forces there to always be a scrollbar so you don't get weird centering issues
+// depending on whether or not the content is long enough to generate a
+// scrollbar.
+html {
+	overflow-y: scroll;
+}
+
 .homepage-section .type {
 	margin: 1em 0 1em 0;
 }

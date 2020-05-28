@@ -22,32 +22,23 @@ body::after {
 @media screen and (max-width: 374px) {
 
 	main {
-		margin-top: 80px;
+		margin-top: 66px;
 	}
 
 	body::after {
-		top: 80px;
+		// 52px for flush border
+		top: 66px;
 	}
 }
 
-@media screen and (min-width: 375px) and (max-width: 429px) {
+@media screen and (min-width: 375px) {
 
 	main {
-		margin-top: 88px;
+		margin-top: 74px;
 	}
 
 	body::after {
-		top: 88px;
-	}
-}
-
-@media screen and (min-width: 430px) {
-
-	main {
-		margin-top: 96px;
-	}
-
-	body::after {
-		top: 96px;
+		// 60px for flush border
+		top: 74px;
 	}
 }

@@ -285,33 +285,33 @@
 	@media only screen and (max-height: 550px) {
 
 		#output {
-			height: 47vh;
+			height: 42vh;
 		}
 
 		#output-container::before, #output-container::after {
-			height: calc(47vh + 1.8rem);
+			height: calc(42vh + 1.8rem);
 		}
 	}
 
 	@media only screen and (min-height: 551px) and (max-height: 699px) {
 
 		#output {
-			height: 55vh;
+			height: 50vh;
 		}
 
 		#output-container::before, #output-container::after {
-			height: calc(55vh + 1.8rem);
+			height: calc(50vh + 1.8rem);
 		}
 	}
 
 	@media only screen and (min-height: 700px) {
 
 		#output {
-			height: 65vh;
+			height: 60vh;
 		}
 
 		#output-container::before, #output-container::after {
-			height: calc(65vh + 1.8rem);
+			height: calc(60vh + 1.8rem);
 		}
 	}
 
