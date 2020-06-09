@@ -19,13 +19,13 @@
         "material-design-icons-iconfont": "^5.0.1",
         "reset-css": "^5.0.1",
         "resolve-url-loader": "^2.3.1",
-        "sass": "^1.26.5",
+        "sass": "^1.26.8",
         "sass-loader": "7.*",
         "typeit": "^7.0.4",
         "vue": "^2.6.11",
-        "vue-router": "^3.2.0",
+        "vue-router": "^3.3.2",
         "vue-template-compiler": "^2.6.10",
-        "vuetify": "^2.2.30",
+        "vuetify": "^2.2.33",
         "vuex": "^3.4.0"
     },
     "comments": {
