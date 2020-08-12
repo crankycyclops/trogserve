@@ -124,6 +124,10 @@ Principle Buttsavich
 
 			</events>
 
+			<messages>
+				<message name="resourceMaxExceeded">You can only take one ticket.</message>
+			</messages>
+
 		</resource>
 
 	</resources>
