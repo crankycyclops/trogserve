@@ -119,8 +119,8 @@ Principle Buttsavich
 
 				</script>
 
-				<event name="afterTake">onTake</event>
-				<event name="beforeDrop">onDrop</event>
+				<event name="afterTakeResource">onTake</event>
+				<event name="beforeDropResource">onDrop</event>
 
 			</events>
 
