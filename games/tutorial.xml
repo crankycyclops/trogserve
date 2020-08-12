@@ -2,21 +2,6 @@
 
 <game>
 
-	<manifest>
-
-		<objects>
-			<object name="flyer"></object>
-			<object name="ticket"></object>
-		</objects>
-
-		<rooms>
-			<room name="start"></room>
-			<room name="hallway"></room>
-			<room name="office"></room>
-		</rooms>
-
-	</manifest>
-
 	<introduction>
 
 		<enabled>1</enabled>
@@ -75,11 +60,23 @@ Congratulations, graduate! To receive your diploma and complete this tutorial, g
 
 		</object>
 
-		<object name="ticket">
+	</objects>
+
+	<resources>
+
+		<resource name="ticket">
+
+			<integer>1</integer>
+			<maxallocation>1</maxallocation>
 
 			<description>Shiny and embossed with gold leaf, the fancy piece of paper is oddly reminiscent of the golden ticket found by Charlie Bucket in the movie, "Willy Wonka." If you'd like to know what the ticket says, type "read ticket."</description>
 
 			<short>You see a ticket sitting on the front desk. Type "take ticket" or "get ticket" to pick it up.</short>
+
+			<tags>
+				<tag>sticky</tag>
+				<tag>ephemeral</tag>
+			</tags>
 
 			<meta>
 				<text>
@@ -127,9 +124,9 @@ Principle Buttsavich
 
 			</events>
 
-		</object>
+		</resource>
 
-	</objects>
+	</resources>
 
 	<!-- Room Definitions -->
 	<rooms>
@@ -179,9 +176,9 @@ TODO: Description of the office.
 
 			<south>hallway</south>
 
-			<contains>
-				<object>ticket</object>
-			</contains>
+			<resources>
+				<resource name="ticket">1</resource>
+			</resources>
 
 		</room>
 
