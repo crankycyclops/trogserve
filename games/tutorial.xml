@@ -109,7 +109,7 @@ Principle Buttsavich
 
 						if not player:isTagSet("ticketDropped") then
 							player:setTag("ticketDropped")
-							player:out("If you want to leave your ticket behind, that's up to you. Just remember: you can't get into the graduation ceremony and complete this tutorial without it! To pick it up again, type \"take ticket\" or \"get ticket.\"\n")
+							player:out("If you want to leave your ticket behind, that's up to you. Just remember: you can't get into the graduation ceremony and complete this tutorial without it! To pick it up again, return to the main office and type \"take ticket\" or \"get ticket.\"\n")
 							player:out("\n")
 						end
 
@@ -125,7 +125,7 @@ Principle Buttsavich
 			</events>
 
 			<messages>
-				<message name="resourceMaxExceeded">You can only take one ticket.</message>
+				<message name="takeErrorMaxExceeded">You already have a ticket.</message>
 			</messages>
 
 		</resource>
