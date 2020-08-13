@@ -96,7 +96,7 @@ Principle Buttsavich
 
 						if not player:isTagSet("ticketTaken") then
 							player:setTag("ticketTaken")
-							player:out("Congratulations, you found your ticket! Now, all you have to do to graduate and complete this tutorial is go to the auditorium and attend your ceremony. To see a list of all items you're currently carrying, type \"inventory\" or just \"inv.\" If you want to leave your ticket behind, type \"drop ticket\" (but remember that you can't complete the tutorial without it!)\n")
+							player:out("Congratulations, you've got your ticket! Now, all you have to do to graduate and complete this tutorial is go to the auditorium and attend your ceremony. To see a list of all items you're currently carrying, type \"inventory\" or just \"inv.\" If you want to leave your ticket behind, type \"drop ticket\" (but remember that you can't complete the tutorial without it!)\n")
 							player:out("\n")
 						end
 
@@ -158,11 +158,12 @@ If at any point you want to reread this description (or the description of any o
 			<description>
 TODO: Description of the hallway.
 
-To the east you see a classroom, and to the north you see the main office.
+To the east you see a classroom, and to the north you see the main office. To the south you see the front entrance to the school.
 			</description>
 
 			<east>start</east>
 			<north>office</north>
+			<south>front door</south>
 
 			<contains>
 				<object>flyer</object>
@@ -183,6 +184,93 @@ TODO: Description of the office.
 			<resources>
 				<resource name="ticket">1</resource>
 			</resources>
+
+		</room>
+
+		<room name="front door">
+
+			<title>Front Door</title>
+
+			<description>
+TODO: Description of the area immediately outside the front door.
+
+To the west you see a cluster of lunch tables, while to the east you see the outside wall of the school building. Further south is a busy street filled with cars.
+			</description>
+
+			<north>hallway</north>
+			<east>outside</east>
+			<west>lunch tables</west>
+
+		</room>
+
+		<room name="outside">
+
+			<title>Outside</title>
+
+			<description>
+TODO: Description of the western part of the outside.
+
+To the east, you see the front door. To the north is a parking lot.
+			</description>
+
+			<north>parking 1</north>
+			<east>front door</east>
+
+		</room>
+
+		<room name="parking 1">
+
+			<title>Parking Lot</title>
+
+			<description>
+TODO: Description of the parking lot.
+
+Going south will bring you closer to the front of the school. While around the corner of the building, to the west, you see more cars.
+			</description>
+
+			<west>parking 2</west>
+			<south>outside</south>
+
+		</room>
+
+		<room name="parking 2">
+
+			<title>Parking Lot</title>
+
+			<description>
+TODO: Parking lot (continued.)
+
+To the south, you see the entrance to the auditorium.
+			</description>
+
+			<east>parking 1</east>
+			<south>auditorium entrance</south>
+
+		</room>
+
+		<room name="auditorium entrance">
+
+			<title>Entrance to the Auditorium</title>
+
+			<description>
+TODO: Description
+			</description>
+
+			<north>parking 2</north>
+			<south>lunch tables</south>
+
+		</room>
+
+		<room name="lunch tables">
+
+			<title>Lunch Area</title>
+
+			<description>
+TODO: Description of lunch tables
+			</description>
+
+			<north>auditorium entrance</north>
+			<east>front door</east>
 
 		</room>
 
