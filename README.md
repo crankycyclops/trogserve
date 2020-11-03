@@ -41,7 +41,7 @@ The PHP extension has been tested with and is known to build against PHP 7.2, 7.
 4. `composer install`
 5. `node install`
 6. `php artisan migrate`
-7. `php artisan passport:keys && php artisan passport:client --password`
+7. `php artisan passport:keys && php artisan passport:client --password --provider admins`
 8. make prod to build frontend (or make dev if not a production server)
 9. To test your installation, fire up the Laravel development server: `php artisan serve`
 

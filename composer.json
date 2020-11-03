@@ -8,11 +8,11 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.2",
+        "php": "^7.3",
 	"ext-trogdord": "*",
         "fideloper/proxy": "^4.0",
-        "laravel/framework": "^7.0",
-        "laravel/passport": "^8.3",
+        "laravel/framework": "^8.0",
+        "laravel/passport": "^10",
         "laravel/ui": "^2.0",
         "laravel/tinker": "^2.0"
     },
@@ -35,12 +35,10 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/"
-        },
-        "classmap": [
-            "database/seeds",
-            "database/factories"
-        ]
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+	}
     },
     "autoload-dev": {
         "psr-4": {

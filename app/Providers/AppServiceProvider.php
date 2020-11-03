@@ -21,6 +21,7 @@ class AppServiceProvider extends ServiceProvider {
 	 * @return void
 	 */
 	public function boot() {
-		//
+		// Don't uncomment this unless things break due to Laravel 8.x upgrade
+		// Paginator::useBootstrap();
 	}
 }
