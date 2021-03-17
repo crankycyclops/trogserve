@@ -5,20 +5,31 @@ A Laravel + Vue.js frontend for the [trogdor-pp](https://github.com/crankycyclop
 
 The following features have been implemented so far:
 
-1. A partially implemented REST API (accessible to admins only) for creating, querying, updating, and deleting games and players. The implemented endpoints are as follows:
- - GET /admin/api/info: for returning global information and statistics about the configured instance of trogdord
- - GET /admin/api/games: for returning a list of all currently existing games
- - POST /admin/api/games: for creating new games
- - GET /admin/api/games/{id}: for returning data about a specific game
- - DELETE /admin/api/games/{id}: for deleting a specific game
- - GET /admin/api/games/{id}/start: for starting a specific game's clock
- - GET /admin/api/games/{id}/stop: for stopping a specific game's clock
- - GET /admin/api/games/{id}/meta: for returning meta data associated with a game
- - POST /admin/api/games/{id}/meta: for setting meta data associated with a game
- - GET /admin/api/games/{id}/players: returns a list of all players in a game
- - POST /admin/api/games/{id}/players: create a new player in a game
- - DELETE /admin/api/games/{id}/players/{name}: removes a player from a game
+1. A partially implemented admin REST API for creating, querying, updating, and deleting games and players. The implemented endpoints are as follows:
+ - GET /admin/api/info: returns global information and statistics about the configured instance of trogdord
  - GET /admin/api/definitions: for returning a list of all game definition files available to our configured instance of trogdord
+ - POST /admin/api/dump: dumps trogdord's state to disk
+ - POST /admin/api/restore: restores trogdord's state from disk
+ - GET /admin/api/games: returns a list of all currently existing games
+ - POST /admin/api/games: creates a new game
+ - GET /admin/api/games/{id}: returns data about a specific game
+ - DELETE /admin/api/games/{id}: deletes a specific game
+ - GET /admin/api/games/{id}/start: starts a game's clock
+ - GET /admin/api/games/{id}/stop: stops a game's clock
+ - GET /admin/api/games/{id}/meta: returns meta data associated with a game
+ - POST /admin/api/games/{id}/meta: sets meta data associated with a game
+ - GET /admin/api/games/{id}/players: returns a list of all players in a game
+ - POST /admin/api/games/{id}/players: creates a new player in a game
+ - DELETE /admin/api/games/{id}/players/{name}: removes a player from a game
+ - GET /admin/api/games/{id}/dump: dumps a game to disk
+ - GET /admin/api/dumps: returns a list of all dumped games
+ - GET /admin/api/dumps/{id}: returns the details of a dumped game
+ - DELETE /admin/api/dumps/{id}: deletes a dumped game
+ - POST /admin/api/dumps/{id}/restore: restores a dumped game
+ - GET /admin/api/dumps/{id}/slots: returns a list of slots (versions) for a game dump
+ - GET /admin/api/dumps/{id}/slots/{slot}: returns details of a specific game dump slot
+ - DELETE /admin/api/dumps/{id}/slots/{slot}: deletes a specific game dump slot (deletes the whole dump history if it's the only slot left)
+ - POST /admin/api/dumps/{id}/slots/{slot}/restore: restores a game from a specific dump slot
 2. A partially implemented admin panel that currently displays some statistics about the configured trogdord instance and that allows for the creation, modification, and deletion of individual games and players.
 3. A public REST API for listing and interacting with available games:
  - GET /api/games: for returning a list of all running and publicly available games.
