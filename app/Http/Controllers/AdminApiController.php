@@ -45,7 +45,7 @@ class AdminApiController extends Controller {
 	 */
 	public function getGames(): \Illuminate\Http\JsonResponse {
 
-		return response()->json($this->trogdord->games(["title", "author", "synopsis"]));
+		return response()->json($this->trogdord->games(null, ["title", "author", "synopsis"]));
 	}
 
 	/*************************************************************************/
