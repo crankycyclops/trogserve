@@ -17,6 +17,15 @@ Route::pattern('id', '\d+');
 // games running.
 Route::get('/info', 'AdminApiController@getInfo');
 
+// Dumps the server's state to disk
+Route::post('/dump', 'AdminApiController@restoreServer');
+
+// Restores trogdord's state from a dump
+Route::post('/restore', 'AdminApiController@restoreServer');
+
+// Returns a list of all currently uploaded game definition
+Route::get('/definitions', 'AdminApiController@getDefinitions');
+
 // Return a complete list of running games.
 Route::get('/games', 'AdminApiController@getGames');
 
@@ -50,5 +59,29 @@ Route::post('/games/{id}/players', 'AdminApiController@createPlayer');
 // Removes a player from the specified game
 Route::delete('/games/{id}/players/{name}', 'AdminApiController@removePlayer');
 
-// Returns a list of all currently uploaded game definition
-Route::get('/definitions', 'AdminApiController@getDefinitions');
+// Dumps a game's state to disk
+Route::post('/games/{id}/dump', 'AdminApiController@dumpGame');
+
+// Retrieve a list of game dumps
+Route::get('/dumps', 'AdminApiController@getDumps');
+
+// Retrieve information about a specific game dump
+Route::get('/dumps/{id}', 'AdminApiController@getDump');
+
+// Deletes a game dump
+Route::delete('/dumps/{id}', 'AdminApiController@deleteDump');
+
+// Restores a game dump (restores the most recent slot)
+Route::post('/dumps/{id}/restore', 'AdminApiController@restoreDump');
+
+// Retrieves a list of all slots belonging to a game dump
+Route::get('/dump/{id}/slots', 'AdminApiController@getSlots');
+
+// Retrieves details of a specific dump slot
+Route::get('/dump/{id}/slots/{id}', 'AdminApiController@getSlot');
+
+// Deletes a specific dump slot
+Route::delete('/dump/{id}/slots/{id}', 'AdminApiController@deleteSlot');
+
+// Restores a specific dump slot
+Route::post('/dump/{id}/slots/{id}/restore', 'AdminApiController@restoreSlot');

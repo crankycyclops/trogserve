@@ -39,6 +39,32 @@ class AdminApiController extends Controller {
 	/*************************************************************************/
 
 	/**
+	 * Dumps the server's state to disk.
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function dump(): \Illuminate\Http\JsonResponse {
+
+		$this->trogdord->dump();
+		return response()->json([], 204);
+	}
+
+	/*************************************************************************/
+
+	/**
+	 * Restores the server's state from disk.
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function restore(): \Illuminate\Http\JsonResponse {
+
+		$this->trogdord->restore();
+		return response()->json([], 204);
+	}
+
+	/*************************************************************************/
+
+	/**
 	 * Return a list of all currently existing games.
 	 *
 	 * @return \Illuminate\Http\JsonResponse
@@ -119,6 +145,7 @@ class AdminApiController extends Controller {
 			'id'         => $game->id,
 			'name'       => $game->name,
 			'definition' => $game->definition,
+			'created'    => $game->created,
 			'title'      => $meta['title'],
 			'author'     => $meta['author'],
 			'synopsis'   => $meta['synopsis'],
@@ -278,5 +305,149 @@ class AdminApiController extends Controller {
 	public function getDefinitions(): \Illuminate\Http\JsonResponse {
 
 		return response()->json($this->trogdord->definitions());
+	}
+
+	/*************************************************************************/
+
+	/**
+	 * Dumps a game to disk.
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function dumpGame(): \Illuminate\Http\JsonResponse {
+
+		// TODO
+		return response()->json([], 204);
+	}
+
+	/*************************************************************************/
+
+	/**
+	 * Retrieves a list of all game dumps.
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function getDumps(): \Illuminate\Http\JsonResponse {
+
+		return response()->json($this->trogdord->dumps());
+	}
+
+	/*************************************************************************/
+
+	/**
+	 * Retrieves a game dump's details.
+	 *
+	 * @param int $id Game Dump ID
+	 * @return Illuminate\Http\JsonResponse
+	 */
+	public function getDump(int $id): \Illuminate\Http\JsonResponse {
+
+		$dump = $this->trogdord->getDump($id);
+
+		return response()->json([
+			'id'         => $dump->id,
+			'name'       => $dump->name,
+			'definition' => $dump->definition,
+			'created'    => $dump->created
+		]);
+	}
+
+	/*************************************************************************/
+
+	/**
+	 * Deletes a game dump.
+	 *
+	 * @param int $id Game Dump ID
+	 * @return Illuminate\Http\JsonResponse
+	 */
+	public function destroyDump(int $id): \Illuminate\Http\JsonResponse {
+
+		$this->trogdord->getDump($id)->destroy();
+		return response()->json([], 204);
+	}
+
+	/*************************************************************************/
+
+	/**
+	 * Restores a game dump from disk.
+	 *
+	 * @param int $id Game Dump ID
+	 * @return Illuminate\Http\JsonResponse
+	 */
+	public function restoreDump(int $id): \Illuminate\Http\JsonResponse {
+
+		$dump = $this->trogdord->getDump($id);
+		$game = $dump->restore();
+
+		return response()->json([
+			'id'         => $game->id,
+			'name'       => $game->name,
+			'definition' => $game->definition,
+			'created'    => $game->created
+		]);
+	}
+
+	/*************************************************************************/
+
+	/**
+	 * Gets a list of a game dump's slots.
+	 *
+	 * @param int $id Game Dump ID
+	 * @return Illuminate\Http\JsonResponse
+	 */
+	public function getSlots(int $id): \Illuminate\Http\JsonResponse {
+
+		$dump = $this->trogdord->getDump($id);
+		return response()->json($dump->slots());
+	}
+
+	/*************************************************************************/
+
+	/**
+	 * Gets details of a specific dump slot.
+	 *
+	 * @param int $id Game Dump ID
+	 * @param int $id Dump Slot
+	 * @return Illuminate\Http\JsonResponse
+	 */
+	public function getSlot(int $id, int $slot): \Illuminate\Http\JsonResponse {
+
+		$slot = $this->trogdord->getDump($id)->getSlot($slot);
+
+		return response()->json([
+			'slot'         => $slot->slot,
+			'timestamp_ms' => $slot->timestampMs
+		]);
+	}
+
+	/*************************************************************************/
+
+	/**
+	 * Deletes a specific dump slot (results in the deletion of the whole dump
+	 * history if it's the only slot left.)
+	 *
+	 * @param int $id Game Dump ID
+	 * @param int $id Dump Slot
+	 * @return Illuminate\Http\JsonResponse
+	 */
+	public function deleteSlot(int $id, int $slot): \Illuminate\Http\JsonResponse {
+
+		$this->trogdord->getDump($id)->getSlot($slot)->destroy();
+		return response()->json([], 204);
+	}
+
+	/*************************************************************************/
+
+	/**
+	 * Restores a specific dump slot.
+	 *
+	 * @param int $id Game Dump ID
+	 * @param int $id Dump Slot
+	 * @return Illuminate\Http\JsonResponse
+	 */
+	public function restoreSlot(int $id, int $slot): \Illuminate\Http\JsonResponse {
+
+		$this->trogdord->getDump($id)->getSlot($slot)->restore();
+		return response()->json([], 204);
 	}
 }
