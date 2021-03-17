@@ -131,6 +131,12 @@
 					},
 
 					{
+						name: "Dump & Restore",
+						route: "/admin/state",
+						icon: "save"
+					},
+
+					{
 						name: "Games",
 						route: "/admin/games",
 						icon: "videogame_asset"

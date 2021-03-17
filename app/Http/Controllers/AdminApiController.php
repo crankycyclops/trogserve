@@ -26,6 +26,18 @@ class AdminApiController extends Controller {
 	/*************************************************************************/
 
 	/**
+	 * Return a list of non-sensitive configuration options set in trogdord.ini.
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function getConfig(): \Illuminate\Http\JsonResponse {
+
+		return response()->json($this->trogdord->config());
+	}
+
+	/*************************************************************************/
+
+	/**
 	 * Return generalized information and statistics about the game server,
 	 * such as the number of games running.
 	 *

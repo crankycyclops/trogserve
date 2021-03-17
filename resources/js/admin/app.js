@@ -35,6 +35,7 @@ import App from './App.vue';
 
 import Account from './components/Account.vue'
 import Statistics from './components/Statistics.vue';
+import State from './components/State.vue';
 import Games from './components/Games.vue';
 import NewGame from './components/games/New.vue';
 import DisplayGame from './components/games/Game.vue';
@@ -76,6 +77,12 @@ const app = new Vue({
 				path: '/admin',
 				name: 'statistics',
 				component: Statistics
+			},
+
+			{
+				path: '/admin/state',
+				name: 'state',
+				component: State
 			},
 
 			{

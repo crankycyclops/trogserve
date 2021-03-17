@@ -6,6 +6,7 @@ A Laravel + Vue.js frontend for the [trogdor-pp](https://github.com/crankycyclop
 The following features have been implemented so far:
 
 1. A partially implemented admin REST API for creating, querying, updating, and deleting games and players. The implemented endpoints are as follows:
+ - GET /admin/api/config: returns non-sensitive settings set in trogdord.ini
  - GET /admin/api/info: returns global information and statistics about the configured instance of trogdord
  - GET /admin/api/definitions: for returning a list of all game definition files available to our configured instance of trogdord
  - POST /admin/api/dump: dumps trogdord's state to disk

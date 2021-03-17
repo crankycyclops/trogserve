@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 
 Route::pattern('id', '\d+');
 
+// Return a list of all non-sensitive settings set in trogdord.ini.
+Route::get('/config', 'AdminApiController@getConfig');
+
 // Return generalized statistics about the game server, such as the number of
 // games running.
 Route::get('/info', 'AdminApiController@getInfo');

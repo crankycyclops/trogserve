@@ -177,27 +177,25 @@
 				this.games.loading = true;
 				this.games.error = null;
 
-				let self = this;
-
 				axios
 					.get('/admin/api/games')
 
 					.then(response => {
 
-						self.games.data = response.data;
+						this.games.data = response.data;
 					})
 
 					.catch(error => {
 
 						if ('undefined' !== typeof(error.response)) {
-							self.games.error = error.response.data.error;
+							this.games.error = error.response.data.error;
 						} else {
-							self.games.error = error.message;
+							this.games.error = error.message;
 						}
 					})
 
 					.finally(() => {
-						self.games.loading = false;
+						this.games.loading = false;
 					});
 			}
 		}
