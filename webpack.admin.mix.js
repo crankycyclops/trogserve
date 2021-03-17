@@ -16,7 +16,8 @@ mix.js('resources/js/admin/app.js', 'public/js/admin')
 	.sass('resources/sass/admin/app.scss', 'public/css/admin')
 	.extract()
 	.sourceMaps()
-	.mergeManifest();
+	.mergeManifest()
+	.vue({ version: 2 });
 
 // Version files in production for cache-busting purposes
 if (mix.inProduction()) {

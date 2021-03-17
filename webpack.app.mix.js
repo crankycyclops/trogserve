@@ -21,7 +21,8 @@ mix.js('resources/js/app/app.js', 'public/js/app')
 
 	.extract()
 	.sourceMaps()
-	.mergeManifest();
+	.mergeManifest()
+	.vue({ version: 2 });
 
 // Version files in production for cache-busting purposes
 if (mix.inProduction()) {

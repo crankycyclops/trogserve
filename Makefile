@@ -14,7 +14,7 @@ _rename_vuetify:
 prod:
 	npm --section=adminauth run prod
 	npm --section=admin run prod
-	nom --section=pages run prod
+	npm --section=pages run prod
 	npm --section=app run prod
 	php artisan view:cache
 	php artisan route:cache

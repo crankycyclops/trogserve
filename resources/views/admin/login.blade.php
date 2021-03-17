@@ -69,7 +69,7 @@
 		</main>
 
 		<script src="{{ mix('/js/adminauth/manifest.js') }}"></script>
-		<script src="{{ mix('/js/adminauth/vendor.js') }}"></script>
+		<?php // <script src="{{ mix('/js/adminauth/vendor.js') }}"></script> ?>
 		<script src="{{ mix('/js/adminauth/app.js') }}"></script>
 
 	</body>
