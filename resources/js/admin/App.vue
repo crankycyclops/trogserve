@@ -75,7 +75,7 @@
 
 		</v-app-bar>
 
-		<v-content>
+		<v-main>
 
 			<v-container fluid>
 
@@ -97,7 +97,7 @@
 
 			</v-container>
 
-		</v-content>
+		</v-main>
 
 		<v-footer app>
 			<span class="px-4">&copy;{{ new Date().getFullYear() }} James Colannino.</span>
