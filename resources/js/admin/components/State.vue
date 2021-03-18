@@ -38,7 +38,9 @@
 
 						<v-row class="features">
 
-							<v-col style="flex-direction: column" xs="12" sm="12" md="6" lg="4" xl="3">
+							<!-- In Vuetify 2.x, cols takes the place of xs. Why the documentation still
+							references it is beyond me. See: https://github.com/vuetifyjs/vuetify/issues/8997 -->
+							<v-col style="flex-direction: column" cols="12" sm="12" md="6" lg="4" xl="3">
 								<feature-button
 									:elevation="1"
 									title="Dump"
@@ -48,7 +50,7 @@
 								/>
 							</v-col>
 
-							<v-col style="flex-direction: column" xs="12" sm="12" md="6" lg="4" xl="3">
+							<v-col style="flex-direction: column" cols="12" sm="12" md="6" lg="4" xl="3">
 								<feature-button
 									:elevation="1"
 									title="Restore"
@@ -58,7 +60,7 @@
 								/>
 							</v-col>
 
-							<v-col style="flex-direction: column" xs="12" sm="12" md="6" lg="4" xl="3">
+							<v-col style="flex-direction: column" cols="12" sm="12" md="6" lg="4" xl="3">
 								<feature-button
 									:elevation="1"
 									title="Games"
@@ -106,12 +108,12 @@
 
 	export default {
 
-		mounted: function () {
+		mounted() {
 
 			this.load();
 		},
 
-		data: function () {
+		data() {
 
 			return {
 

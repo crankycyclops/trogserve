@@ -125,15 +125,15 @@
 				pages: [
 
 					{
-						name: "Statistics",
-						route: "/admin",
-						icon: "bar_chart"
+						name: "Account",
+						route: "/admin/account",
+						icon: "account_box"
 					},
 
 					{
-						name: "Dump & Restore",
-						route: "/admin/state",
-						icon: "save"
+						name: "Statistics",
+						route: "/admin",
+						icon: "bar_chart"
 					},
 
 					{
@@ -143,9 +143,9 @@
 					},
 
 					{
-						name: "Account",
-						route: "/admin/account",
-						icon: "account_box"
+						name: "Dump & Restore",
+						route: "/admin/state",
+						icon: "save"
 					}
 				],
 
