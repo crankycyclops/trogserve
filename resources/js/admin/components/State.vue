@@ -36,7 +36,36 @@
 
 					<template v-else>
 
-						TODO ;)
+						<v-row class="features">
+
+							<v-col style="flex-direction: column" xs="12" sm="12" md="6" lg="4" xl="3">
+								<feature-button
+									:elevation="1"
+									title="Dump"
+									description="Dump the server's global state to disk."
+									icon="file_download"
+								/>
+							</v-col>
+
+							<v-col style="flex-direction: column" xs="12" sm="12" md="6" lg="4" xl="3">
+								<feature-button
+									:elevation="1"
+									title="Restore"
+									description="Restore the server's global state from disk."
+									icon="settings_backup_restore"
+								/>
+							</v-col>
+
+							<v-col style="flex-direction: column" xs="12" sm="12" md="6" lg="4" xl="3">
+								<feature-button
+									:elevation="1"
+									title="Games"
+									description="Restore one or more dumped games."
+									icon="videogame_asset"
+								/>
+							</v-col>
+
+						</v-row>
 
 					</template>
 
@@ -58,7 +87,19 @@
 
 </template>
 
+
+<style scoped>
+
+.features {
+	padding-top: 15px;
+}
+
+</style>
+
+
 <script>
+
+	import FeatureButton from './ui/FeatureButton';
 
 	export default {
 
@@ -110,6 +151,10 @@
 						this.status.loading = false;
 					});
 			}
+		},
+
+		components: {
+			FeatureButton
 		}
 	};
 
