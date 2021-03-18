@@ -120,13 +120,12 @@
 
 				this.status.loading = true;
 
-				axios
-					.get('/admin/api/config')
+				axios.get('/admin/api/config')
 
 					.then(response => {
 
 						if (!response.data["state.enabled"]) {
-							this.$emit('navigate', '/admin/state/' + page);
+							this.$emit('navigate', '/admin/state');
 						}
 					})
 
@@ -134,7 +133,7 @@
 					// which will display an informative error message.
 					.catch(error => {
 
-						this.$emit('navigate', '/admin/state/' + page);
+						this.$emit('navigate', '/admin/state');
 					})
 
 					.finally(() => {

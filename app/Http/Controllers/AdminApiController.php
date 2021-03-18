@@ -341,7 +341,7 @@ class AdminApiController extends Controller {
 	 */
 	public function getDumps(): \Illuminate\Http\JsonResponse {
 
-		return response()->json($this->trogdord->dumps());
+		return response()->json($this->trogdord->dumped());
 	}
 
 	/*************************************************************************/

@@ -138,8 +138,7 @@
 
 				this.status.loading = true;
 
-				axios
-					.get('/admin/api/config')
+				axios.get('/admin/api/config')
 
 					.then(response => {
 
