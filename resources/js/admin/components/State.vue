@@ -62,7 +62,7 @@
 								<feature-button
 									:elevation="1"
 									title="Games"
-									description="Restore one or more dumped games."
+									description="Manage one or more dumped games."
 									icon="videogame_asset"
 									@click="navigate('games');"
 								/>
@@ -155,11 +155,10 @@
 					});
 			},
 
-			// Navigate to the desired feature
+			// Navigate to the desired state feature
 			navigate(page) {
 
-				// TODO
-				alert(page);
+				this.$emit('navigate', '/admin/state/' + page);
 			}
 		},
 

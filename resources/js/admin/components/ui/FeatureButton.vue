@@ -90,18 +90,6 @@
 				type: String,
 				required: true
 			}
-		},
-
-		data: function () {
-
-			return {
-				//
-			};
-		},
-
-		methods: {
-
-			// TOOD
 		}
 	};
 

@@ -39,6 +39,9 @@ import State from './components/State.vue';
 import Games from './components/Games.vue';
 import NewGame from './components/games/New.vue';
 import DisplayGame from './components/games/Game.vue';
+import StateDump from './components/state/Dump.vue';
+import StateRestore from './components/state/Restore.vue';
+import StateGames from './components/state/Games.vue';
 
 Vue.use(Vuetify);
 Vue.use(VueRouter);
@@ -83,6 +86,24 @@ const app = new Vue({
 				path: '/admin/state',
 				name: 'state',
 				component: State
+			},
+
+			{
+				path: '/admin/state/dump',
+				name: 'state_dump',
+				component: StateDump
+			},
+
+			{
+				path: '/admin/state/restore',
+				name: 'state_restore',
+				component: StateRestore
+			},
+
+			{
+				path: '/admin/state/games',
+				name: 'state_games',
+				component: StateGames
 			},
 
 			{
