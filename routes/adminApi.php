@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 */
 
 Route::pattern('id', '\d+');
+Route::pattern('slot', '\d+');
 
 // Return a list of all non-sensitive settings set in trogdord.ini.
 Route::get('/config', 'AdminApiController@getConfig');
@@ -21,10 +22,10 @@ Route::get('/config', 'AdminApiController@getConfig');
 Route::get('/info', 'AdminApiController@getInfo');
 
 // Dumps the server's state to disk
-Route::post('/dump', 'AdminApiController@restoreServer');
+Route::post('/dump', 'AdminApiController@dump');
 
 // Restores trogdord's state from a dump
-Route::post('/restore', 'AdminApiController@restoreServer');
+Route::post('/restore', 'AdminApiController@restore');
 
 // Returns a list of all currently uploaded game definition
 Route::get('/definitions', 'AdminApiController@getDefinitions');
@@ -81,10 +82,10 @@ Route::post('/dumps/{id}/restore', 'AdminApiController@restoreDump');
 Route::get('/dump/{id}/slots', 'AdminApiController@getSlots');
 
 // Retrieves details of a specific dump slot
-Route::get('/dump/{id}/slots/{id}', 'AdminApiController@getSlot');
+Route::get('/dump/{id}/slots/{slot}', 'AdminApiController@getSlot');
 
 // Deletes a specific dump slot
-Route::delete('/dump/{id}/slots/{id}', 'AdminApiController@deleteSlot');
+Route::delete('/dump/{id}/slots/{slot}', 'AdminApiController@deleteSlot');
 
 // Restores a specific dump slot
-Route::post('/dump/{id}/slots/{id}/restore', 'AdminApiController@restoreSlot');
+Route::post('/dump/{id}/slots/{slot}/restore', 'AdminApiController@restoreSlot');

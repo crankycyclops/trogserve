@@ -73,7 +73,7 @@
 
 		</v-dialog>
 
-		<!-- Dialog to confirm deletion of a game -->
+		<!-- Dialog to confirm removal of a player -->
 		<v-dialog
 			v-model="removePlayerForm.showRemoveDialog"
 			overlay-opacity="0.8"

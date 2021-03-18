@@ -125,12 +125,6 @@
 				pages: [
 
 					{
-						name: "Account",
-						route: "/admin/account",
-						icon: "account_box"
-					},
-
-					{
 						name: "Statistics",
 						route: "/admin",
 						icon: "bar_chart"
@@ -146,6 +140,12 @@
 						name: "Dump & Restore",
 						route: "/admin/state",
 						icon: "save"
+					},
+
+					{
+						name: "Account",
+						route: "/admin/account",
+						icon: "account_box"
 					}
 				],
 
