@@ -35,47 +35,55 @@
 						</v-col>
 					</v-row>
 
-					<!-- Clickable list of dumped games -->
-					<v-list id="games" three-line max-height="48vh" v-else>
+					<template v-else>
 
-						<template v-for="(game, index) in games">
+						<v-row style="font-size: 1.1rem;">
+							<v-col xs="12">Click "Restore" to recover a game from its most recent slot or "Destroy" to delete the game's entire dump history. To see or operate on individual slots, click on the desired game's name.</strong></v-col>
+						</v-row>
 
-							<v-list-item link :key="game.name" @click="expand(game.id)">
+						<!-- Clickable list of dumped games -->
+						<v-list id="games" three-line max-height="48vh">
 
-								<v-list-item-content>
+							<template v-for="(game, index) in games">
 
-									<v-list-item-title>{{ game.name }} ({{ game.definition }})</v-list-item-title>
-									<v-list-item-subtitle><strong>Created:</strong> {{ showCreated(game.created) }}</v-list-item-subtitle>
+								<v-list-item link :key="game.name" @click="expand(game.id)">
 
-								</v-list-item-content>
+									<v-list-item-content>
 
-								<v-list-item-action>
+										<v-list-item-title>{{ game.name }} ({{ game.definition }})</v-list-item-title>
+										<v-list-item-subtitle><strong>Created:</strong> {{ showCreated(game.created) }}</v-list-item-subtitle>
 
-									<v-btn
-										text
-										color="primary"
-										@click.stop="restore(game.id)"
-									>
-										Restore
-									</v-btn>
+									</v-list-item-content>
 
-									<v-btn
-										text
-										color="error"
-										@click.stop="destroy(game.id)"
-									>
-										Destroy
-									</v-btn>
+									<v-list-item-action>
 
-								</v-list-item-action>
+										<v-btn
+											text
+											color="primary"
+											@click.stop="restore(game.id)"
+										>
+											Restore
+										</v-btn>
 
-							</v-list-item>
+										<v-btn
+											text
+											color="error"
+											@click.stop="destroy(game.id)"
+										>
+											Destroy
+										</v-btn>
 
-							<v-divider v-if="index < games.length - 1" :key="index" />
+									</v-list-item-action>
 
-						</template>
+								</v-list-item>
 
-					</v-list>
+								<v-divider v-if="index < games.length - 1" :key="index" />
+
+							</template>
+
+						</v-list>
+
+					</template>
 
 				</template>
 
@@ -91,6 +99,7 @@
 <style>
 
 	#games {
+		margin-top: 2rem;
 		background-color: #2a2a2a;
 		border: 1px solid #0e0e0e;
 		overflow-y: auto;
