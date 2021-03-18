@@ -7,6 +7,8 @@
 			:width="width"
 			:height="height"
 			:class="{ 'on-hover': hover }"
+			shaped
+			@click="$emit('click');"
 		>
 
 			<h3 class="title">{{ title }}</h3>
@@ -28,6 +30,10 @@
 	text-align: center;
 	transition: opacity .2s ease-in-out;
 	padding: 10px;
+	-webkit-user-select: none; /* Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ and Edge */
+	user-select: none; /* Standard */
 }
 
 .v-sheet .title {

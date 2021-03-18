@@ -44,6 +44,7 @@
 									title="Dump"
 									description="Dump the server's global state to disk."
 									icon="file_download"
+									@click="navigate('dump');"
 								/>
 							</v-col>
 
@@ -53,6 +54,7 @@
 									title="Restore"
 									description="Restore the server's global state from disk."
 									icon="settings_backup_restore"
+									@click="navigate('restore');"
 								/>
 							</v-col>
 
@@ -62,6 +64,7 @@
 									title="Games"
 									description="Restore one or more dumped games."
 									icon="videogame_asset"
+									@click="navigate('games');"
 								/>
 							</v-col>
 
@@ -150,6 +153,13 @@
 					.finally(() => {
 						this.status.loading = false;
 					});
+			},
+
+			// Navigate to the desired feature
+			navigate(page) {
+
+				// TODO
+				alert(page);
 			}
 		},
 
