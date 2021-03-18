@@ -51,10 +51,10 @@ The PHP extension has been tested with and is known to build against PHP 7.2, 7.
 2. `cd webroot && git clone git@github.com:crankycyclops/trogserve.git`
 3. `cp webroot/.env.example webroot/.env` and configure according to your environment
 4. `composer install`
-5. `node install`
+5. `npm install && cd webroot/sockserve && npm install && cd ..`
 6. `php artisan migrate`
 7. `php artisan passport:keys && php artisan passport:client --password --provider admins`
-8. make prod to build frontend (or make dev if not a production server)
+8. `make prod` to build frontend (or `make dev` if not a production server)
 9. To test your installation, fire up the Laravel development server: `php artisan serve`
 
 ## Configuration
@@ -105,9 +105,9 @@ For the frontend API and SPA used to retrieve information about and play games:
 And finally, for the build process:
 
 - webpack.mix.js, webpack.app.mix.js, webpack.adminauth.mix.js, and webpack.admin.mix.js: interesting because I had to do a little magic to separate everything out into their own separate bundles
-- Makefile: you'll notice that in order to separate Vuetify from the main bundle, I had to resort to some Makefile magic that you might find interesting—or that you might find to be ugly, depending on your disposition ;)
+- Makefile: you'll notice that in order to separate Vuetify from the main bundle, I had to resort to some Makefile magic that you might find interesting—or that you might find ugly, depending on your disposition :)
 
-If you've never seen the innards of a PHP extension before, you might also find the following link interesting (written in C++17): https://github.com/crankycyclops/trogdor-pp/tree/master/src/php7/trogdord
+If you've never seen the innards of a PHP extension before, you might also find the following link to my sister project interesting (written in C++17): https://github.com/crankycyclops/trogdor-pp/tree/master/src/php7/trogdord
 
 ## License
 
@@ -117,6 +117,6 @@ This project is licensed under the [GPL 3.0](https://www.gnu.org/licenses/gpl-3.
 
 James Colannino (Author)
 
-This entire repo, as well as its trogdor-pp, trogdord, and PHP extension dependencies, is my own personal passion project and has been built from the ground up. I loved text adventure games growing up and always wanted to write one, but as a child, my lack of programming ability always frustrated me. Now, as an adult CS major, this is a bit of wish fulfillment on my part :)
+This entire repo, as well as its trogdor-pp, trogdord, and PHP extension dependencies, is my own personal passion project built from the ground up. Growing up, I loved text adventure games and wanted to write one, but as a child, my lack of programming ability always frustrated me. Now, as an adult CS major, this is a bit of over-the-top wish fulfillment on my part.
 
 Enjoy!
