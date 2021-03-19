@@ -51,17 +51,6 @@
 			players: {
 				type: Number
 			}
-		},
-
-		data: function () {
-
-			return {
-				//
-			};
-		},
-
-		methods: {
-			//
 		}
 	};
 

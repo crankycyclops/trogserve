@@ -22,9 +22,7 @@
 							Insert a new player into the game.
 						</v-col>
 
-						<v-col cols="12" v-if="createPlayerForm.error">
-							<span class="error">{{ createPlayerForm.error }}</span>
-						</v-col>
+						<message type="error" :message="createPlayerForm.error" />
 
 						<v-col cols="12">
 
@@ -145,17 +143,10 @@
 
 			<v-card-text>
 
-				<!-- An error occurred -->
-				<v-row align="center" justify="start" v-if="players.error">
-
-					<v-col cols="12">
-						<span class="error">{{ players.error }}</span>
-					</v-col>
-
-				</v-row>
+				<message type="error" :message="players.error" />
 
 				<!-- Display the loaded list of players -->
-				<v-row align="center" justify="start" v-else>
+				<v-row align="center" justify="start" v-if="!players.error.length">
 
 					<v-col cols="12">
 
@@ -278,11 +269,12 @@
 <script>
 
 	import Progress from '../../ui/Progress';
+	import Message from '../../ui/Message';
 	import RequestMixin from '../../../mixins/Request.vue';
 
 	export default {
 
-		mounted: function () {
+		mounted() {
 
 			this.loadPlayers();
 		},
@@ -290,16 +282,16 @@
 		computed: {
 
 			// Form validation values and error messages
-			playerNameMaxLen: function () {return window.playerNameMaxLen;},
-			playerNameMaxLenMsg: function () {return window.playerNameMaxLenMsg;},
+			playerNameMaxLen() {return window.playerNameMaxLen;},
+			playerNameMaxLenMsg() {return window.playerNameMaxLenMsg;},
 
 			// Returns true if a player was selected (clicked on) in the list
-			playerIsSelected: function () {
+			playerIsSelected() {
 				return this.players.selected || 0 === this.players.selected;
 			}
 		},
 
-		data: function () {
+		data() {
 
 			return {
 
@@ -329,7 +321,7 @@
 
 					// If an error occurred when creating a player, set it
 					// here.
-					error: null,
+					error: '',
 
 					// Validation for the "Create Player" form
 					validation: {
@@ -351,7 +343,7 @@
 					loading: true,
 
 					// If an error occurs during loading, set it here
-					error: null,
+					error: '',
 
 					// Our loaded list of players
 					data: []
@@ -384,30 +376,28 @@
 					return false;
 				}
 
-				let self = this;
-
 				let gameId = this.$router.currentRoute.params.id;
 
 				this.createPlayerForm.submitting = true;
-				this.createPlayerForm.error = null;
+				this.createPlayerForm.error = '';
 
 				axios
 					.post('/admin/api/games/' + gameId + '/players', {name: this.createPlayerForm.newPlayerName})
 
 					.then(response => {
 
-						self.cancelCreatePlayer();
-						self.loadPlayers();
+						this.cancelCreatePlayer();
+						this.loadPlayers();
 					})
 
 					// We can't remove the player, so let the admin know
 					// about the error and close the dialog
 					.catch(error => {
-						self.createPlayerForm.error = self.getResponseError(error);
+						this.createPlayerForm.error = this.getResponseError(error);
 					})
 
 					.finally(() => {
-						self.createPlayerForm.submitting = false;
+						this.createPlayerForm.submitting = false;
 					});
 			},
 
@@ -427,7 +417,6 @@
 			// API call to remove player from the game
 			removePlayer() {
 
-				let self = this;
 				let data = {};
 
 				let gameId = this.$router.currentRoute.params.id;
@@ -438,7 +427,7 @@
 				}
 
 				this.players.loading = true;
-				this.players.error = null;
+				this.players.error = '';
 
 				axios
 					.delete('/admin/api/games/' + gameId + '/players/' + playerName, {data: data})
@@ -450,7 +439,7 @@
 					// We can't remove the player, so let the admin know
 					// about the error and close the dialog
 					.catch(error => {
-						alert(self.getResponseError(error));
+						alert(this.getResponseError(error));
 					})
 
 					.finally(() => {
@@ -461,32 +450,31 @@
 			// Loads list of players
 			loadPlayers() {
 
-				let self = this;
-
 				this.players.loading = true;
-				this.players.error = null;
-				this.players.selected = null;
+				this.players.error = '';
+				this.players.selected = '';
 
 				axios
 					.get('/admin/api/games/' + this.$router.currentRoute.params.id + '/players')
 
 					.then(response => {
-						self.players.data = response.data;
+						this.players.data = response.data;
 					})
 
 					// We can't load the players, so display the error
 					.catch(error => {
-						self.players.error = self.getResponseError(error);
+						this.players.error = this.getResponseError(error);
 					})
 
 					.finally(() => {
-						self.players.loading = false;
-						self.players.selected = null;
+						this.players.loading = false;
+						this.players.selected = null;
 					});
 			}
 		},
 
 		components: {
+			'message': Message,
 			'progress-bar': Progress
 		},
 
