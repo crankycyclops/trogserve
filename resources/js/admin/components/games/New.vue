@@ -102,7 +102,7 @@
 
 					// If submission of the form results in an error, this
 					// will be set to the error message
-					error: null,
+					error: '',
 
 					// Corresponds to form values above
 					name: '',
@@ -135,7 +135,7 @@
 			loadDefinitions: function () {
 
 				this.definitions.loading = true;
-				this.definitions.error = null;
+				this.definitions.error = '';
 
 				axios
 					.get('/admin/api/definitions')
@@ -161,7 +161,7 @@
 			// Submit the form to create a new game
 			submit: function () {
 
-				this.form.error = null;
+				this.form.error = '';
 
 				if (!this.$refs.form.validate()) {
 					return false;

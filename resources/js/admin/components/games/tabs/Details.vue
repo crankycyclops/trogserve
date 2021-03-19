@@ -254,7 +254,7 @@
 
 					// The last error that occurred when attempting to start
 					// or stop the game
-					error: null,
+					error: '',
 
 					// Description of the started state
 					startedDesc: 'The timer is running and the game is accepting player commands.',
@@ -272,7 +272,7 @@
 					submitting: false,
 
 					// If an error occurs during submission, set it here
-					error: null,
+					error: '',
 
 					// Whether or not to display the form for editing game
 					// meta values
@@ -332,7 +332,14 @@
 					})
 
 					.catch(error => {
+
 						this.form.error = this.getResponseError(error);
+
+						setTimeout(() => {
+							this.form.error = '';
+						}, 5000);
+
+						this.cancelDestroy();
 					});
 			},
 
@@ -345,7 +352,7 @@
 			// Submit updated game details
 			submitDetails() {
 
-				this.form.error = null;
+				this.form.error = '';
 
 				if (!this.$refs.form.validate()) {
 					return false;
@@ -381,7 +388,12 @@
 					})
 
 					.catch(error => {
+
 						this.form.error = this.getResponseError(error);
+
+						setTimeout(() => {
+							this.form.error = '';
+						}, 5000);
 					})
 
 					.finally(() => {
@@ -401,7 +413,7 @@
 
 				let uriBase = '/admin/api/games/' + this.$router.currentRoute.params.id;
 
-				this.toggleStartData.error = null;
+				this.toggleStartData.error = '';
 				this.toggleStartData.enable = false;
 				this.toggleStartData.state = value;
 
@@ -414,7 +426,13 @@
 					})
 
 					.catch(error => {
+
 						this.toggleStartData.state = this.isRunning;
+
+						setTimeout(() => {
+							this.toggleStartData.error = '';
+						}, 5000);
+
 						this.toggleStartData.error = this.getResponseError(error);
 					})
 
