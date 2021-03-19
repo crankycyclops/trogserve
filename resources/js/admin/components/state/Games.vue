@@ -63,13 +63,7 @@
 			<!-- Display this after loading the page (or an error occurred) -->
 			<template v-else>
 
-				<transition name="showMessage">
-					<v-row align="center" justify="start" v-show="status.message">
-						<v-col cols="12">
-							<span :class="status.error ? 'error' : 'success'">{{ status.message }}</span>
-						</v-col>
-					</v-row>
-				</transition>
+				<message :type="status.messageType" :message="status.message" />
 
 				<v-text-field
 					v-model="table.search"
@@ -115,35 +109,9 @@
 </template>
 
 
-<style>
-
-	#games {
-		margin-top: 2rem;
-		background-color: #2a2a2a;
-		border: 1px solid #0e0e0e;
-		overflow-y: auto;
-		scrollbar-color: #d0d0d0 #505050;
-		scrollbar-width: auto;
-	}
-
-	.showMessage-enter,
-	.showMessage-leave-to {
-		visibility: hidden;
-		height: 0;
-		margin: 0;
-		padding: 0;
-		opacity: 0;
-	}
-
-	.showMessage-enter-active,
-	.showMessage-leave-active {
-		transition: all 0.3s;
-	}
-
-</style>
-
-
 <script>
+
+	import Message from '../ui/Message';
 
 	export default {
 
@@ -189,9 +157,9 @@
 					// When set to true, the restore and destroy buttons will be disabled
 					disableButtons: false,
 
-					// When showing a message, this determines whether it's an error
-					// or confirmation of a successful operation
-					error: false,
+					// When showing a message, this determines what kind it is (can be one
+					// of 'success', 'warning', or 'error'.)
+					messageType: 'success',
 
 					// Error message or confirmation to display
 					message: ''
@@ -269,7 +237,7 @@
 							this.load();
 						}
 
-						this.status.error = false;
+						this.status.messageType = 'success';
 						this.status.message = "Dump " + ('destroy' == this.dialog.operation ? "destroyed." : "restored.");
 					})
 
@@ -281,7 +249,7 @@
 							this.status.message = 'An unknown error occurred. Please try again.';
 						}
 
-						this.status.error = true;
+						this.status.messageType = 'error';
 					})
 
 					.finally(() => {
@@ -308,6 +276,10 @@
 
 				return (new Date(timestamp * 1000)).toString();
 			}
+		},
+
+		components: {
+			'message': Message
 		}
 	};
 

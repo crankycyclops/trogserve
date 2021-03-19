@@ -20,12 +20,7 @@
 			<!-- Display this after games have loaded (or an error occurred) -->
 			<template v-else>
 
-				<!-- API call failed -->
-				<v-row align="center" justify="start" v-if="games.error">
-					<v-col cols="12">
-						<span class="error">{{ games.error }}</span>
-					</v-col>
-				</v-row>
+				<message type="error" :message="games.error" />
 
 				<!-- Clickable list of games -->
 				<v-text-field
@@ -84,26 +79,6 @@
 
 <style scoped>
 
-	#games {
-		background-color: #2a2a2a;
-		border: 1px solid #0e0e0e;
-		overflow-y: auto;
-		scrollbar-color: #d0d0d0 #505050;
-		scrollbar-width: auto;
-	}
-
-	#games::-webkit-scrollbar {
-		width: 11px;
-	}
-
-	#games::-webkit-scrollbar-track {
-		background: #505050;
-	}
-
-	#games::-webkit-scrollbar-thumb {
-		background: #d0d0d0;
-	}
-
 	.v-card__actions .v-btn {
 		font-size: 0.95rem;
 		font-weight: bold;
@@ -112,6 +87,8 @@
 </style>
 
 <script>
+
+	import Message from './ui/Message';
 
 	export default {
 
@@ -146,7 +123,7 @@
 
 					// If an error occurred during loading, that error
 					// message will be set here.
-					error: null,
+					error: '',
 
 					// This is the data that's returned from the API call.
 					data: []
@@ -180,7 +157,7 @@
 			loadGames() {
 
 				this.games.loading = true;
-				this.games.error = null;
+				this.games.error = '';
 
 				axios
 					.get('/admin/api/games')
@@ -197,12 +174,21 @@
 						} else {
 							this.games.error = error.message;
 						}
+
+						// Only display message for 5 seconds
+						setTimeout(() => {
+							this.games.error = '';
+						}, 5000);
 					})
 
 					.finally(() => {
 						this.games.loading = false;
 					});
 			}
+		},
+
+		components: {
+			'message': Message
 		}
 	};
 
