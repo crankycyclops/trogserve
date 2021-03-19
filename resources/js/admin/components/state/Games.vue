@@ -108,6 +108,7 @@
 
 	import Message from '../ui/Message';
 	import Progress from '../ui/Progress';
+	import RequestMixin from '../../mixins/Request';
 
 	export default {
 
@@ -116,7 +117,7 @@
 			this.load();
 		},
 
-		data: function () {
+		data() {
 
 			return {
 
@@ -185,12 +186,10 @@
 					})
 
 					.then(response => {
-
 						this.games = response.data;
 					})
 
 					.catch(error => {
-
 						this.$emit('navigate', '/admin/state');
 					})
 
@@ -238,13 +237,7 @@
 					})
 
 					.catch(error => {
-
-						if ('undefined' !== typeof(error.response)) {
-							this.status.message = error.message;
-						} else {
-							this.status.message = 'An unknown error occurred. Please try again.';
-						}
-
+						this.status.message = this.getResponseError(error);
 						this.status.messageType = 'error';
 					})
 
@@ -277,7 +270,11 @@
 		components: {
 			'message': Message,
 			'progress-bar': Progress
-		}
+		},
+
+		mixins: [
+			RequestMixin
+		]
 	};
 
 </script>

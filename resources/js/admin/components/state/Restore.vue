@@ -81,15 +81,16 @@
 <script>
 
 	import FeatureButton from '../ui/FeatureButton';
+	import RequestMixin from '../../mixins/Request';
 
 	export default {
 
-		mounted: function () {
+		mounted() {
 
 			this.load();
 		},
 
-		data: function () {
+		data() {
 
 			return {
 
@@ -155,17 +156,11 @@
 					.post('/admin/api/restore')
 
 					.then(response => {
-
 						this.dialog.message = 'The global restore was successful.';
 					})
 
 					.catch(error => {
-
-						if ('undefined' !== typeof(error.response)) {
-							this.dialog.message = error.message;
-						} else {
-							this.dialog.message = 'An unknown error occurred. Please try again.';
-						}
+						this.dialog.message = this.getResponseError(error);
 					})
 
 					.finally(() => {
@@ -178,7 +173,11 @@
 
 		components: {
 			FeatureButton
-		}
+		},
+
+		mixins: [
+			RequestMixin
+		]
 	};
 
 </script>
