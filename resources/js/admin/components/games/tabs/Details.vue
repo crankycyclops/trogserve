@@ -176,7 +176,7 @@
 
 		// The first time the component is mounted, the game data has already
 		// been loaded, so make sure we initialize the form.
-		mounted: function () {
+		mounted() {
 
 			this.resetForm();
 		},
@@ -214,28 +214,28 @@
 
 		computed: {
 
-			getGameTitleStr: function () {
+			getGameTitleStr() {
 				return this.title ?
 					this.title + ' (' + this.name + ')' :
 					this.name
 			},
 
-			getGameByLine: function () {
+			getGameByLine() {
 				return this.author ?
 					'By ' + this.author : '';
 			},
 
-			titleMaxLen: function () {return window.titleMaxLen;},
-			authorMaxLen: function () {return window.authorMaxLen;},
-			synopsisMaxLen: function () {return window.synopsisMaxLen;},
+			titleMaxLen() {return window.titleMaxLen;},
+			authorMaxLen() {return window.authorMaxLen;},
+			synopsisMaxLen() {return window.synopsisMaxLen;},
 
-			nameMaxLenMsg: function () {return window.nameMaxLenMsg;},
-			titleMaxLenMsg: function () {return window.titleMaxLenMsg;},
-			authorMaxLenMsg: function () {return window.authorMaxLenMsg;},
-			synopsisMaxLenMsg: function () {return window.synopsisMaxLenMsg;}
+			nameMaxLenMsg() {return window.nameMaxLenMsg;},
+			titleMaxLenMsg() {return window.titleMaxLenMsg;},
+			authorMaxLenMsg() {return window.authorMaxLenMsg;},
+			synopsisMaxLenMsg() {return window.synopsisMaxLenMsg;}
 		},
 
-		data: function () {
+		data() {
 
 			return {
 
@@ -292,7 +292,7 @@
 		watch: {
 
 			// Reset the form whenever a new game is loaded
-			loaded: function () {
+			loaded() {
 
 				this.resetForm();
 			}
@@ -301,7 +301,7 @@
 		methods: {
 
 			// Resets the form to reflect the values associated with the game
-			resetForm: function () {
+			resetForm() {
 
 				this.form.values.title = this.title;
 				this.form.values.author = this.author;
@@ -309,43 +309,41 @@
 			},
 
 			// Prompts the user for confirmation before destroying the game
-			promptDestroy: function () {
+			promptDestroy() {
 
 				this.showDestroyDialog = true;
 			},
 
 			// During confirmation, user decided not to destroy the game
-			cancelDestroy: function () {
+			cancelDestroy() {
 
 				this.showDestroyDialog = false;
 			},
 
 			// Call the API to destroy the game
-			destroy: function () {
-
-				let self = this;
+			destroy() {
 
 				axios.delete('/admin/api/games/' + this.$router.currentRoute.params.id) 
 
 					// After successful update, reset the form and hide it.
 					.then(response => {
-						self.showDestroyDialog = false;
-						self.$emit('navigate', '/admin/games');
+						this.showDestroyDialog = false;
+						this.$emit('navigate', '/admin/games');
 					})
 
 					.catch(error => {
-						self.form.error = self.getResponseError(error);
+						this.form.error = this.getResponseError(error);
 					});
 			},
 
 			// Provide an interface for the user to edit the game's details
-			editDetails: function () {
+			editDetails() {
 
 				this.form.show = true;
 			},
 
 			// Submit updated game details
-			submitDetails: function () {
+			submitDetails() {
 
 				this.form.error = null;
 
@@ -353,19 +351,18 @@
 					return false;
 				}
 
-				let self = this;
 				let data = {};
 
-				['title', 'author', 'synopsis'].forEach(function(field) {
-					if (self[field] !== self.form.values[field]) {
-						data[field] = self.form.values[field];
+				['title', 'author', 'synopsis'].forEach(field => {
+					if (this[field] !== this.form.values[field]) {
+						data[field] = this.form.values[field];
 					}
 				});
 
 				// Nothing actually needs to be updated, so we don't have to
 				// make a request :)
 				if (!Object.keys(data).length) {
-					self.form.show = false;
+					this.form.show = false;
 					return;
 				}
 
@@ -375,34 +372,33 @@
 
 					// After successful update, reset the form and hide it.
 					.then(response => {
-						self.$emit('update', {payload: data, callback: function () {
-							self.$nextTick(() => {
-								self.resetForm();
-								self.form.show = false;
+						this.$emit('update', {payload: data, callback: () => {
+							this.$nextTick(() => {
+								this.resetForm();
+								this.form.show = false;
 							});
 						}});
 					})
 
 					.catch(error => {
-						self.form.error = self.getResponseError(error);
+						this.form.error = this.getResponseError(error);
 					})
 
 					.finally(() => {
-						self.form.submitting = false;
+						this.form.submitting = false;
 					});
 			},
 
 			// The user started editing the game's details but decided to cancel
-			cancelEditDetails: function () {
+			cancelEditDetails() {
 
 				this.resetForm();
 				this.form.show = false;
 			},
 
 			// Starts and stops the game
-			toggleStart: function (value) {
+			toggleStart(value) {
 
-				let self = this;
 				let uriBase = '/admin/api/games/' + this.$router.currentRoute.params.id;
 
 				this.toggleStartData.error = null;
@@ -414,7 +410,7 @@
 					// After successful update, notify the parent to update
 					// the game's statistic
 					.then(response => {
-						self.$emit('update:isRunning', value);
+						this.$emit('update:isRunning', value);
 					})
 
 					.catch(error => {
@@ -423,7 +419,7 @@
 					})
 
 					.finally(() => {
-						self.toggleStartData.enable = true;
+						this.toggleStartData.enable = true;
 					});
 			}
 		},
