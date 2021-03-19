@@ -63,6 +63,10 @@
 		border: none !important;
 	}
 
+	.clickable {
+		cursor: pointer;
+	}
+
 	// Once again, Vuetify makes bad decisions and forces me to use !important
 	.v-navigation-drawer .v-list-item__title.title {
 		margin-bottom: 10px;

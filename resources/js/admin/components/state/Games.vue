@@ -63,72 +63,48 @@
 			<!-- Display this after loading the page (or an error occurred) -->
 			<template v-else>
 
-				<!-- Call was successful, but there are no dumped games -->
-				<v-row align="center" justify="start" v-if="!games.length">
-					<v-col cols="12">
-						<span class="warning">There aren't any dumped games yet.</span>
-					</v-col>
-				</v-row>
-
-				<template v-else>
-
-					<v-row style="font-size: 1.1rem;">
-						<v-col xs="12">Click "Restore" to recover a game from its most recent slot or "Destroy" to delete the game's entire dump history. To see or operate on individual slots, click on the desired game's name.</strong></v-col>
+				<transition name="showMessage">
+					<v-row align="center" justify="start" v-show="status.message">
+						<v-col cols="12">
+							<span :class="status.error ? 'error' : 'success'">{{ status.message }}</span>
+						</v-col>
 					</v-row>
+				</transition>
 
-					<transition name="showMessage">
-						<v-row align="center" justify="start" v-show="status.message">
+				<v-text-field
+					v-model="table.search"
+					append-icon="search"
+					label="Search any field to narrow down the list"
+					single-line
+					hide-details
+				/>
+
+				<v-data-table
+					:headers="table.headers"
+					:search="table.search"
+					:items="games"
+					multi-sort
+				>
+
+					<template v-slot:item.created="props">
+						{{ showCreated(props.item.created) }}
+					</template>
+
+					<template v-slot:item.actions="{ item }">
+						<v-icon small @click="confirmRestore(item.id)">restore</v-icon>
+						<v-icon small @click="confirmDestroy(item.id)">delete</v-icon>
+						<v-icon small @click="expand(item.id)">view_list</v-icon>
+					</template>
+
+					<template v-slot:no-data>
+						<v-row align="center" justify="start" v-if="!games.length">
 							<v-col cols="12">
-								<span :class="status.error ? 'error' : 'success'">{{ status.message }}</span>
+								<span class="warning">There aren't any dumped games yet.</span>
 							</v-col>
 						</v-row>
-					</transition>
+					</template>
 
-					<!-- Clickable list of dumped games -->
-					<v-list id="games" three-line max-height="48vh">
-
-						<template v-for="(game, index) in games">
-
-							<v-list-item link :key="game.name" @click="expand(game.id)">
-
-								<v-list-item-content>
-
-									<v-list-item-title>{{ game.name }} ({{ game.definition }})</v-list-item-title>
-									<v-list-item-subtitle><strong>Created:</strong> {{ showCreated(game.created) }}</v-list-item-subtitle>
-
-								</v-list-item-content>
-
-								<v-list-item-action>
-
-									<v-btn
-										text
-										color="primary"
-										:disabled="status.disableButtons"
-										@click.stop="confirmRestore(game.id)"
-									>
-										Restore
-									</v-btn>
-
-									<v-btn
-										text
-										color="error"
-										:disabled="status.disableButtons"
-										@click.stop="confirmDestroy(game.id)"
-									>
-										Destroy
-									</v-btn>
-
-								</v-list-item-action>
-
-							</v-list-item>
-
-							<v-divider v-if="index < games.length - 1" :key="index" />
-
-						</template>
-
-					</v-list>
-
-				</template>
+				</v-data-table>
 
 			</template>
 
@@ -179,6 +155,19 @@
 		data: function () {
 
 			return {
+
+				table: {
+
+					search: '',
+
+					headers: [
+						{text: 'ID', value: 'id'},
+						{text: 'Name', value: 'name'},
+						{text: 'Definition', value: 'definition'},
+						{text: 'Created', value: 'created'},
+						{text: 'Actions', value: 'actions'}
+					],
+				},
 
 				dialog: {
 

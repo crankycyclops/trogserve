@@ -55,7 +55,7 @@
 									:elevation="1"
 									title="Restore"
 									description="Restore the server's global state from disk."
-									icon="settings_backup_restore"
+									icon="restore"
 									@click="navigate('restore');"
 								/>
 							</v-col>

@@ -51,7 +51,7 @@
 						:hideDescription="true"
 						:disabled="status.buttonDisabled"
 						:title="status.buttonTitle"
-						icon="settings_backup_restore"
+						icon="restore"
 						@click="restore()"
 					/>
 				</v-col>

@@ -116,10 +116,6 @@
 		font-weight: bold;
 	}
 
-	.clickable {
-		cursor: pointer;
-	}
-
 </style>
 
 <script>
