@@ -36,7 +36,7 @@
 
 			<progress-bar :show="statistics.loading" />
 
-			<div v-if="!statistics.loading">
+			<template v-if="!statistics.loading">
 
 				<v-row align="center" justify="start" v-if="statistics.loadingError">
 
@@ -45,13 +45,11 @@
 						<span class="error">Offline</span>
 					</v-col>
 
-					<v-col cols="12">
-						<span class="error">{{ statistics.loadingError }}</span>
-					</v-col>
-
 				</v-row>
 
-				<template v-else>
+				<message type="error" :message="statistics.loadingError" />
+
+				<template v-if="!statistics.loadingError">
 
 					<v-row align="center" justify="start">
 
@@ -98,7 +96,7 @@
 
 				</template>
 
-			</div>
+			</template>
 
 		</v-card-text>
 
@@ -117,6 +115,7 @@
 <script>
 
 	import Progress from './ui/Progress';
+	import Message from './ui/Message';
 
 	export default {
 
@@ -205,6 +204,7 @@
 		},
 
 		components: {
+			'message': Message,
 			'progress-bar': Progress
 		}
 	};
