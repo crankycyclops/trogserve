@@ -10,15 +10,10 @@
 
 		<v-card-text>
 
-			<!-- Loading progress -->
-			<v-row align="center" justify="start" v-if="games.loading">
-				<v-col cols="12">
-					<v-progress-linear :active="true" :indeterminate="true" />
-				</v-col>
-			</v-row>
+			<progress-bar :show="games.loading" />
 
 			<!-- Display this after games have loaded (or an error occurred) -->
-			<template v-else>
+			<template v-if="!games.loading">
 
 				<message type="error" :message="games.error" />
 
@@ -89,6 +84,7 @@
 <script>
 
 	import Message from './ui/Message';
+	import Progress from './ui/Progress';
 
 	export default {
 
@@ -188,7 +184,8 @@
 		},
 
 		components: {
-			'message': Message
+			'message': Message,
+			'progress-bar': Progress
 		}
 	};
 

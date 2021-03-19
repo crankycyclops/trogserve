@@ -53,15 +53,10 @@
 
 		<v-card-text>
 
-			<!-- Loading progress -->
-			<v-row align="center" justify="start" v-if="status.loading">
-				<v-col cols="12">
-					<v-progress-linear :active="true" :indeterminate="true" />
-				</v-col>
-			</v-row>
+			<progress-bar :show="status.loading" />
 
 			<!-- Display this after loading the page (or an error occurred) -->
-			<template v-else>
+			<template v-if="!status.loading">
 
 				<message :type="status.messageType" :message="status.message" />
 
@@ -112,6 +107,7 @@
 <script>
 
 	import Message from '../ui/Message';
+	import Progress from '../ui/Progress';
 
 	export default {
 
@@ -279,7 +275,8 @@
 		},
 
 		components: {
-			'message': Message
+			'message': Message,
+			'progress-bar': Progress
 		}
 	};
 

@@ -34,13 +34,9 @@
 
 		<v-card-text>
 
-			<v-row align="center" justify="start" v-if="statistics.loading">
-				<v-col cols="12">
-					<v-progress-linear :active="true" :indeterminate="true" />
-				</v-col>
-			</v-row>
+			<progress-bar :show="statistics.loading" />
 
-			<div v-else>
+			<div v-if="!statistics.loading">
 
 				<v-row align="center" justify="start" v-if="statistics.loadingError">
 
@@ -119,6 +115,8 @@
 </template>
 
 <script>
+
+	import Progress from './ui/Progress';
 
 	export default {
 
@@ -204,6 +202,10 @@
 						self.statistics.loading = false;
 					});
 			}
+		},
+
+		components: {
+			'progress-bar': Progress
 		}
 	};
 

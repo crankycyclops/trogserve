@@ -2,25 +2,10 @@
 
 	<v-card id="game">
 
-		<!-- Loading progress -->
-		<template v-if="game.loading">
-
-			<v-card-title>Fetching Details&hellip;</v-card-title>
-
-			<v-card-text>
-
-				<v-row align="center" justify="start">
-					<v-col cols="12">
-						<v-progress-linear :active="true" :indeterminate="true" />
-					</v-col>
-				</v-row>
-
-			</v-card-text>
-
-		</template>
+		<progress-bar :show="game.loading" />
 
 		<!-- Display card for loaded game -->
-		<template v-else>
+		<template v-if="!game.loading">
 
 			<v-tabs v-model="activeTab" :show-arrows="isMobile" :vertical="!isMobile">
 
@@ -102,6 +87,7 @@
 	import Statistics from './tabs/Statistics.vue';
 	import Players from './tabs/Players.vue';
 
+	import Progress from '../ui/Progress';
 	import RequestMixin from '../../mixins/Request.vue';
 
 	export default {
@@ -269,6 +255,7 @@
 		},
 
 		components: {
+			'progress-bar': Progress,
 			'game-details': Details,
 			'game-statistics': Statistics,
 			'game-players': Players

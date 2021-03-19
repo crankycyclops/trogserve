@@ -130,22 +130,9 @@
 
 		</v-dialog>
 
-		<!-- Loading progress -->
-		<template v-if="players.loading">
-
-			<v-card-title>Fetching Players&hellip;</v-card-title>
-
-			<v-card-text>
-
-				<v-row align="center" justify="start">
-					<v-col cols="12">
-						<v-progress-linear :active="true" :indeterminate="true" />
-					</v-col>
-				</v-row>
-
-			</v-card-text>
-
-		</template>
+		<v-card-text v-if="players.loading">
+			<progress-bar :show="players.loading" />
+		</v-card-text>
 
 		<!-- Players have loaded (or there was an error) -->
 		<template v-else>
@@ -290,6 +277,7 @@
 
 <script>
 
+	import Progress from '../../ui/Progress';
 	import RequestMixin from '../../../mixins/Request.vue';
 
 	export default {
@@ -496,6 +484,10 @@
 						self.players.selected = null;
 					});
 			}
+		},
+
+		components: {
+			'progress-bar': Progress
 		},
 
 		mixins: [
