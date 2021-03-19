@@ -57,18 +57,15 @@
 			label="Autostart the game"
 		/>
 
-		<!-- Progress bar indicates when the form is being submitted -->
-		<v-row align="center" justify="start" v-if="submitting">
-			<v-col cols="12">
-				<v-progress-linear :active="true" :indeterminate="true" />
-			</v-col>
-		</v-row>
+		<progress-bar :show="submitting" />
 
 	</v-form>
 
 </template>
 
 <script>
+
+	import Progress from '../ui/Progress';
 
 	export default {
 
@@ -122,15 +119,15 @@
 		computed: {
 
 			// Form validation values
-			nameMaxLen: function () {return window.nameMaxLen;},
-			titleMaxLen: function () {return window.titleMaxLen;},
-			authorMaxLen: function () {return window.authorMaxLen;},
-			synopsisMaxLen: function () {return window.synopsisMaxLen;},
+			nameMaxLen() {return window.nameMaxLen;},
+			titleMaxLen() {return window.titleMaxLen;},
+			authorMaxLen() {return window.authorMaxLen;},
+			synopsisMaxLen() {return window.synopsisMaxLen;},
 
-			nameMaxLenMsg: function () {return window.nameMaxLenMsg;},
-			titleMaxLenMsg: function () {return window.titleMaxLenMsg;},
-			authorMaxLenMsg: function () {return window.authorMaxLenMsg;},
-			synopsisMaxLenMsg: function () {return window.synopsisMaxLenMsg;},
+			nameMaxLenMsg() {return window.nameMaxLenMsg;},
+			titleMaxLenMsg() {return window.titleMaxLenMsg;},
+			authorMaxLenMsg() {return window.authorMaxLenMsg;},
+			synopsisMaxLenMsg() {return window.synopsisMaxLenMsg;},
 
 			// These allow us to indirectly update the prop values
 			nameModel: {
@@ -200,7 +197,7 @@
 			},
 		},
 
-		data: function () {
+		data() {
 
 			return {
 
@@ -234,17 +231,21 @@
 		methods: {
 
 			// Validate the form
-			validate: function () {
+			validate() {
 
 				return this.$refs.form.validate();
 			},
 
 			// Reset the game form
-			reset: function () {
+			reset() {
 
 				this.$refs.form.reset();
 				this.$refs.form.resetValidation();
 			}
+		},
+
+		components: {
+			'progress-bar': Progress
 		}
 	};
 
