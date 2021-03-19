@@ -5,7 +5,7 @@
 		<v-card-title>Games</v-card-title>
 
 		<v-card-subtitle>
-			Click on a game's ID or name to edit its details or change its state.
+			Edit, delete, or manage the state of a game.
 		</v-card-subtitle>
 
 		<v-card-text>
@@ -27,42 +27,35 @@
 					</v-col>
 				</v-row>
 
-				<!-- Call was successful, but there are no games -->
-				<v-row align="center" justify="start" v-else-if="!games.data.length">
-					<v-col cols="12">
-						No games have been created yet.
-					</v-col>
-				</v-row>
-
 				<!-- Clickable list of games -->
-				<template v-else>
+				<v-text-field
+					v-model="table.search"
+					append-icon="search"
+					label="Search any field to narrow down the list"
+					single-line
+					hide-details
+				/>
 
-					<v-text-field
-						v-model="table.search"
-						append-icon="search"
-						label="Search any field to narrow down the list"
-						single-line
-						hide-details
-					/>
+				<v-data-table
+					:headers="table.headers"
+					:search="table.search"
+					:items="games.data"
+					multi-sort
+				>
 
-					<v-data-table
-						:headers="table.headers"
-						:search="table.search"
-						:items="games.data"
-						multi-sort
-					>
+					<template v-slot:item.actions="{ item }">
+						<v-icon small @click="viewGame(item.id)">view_list</v-icon>
+					</template>
 
-						<template v-slot:item.id="props">
-							<div class="clickable" @click="viewGame(props.item.id);">{{ props.item.id }}</div>
-						</template>
+					<template v-slot:no-data>
+						<v-row align="center" justify="start" v-if="!games.length">
+							<v-col cols="12">
+								<span class="warning">There aren't any games yet.</span>
+							</v-col>
+						</v-row>
+					</template>
 
-						<template v-slot:item.name="props">
-							<div class="clickable" @click="viewGame(props.item.id);">{{ props.item.name }}</div>
-						</template>
-
-					</v-data-table>
-
-				</template>
+				</v-data-table>
 
 			</template>
 
@@ -140,7 +133,8 @@
 						{text: 'Name', value: 'name'},
 						{text: 'Definition', value: 'definition'},
 						{text: 'Title', value: 'title'},
-						{text: 'Author', value: 'author'}
+						{text: 'Author', value: 'author'},
+						{text: 'Actions', value: 'actions'}
 					],
 				},
 
