@@ -138,31 +138,29 @@
 				this.definitions.loading = true;
 				this.definitions.error = null;
 
-				let self = this;
-
 				axios
 					.get('/admin/api/definitions')
 
 					.then(response => {
 
 						if (!response.data.length) {
-							self.definitions.error = "No definitions are available. Check trogdord's configuration and try again";
+							this.definitions.error = "No definitions are available. Check trogdord's configuration and try again";
 						} else {
-							self.definitions.data = response.data;
+							this.definitions.data = response.data;
 						}
 					})
 
 					.catch(error => {
 
 						if ('undefined' !== typeof(error.response)) {
-							self.definitions.error = error.response.data.error;
+							this.definitions.error = error.response.data.error;
 						} else {
-							self.definitions.error = error.message;
+							this.definitions.error = error.message;
 						}
 					})
 
 					.finally(() => {
-						self.definitions.loading = false;
+						this.definitions.loading = false;
 					});
 			},
 
@@ -175,21 +173,19 @@
 					return false;
 				}
 
-				let self = this;
-
 				let data = {
 					name: this.form.name,
 					definition: this.form.definition
 				};
 
-				['title', 'author', 'synopsis'].forEach(function(field) {
+				['title', 'author', 'synopsis'].forEach(field => {
 					if (field.length) {
-						data[field] = self.form[field];
+						data[field] = this.form[field];
 					}
 				});
 
-				if (self.form.autostart) {
-					data.autostart = self.form.autostart;
+				if (this.form.autostart) {
+					data.autostart = this.form.autostart;
 				}
 
 				this.form.submitting = true;
@@ -199,16 +195,16 @@
 					// After successful creation of the game, reset the
 					// form and view the game's admin console.
 					.then(response => {
-						self.$refs.form.reset();
-						self.$emit('navigate', '/admin/games/' + response.data.id);
+						this.$refs.form.reset();
+						this.$emit('navigate', '/admin/games/' + response.data.id);
 					})
 
 					.catch(error => {
-						self.form.error = self.getResponseError(error);
+						this.form.error = this.getResponseError(error);
 					})
 
 					.finally(() => {
-						self.form.submitting = false;
+						this.form.submitting = false;
 					});
 			}
 		},

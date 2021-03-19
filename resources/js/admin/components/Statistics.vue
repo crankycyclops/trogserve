@@ -117,6 +117,8 @@
 	import Progress from './ui/Progress';
 	import Message from './ui/Message';
 
+	import RequestMixin from '../mixins/Request.vue';
+
 	export default {
 
 		mounted() {
@@ -169,37 +171,30 @@
 				this.statistics.loading = true;
 				this.statistics.loadingError = null;
 
-				let self = this;
-
 				axios
 					.get('/admin/api/info')
 
 					.then(response => {
 
-						self.statistics.trogdordVersion =
+						this.statistics.trogdordVersion =
 							response.data.version.major + '.' +
 							response.data.version.minor + '.' +
 							response.data.version.patch;
 
-						self.statistics.libtrogdorVersion =
+						this.statistics.libtrogdorVersion =
 							response.data.lib_version.major + '.' +
 							response.data.lib_version.minor + '.' +
 							response.data.lib_version.patch;
 
-						self.statistics.players = response.data.players;
+						this.statistics.players = response.data.players;
 					})
 
 					.catch(error => {
-
-						if ('undefined' !== typeof(error.response)) {
-							self.statistics.loadingError = error.response.data.error;
-						} else {
-							self.statistics.loadingError = error.message;
-						}
+						this.statistics.loadingError = this.getResponseError(error);
 					})
 
 					.finally(() => {
-						self.statistics.loading = false;
+						this.statistics.loading = false;
 					});
 			}
 		},
@@ -207,7 +202,11 @@
 		components: {
 			'message': Message,
 			'progress-bar': Progress
-		}
+		},
+
+		mixins: [
+			RequestMixin
+		]
 	};
 
 </script>
