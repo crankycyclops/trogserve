@@ -45,34 +45,6 @@
 
 		</v-dialog>
 
-		<v-dialog class="error"
-			v-model="dialog.showError"
-			overlay-opacity="0.8"
-			max-width="500px"
-			@keydown.esc="dialog.showError = false;"
-		>
-
-			<v-card>
-
-				<v-card-text class="restore">{{ dialog.errorMessage }}</v-card-text>
-
-				<v-card-actions>
-
-					<v-btn class="restore"
-						text
-						x-large
-						color="primary"
-						@click="dialog.showError = false;"
-					>
-						OK
-					</v-btn>
-
-				</v-card-actions>
-
-			</v-card>
-
-		</v-dialog>
-
 		<v-card-title>Dumped Games</v-card-title>
 
 		<v-card-subtitle>
@@ -91,72 +63,70 @@
 			<!-- Display this after loading the page (or an error occurred) -->
 			<template v-else>
 
-				<v-row align="center" justify="start" v-if="status.error">
+				<!-- Call was successful, but there are no dumped games -->
+				<v-row align="center" justify="start" v-if="!games.length">
 					<v-col cols="12">
-						<span class="error">Unable to connect to trogdord.</span>
+						<span class="warning">There aren't any dumped games yet.</span>
 					</v-col>
 				</v-row>
 
 				<template v-else>
 
-					<!-- Call was successful, but there are no dumped games -->
-					<v-row align="center" justify="start" v-if="!games.length">
-						<v-col cols="12">
-							<span class="warning">There aren't any dumped games yet.</span>
-						</v-col>
+					<v-row style="font-size: 1.1rem;">
+						<v-col xs="12">Click "Restore" to recover a game from its most recent slot or "Destroy" to delete the game's entire dump history. To see or operate on individual slots, click on the desired game's name.</strong></v-col>
 					</v-row>
 
-					<template v-else>
-
-						<v-row style="font-size: 1.1rem;">
-							<v-col xs="12">Click "Restore" to recover a game from its most recent slot or "Destroy" to delete the game's entire dump history. To see or operate on individual slots, click on the desired game's name.</strong></v-col>
+					<transition name="showMessage">
+						<v-row align="center" justify="start" v-show="status.message">
+							<v-col cols="12">
+								<span :class="status.error ? 'error' : 'success'">{{ status.message }}</span>
+							</v-col>
 						</v-row>
+					</transition>
 
-						<!-- Clickable list of dumped games -->
-						<v-list id="games" three-line max-height="48vh">
+					<!-- Clickable list of dumped games -->
+					<v-list id="games" three-line max-height="48vh">
 
-							<template v-for="(game, index) in games">
+						<template v-for="(game, index) in games">
 
-								<v-list-item link :key="game.name" @click="expand(game.id)">
+							<v-list-item link :key="game.name" @click="expand(game.id)">
 
-									<v-list-item-content>
+								<v-list-item-content>
 
-										<v-list-item-title>{{ game.name }} ({{ game.definition }})</v-list-item-title>
-										<v-list-item-subtitle><strong>Created:</strong> {{ showCreated(game.created) }}</v-list-item-subtitle>
+									<v-list-item-title>{{ game.name }} ({{ game.definition }})</v-list-item-title>
+									<v-list-item-subtitle><strong>Created:</strong> {{ showCreated(game.created) }}</v-list-item-subtitle>
 
-									</v-list-item-content>
+								</v-list-item-content>
 
-									<v-list-item-action>
+								<v-list-item-action>
 
-										<v-btn
-											text
-											color="primary"
-											:disabled="status.disableButtons"
-											@click.stop="confirmRestore(game.id)"
-										>
-											Restore
-										</v-btn>
+									<v-btn
+										text
+										color="primary"
+										:disabled="status.disableButtons"
+										@click.stop="confirmRestore(game.id)"
+									>
+										Restore
+									</v-btn>
 
-										<v-btn
-											text
-											color="error"
-											:disabled="status.disableButtons"
-											@click.stop="confirmDestroy(game.id)"
-										>
-											Destroy
-										</v-btn>
+									<v-btn
+										text
+										color="error"
+										:disabled="status.disableButtons"
+										@click.stop="confirmDestroy(game.id)"
+									>
+										Destroy
+									</v-btn>
 
-									</v-list-item-action>
+								</v-list-item-action>
 
-								</v-list-item>
+							</v-list-item>
 
-								<v-divider v-if="index < games.length - 1" :key="index" />
+							<v-divider v-if="index < games.length - 1" :key="index" />
 
-							</template>
+						</template>
 
-						</v-list>
-
-					</template>
+					</v-list>
 
 				</template>
 
@@ -178,6 +148,20 @@
 		overflow-y: auto;
 		scrollbar-color: #d0d0d0 #505050;
 		scrollbar-width: auto;
+	}
+
+	.showMessage-enter,
+	.showMessage-leave-to {
+		visibility: hidden;
+		height: 0;
+		margin: 0;
+		padding: 0;
+		opacity: 0;
+	}
+
+	.showMessage-enter-active,
+	.showMessage-leave-active {
+		transition: all 0.3s;
 	}
 
 </style>
@@ -205,13 +189,7 @@
 					operation: 'destroy',
 
 					// The id of whichever dumped game has been selected
-					selectedId: null,
-
-					// Show or hide the error dialog
-					showError: false,
-
-					// Error message to display in the error dialog
-					errorMessage: ''
+					selectedId: null
 				},
 
 				status: {
@@ -220,7 +198,14 @@
 					loading: true,
 
 					// When set to true, the restore and destroy buttons will be disabled
-					disableButtons: false
+					disableButtons: false,
+
+					// When showing a message, this determines whether it's an error
+					// or confirmation of a successful operation
+					error: false,
+
+					// Error message or confirmation to display
+					message: ''
 				},
 
 				// Games retrieved by load()
@@ -294,21 +279,30 @@
 						if ('destroy' == this.dialog.operation) {
 							this.load();
 						}
+
+						this.status.error = false;
+						this.status.message = "Dump " + ('destroy' == this.dialog.operation ? "destroyed." : "restored.");
 					})
 
 					.catch(error => {
 
 						if ('undefined' !== typeof(error.response)) {
-							this.dialog.errorMessage = error.message;
+							this.status.message = error.message;
 						} else {
-							this.dialog.errorMessage = 'An unknown error occurred. Please try again.';
+							this.status.message = 'An unknown error occurred. Please try again.';
 						}
 
-						this.dialog.showError = true;
+						this.status.error = true;
 					})
 
 					.finally(() => {
+
 						this.status.disableButtons = false;
+
+						// Only display message for 5 seconds
+						setTimeout(() => {
+							this.status.message = '';
+						}, 5000);
 					});
 
 				this.dialog.show = false;
