@@ -10,15 +10,10 @@
 
 		<v-card-text>
 
-			<!-- Loading progress -->
-			<v-row align="center" justify="start" v-if="definitions.loading">
-				<v-col cols="12">
-					<v-progress-linear :active="true" :indeterminate="true" />
-				</v-col>
-			</v-row>
+			<progress-bar :show="definitions.loading" />
 
 			<!-- Display this after definitions have loaded (or an error occurred) -->
-			<template v-else>
+			<template v-if="!definitions.loading">
 
 				<message class="message" type="error" :message="definitions.error" />
 				<message class="message" type="error" :message="form.error" />
@@ -53,7 +48,7 @@
 
 			<v-btn
 				text
-				:disabled="definitions.error || definitions.loading || form.submitting ? true : false"
+				:disabled="definitions.error.length || definitions.loading || form.submitting ? true : false"
 				color="primary"
 				@click="submit()"
 			>
@@ -79,17 +74,18 @@
 <script>
 
 	import Message from '../ui/Message';
+	import Progress from '../ui/Progress';
 	import GameForm from '../forms/Game.vue';
 	import RequestMixin from '../../mixins/Request.vue';
 
 	export default {
 
-		mounted: function () {
+		mounted() {
 
 			this.loadDefinitions();
 		},
 
-		data: function () {
+		data() {
 
 			return {
 
@@ -121,7 +117,7 @@
 
 					// If an error occurred while loading the list of
 					// available game definitions, it will be set here.
-					error: null,
+					error: '',
 
 					// Our loaded definitions
 					data: []
@@ -132,7 +128,7 @@
 		methods: {
 
 			// Loads available game definitions via API call.
-			loadDefinitions: function () {
+			loadDefinitions() {
 
 				this.definitions.loading = true;
 				this.definitions.error = '';
@@ -159,7 +155,7 @@
 			},
 
 			// Submit the form to create a new game
-			submit: function () {
+			submit() {
 
 				this.form.error = '';
 
@@ -210,6 +206,7 @@
 
 		components: {
 			'message': Message,
+			'progress-bar': Progress,
 			'game-form': GameForm
 		},
 
