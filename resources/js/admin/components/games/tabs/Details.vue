@@ -51,13 +51,7 @@
 
 		<v-card-text>
 
-			<!-- If submission results in a server side error, it'll be
-				displayed here. -->
-			<v-row align="center" justify="start" v-if="form.error">
-				<v-col cols="12">
-					<span class="error">{{ form.error }}</span>
-				</v-col>
-			</v-row>
+			<message type="error" :message="form.error" />
 
 			<!-- Provide an interface for the user to edit basic game details -->
 			<v-row align="center" justify="start" v-if="form.show">
@@ -105,11 +99,9 @@
 
 					</v-col>
 
-					<v-col cols="12" v-if="toggleStartData.error">
-						<span class="error">{{ toggleStartData.error }}</span>
-					</v-col>
-
 				</v-row>
+
+				<message type="error" :message="toggleStartData.error" />
 
 			</template>
 
@@ -169,6 +161,7 @@
 
 <script>
 
+	import Message from '../../ui/Message';
 	import GameForm from '../../forms/Game.vue';
 	import RequestMixin from '../../../mixins/Request.vue';
 
@@ -443,6 +436,7 @@
 		},
 
 		components: {
+			'message': Message,
 			'game-form': GameForm
 		},
 
