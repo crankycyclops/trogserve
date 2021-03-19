@@ -92,7 +92,7 @@
 
 	export default {
 
-		mounted: function () {
+		mounted() {
 
 			this.loadGame();
 		},
@@ -105,28 +105,28 @@
 				return this.$vuetify.breakpoint.mdAndDown;
 			},
 
-			getGameTitleStr: function () {
+			getGameTitleStr() {
 				return this.game.data.title ?
 					this.game.data.title + ' (' + this.game.data.name + ')' :
 					this.game.data.name
 			},
 
-			getGameByLine: function () {
+			getGameByLine() {
 				return this.game.data.author ?
 					'By ' + this.game.data.author : '';
 			},
 
-			titleMaxLen: function () {return window.titleMaxLen;},
-			authorMaxLen: function () {return window.authorMaxLen;},
-			synopsisMaxLen: function () {return window.synopsisMaxLen;},
+			titleMaxLen() {return window.titleMaxLen;},
+			authorMaxLen() {return window.authorMaxLen;},
+			synopsisMaxLen() {return window.synopsisMaxLen;},
 
-			nameMaxLenMsg: function () {return window.nameMaxLenMsg;},
-			titleMaxLenMsg: function () {return window.titleMaxLenMsg;},
-			authorMaxLenMsg: function () {return window.authorMaxLenMsg;},
-			synopsisMaxLenMsg: function () {return window.synopsisMaxLenMsg;}
+			nameMaxLenMsg() {return window.nameMaxLenMsg;},
+			titleMaxLenMsg() {return window.titleMaxLenMsg;},
+			authorMaxLenMsg() {return window.authorMaxLenMsg;},
+			synopsisMaxLenMsg() {return window.synopsisMaxLenMsg;}
 		},
 
-		data: function () {
+		data() {
 
 			return {
 
@@ -185,20 +185,18 @@
 			// Because emitted events are only sent to a child's parent and
 			// don't go further up the hierarchy, I have to bubble this event
 			// up. Meh.
-			navigate: function(uri) {
+			navigate(uri) {
 
 				this.$emit('navigate', uri);
 			},
 
 			// Updates the currently loaded game's data
-			updateGameData: function (updated) {
+			updateGameData(updated) {
 
-				let self = this;
+				Object.keys(updated.payload).forEach(field => {
 
-				Object.keys(updated.payload).forEach(function (field) {
-
-					if ('undefined' !== typeof self.game.data[field]) {
-						self.game.data[field] = updated.payload[field];
+					if ('undefined' !== typeof this.game.data[field]) {
+						this.game.data[field] = updated.payload[field];
 					}
 				});
 
@@ -210,9 +208,8 @@
 			},
 
 			// Load the specified game
-			loadGame: function () {
+			loadGame() {
 
-				let self = this;
 				this.game.loading = true;
 
 				axios
@@ -221,34 +218,34 @@
 					.then(response => {
 
 						// Update game data
-						self.updateGameData({payload: response.data});
+						this.updateGameData({payload: response.data});
 
 						// Update game statistics
-						self.game.data.statistics.created = response.data.statistics.created;
-						self.game.data.statistics.is_running = response.data.statistics.is_running;
-						self.game.data.statistics.players = response.data.statistics.players;
+						this.game.data.statistics.created = response.data.statistics.created;
+						this.game.data.statistics.is_running = response.data.statistics.is_running;
+						this.game.data.statistics.players = response.data.statistics.players;
 					})
 
 					// We can't load the game, so return to the games list
 					// page with an error message at the top.
 					.catch(error => {
 
-						self.$store.commit('setError', this.getResponseError(error));
+						this.$store.commit('setError', this.getResponseError(error));
 
 						// Don't emit a navigation event because that's
 						// going to clear the error message. Instead, use
 						// the router directly.
-						self.$router.push('/admin/games');
+						this.$router.push('/admin/games');
 					})
 
 					.finally(() => {
-						self.game.loading = false;
+						this.game.loading = false;
 					});
 			},
 
 			// Update the is_running statistic after the status is toggled by
 			// the "Game Details" tab
-			updateIsRunning: function (value) {
+			updateIsRunning(value) {
 
 				this.game.data.statistics.is_running = value;
 			}
