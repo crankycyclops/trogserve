@@ -146,7 +146,7 @@
 
 					// If there was an error loading the statistics, this
 					// will be an error message explaining what went wrong
-					loadingError: null,
+					loadingError: '',
 
 					// Trogdord's version
 					trogdordVersion: null,
@@ -169,7 +169,7 @@
 			loadStatistics() {
 
 				this.statistics.loading = true;
-				this.statistics.loadingError = null;
+				this.statistics.loadingError = '';
 
 				axios
 					.get('/admin/api/info')
