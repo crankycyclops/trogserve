@@ -5,7 +5,7 @@
 		<v-card-title>Games</v-card-title>
 
 		<v-card-subtitle>
-			Click on a game to edit its details or change its state.
+			Click on a game's ID or name to edit its details or change its state.
 		</v-card-subtitle>
 
 		<v-card-text>
@@ -35,36 +35,34 @@
 				</v-row>
 
 				<!-- Clickable list of games -->
-				<v-list id="games" three-line max-height="48vh" v-else>
+				<template v-else>
 
-					<template v-for="(game, index) in games.data">
+					<v-text-field
+						v-model="table.search"
+						append-icon="search"
+						label="Search any field to narrow down the list"
+						single-line
+						hide-details
+					/>
 
-						<v-list-item
-							link
-							:key="game.name"
-							@click="viewGame(game.id)">
+					<v-data-table
+						:headers="table.headers"
+						:search="table.search"
+						:items="games.data"
+						multi-sort
+					>
 
-							<v-list-item-content>
+						<template v-slot:item.id="props">
+							<div class="clickable" @click="viewGame(props.item.id);">{{ props.item.id }}</div>
+						</template>
 
-								<v-list-item-title>{{ getGameTitleStr(game) }}</v-list-item-title>
+						<template v-slot:item.name="props">
+							<div class="clickable" @click="viewGame(props.item.id);">{{ props.item.name }}</div>
+						</template>
 
-								<v-list-item-subtitle v-if="game.author" class="text--primary">
-									{{ getGameByLine(game) }}
-								</v-list-item-subtitle>
+					</v-data-table>
 
-								<v-list-item-subtitle v-if="game.synopsis && game.synopsis.length">
-									{{ game.synopsis }}
-								</v-list-item-subtitle>
-
-							</v-list-item-content>
-
-						</v-list-item>
-
-						<v-divider v-if="index < games.data.length - 1" :key="index" />
-
-					</template>
-
-				</v-list>
+				</template>
 
 			</template>
 
@@ -118,6 +116,10 @@
 		font-weight: bold;
 	}
 
+	.clickable {
+		cursor: pointer;
+	}
+
 </style>
 
 <script>
@@ -132,6 +134,19 @@
 		data: function () {
 
 			return {
+
+				table: {
+
+					search: '',
+
+					headers: [
+						{text: 'ID', value: 'id'},
+						{text: 'Name', value: 'name'},
+						{text: 'Definition', value: 'definition'},
+						{text: 'Title', value: 'title'},
+						{text: 'Author', value: 'author'}
+					],
+				},
 
 				games: {
 
