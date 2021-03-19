@@ -281,31 +281,19 @@
 			// If an operation was confirmed, carry it out
 			proceed() {
 
+				let request;
+
 				if ('destroy' == this.dialog.operation) {
-					this.destroy(this.dialog.selectedId);
+					request = axios.delete("/admin/api/dumps/" + this.dialog.selectedId)
 				} else {
-					this.restore(this.dialog.selectedId);
+					request = axios.post("/admin/api/dumps/" + this.dialog.selectedId + '/restore');
 				}
 
-				this.dialog.show = false;
-			},
+				request.then(response => {
 
-			// Restore a dumped game
-			restore(id) {
-
-				alert('TODO: restore ' + id + "!");
-			},
-
-			// Destroy a dumped game
-			destroy(id) {
-
-				this.status.disableButtons = true;
-
-				axios.delete("/admin/api/dumps/" + id)
-
-					.then(response => {
-
-						this.load();
+						if ('destroy' == this.dialog.operation) {
+							this.load();
+						}
 					})
 
 					.catch(error => {
@@ -322,6 +310,8 @@
 					.finally(() => {
 						this.status.disableButtons = false;
 					});
+
+				this.dialog.show = false;
 			},
 
 			// Display the details of a game's dump history
