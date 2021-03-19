@@ -119,20 +119,21 @@
 
 	export default {
 
-		mounted: function () {
+		mounted() {
 
 			this.loadStatistics();
 		},
 
 		computed: {
 			// This is how I suck data in from Laravel
-			phpVersion: function () {return window.phpVersion;},
-			extVersion: function () {return window.extVersion;},
-			lastLoginAt: function () {return window.lastLoginAt;},
-			lastLoginIp: function () {return window.lastLoginIp;}
+			phpVersion() {return window.phpVersion;},
+			extVersion() {return window.extVersion;},
+			lastLoginAt() {return window.lastLoginAt;},
+			lastLoginIp() {return window.lastLoginIp;}
 		},
 
-		data: function () {
+		data() {
+
 			return {
 
 				// Server statistics that we load via an API call
@@ -163,7 +164,7 @@
 
 		methods: {
 
-			loadStatistics: function () {
+			loadStatistics() {
 
 				this.statistics.loading = true;
 				this.statistics.loadingError = null;
