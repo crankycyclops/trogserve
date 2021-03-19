@@ -20,20 +20,8 @@
 			<!-- Display this after definitions have loaded (or an error occurred) -->
 			<template v-else>
 
-				<!-- API call failed -->
-				<v-row align="center" justify="start" v-if="definitions.error">
-					<v-col cols="12">
-						<span class="error">{{ definitions.error }}</span>
-					</v-col>
-				</v-row>
-
-				<!-- If submission results in a server side error, it'll
-					be displayed here. -->
-				<v-row align="center" justify="start" v-if="form.error">
-					<v-col cols="12">
-						<span class="error">{{ form.error }}</span>
-					</v-col>
-				</v-row>
+				<message class="message" type="error" :message="definitions.error" />
+				<message class="message" type="error" :message="form.error" />
 
 				<!-- Successfully retrieved definitions, so we can go ahead and create the game -->
 				<game-form ref="form"
@@ -78,8 +66,19 @@
 
 </template>
 
+
+<style scoped>
+
+.message {
+	margin-bottom: 1em;
+}
+
+</style>
+
+
 <script>
 
+	import Message from '../ui/Message';
 	import GameForm from '../forms/Game.vue';
 	import RequestMixin from '../../mixins/Request.vue';
 
@@ -151,12 +150,7 @@
 					})
 
 					.catch(error => {
-
-						if ('undefined' !== typeof(error.response)) {
-							this.definitions.error = error.response.data.error;
-						} else {
-							this.definitions.error = error.message;
-						}
+						this.definitions.error = this.getResponseError(error);
 					})
 
 					.finally(() => {
@@ -200,7 +194,12 @@
 					})
 
 					.catch(error => {
+
 						this.form.error = this.getResponseError(error);
+
+						setTimeout(() => {
+							this.form.error = '';
+						}, 5000);
 					})
 
 					.finally(() => {
@@ -210,6 +209,7 @@
 		},
 
 		components: {
+			'message': Message,
 			'game-form': GameForm
 		},
 
