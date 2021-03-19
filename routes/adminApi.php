@@ -73,7 +73,7 @@ Route::get('/dumps', 'AdminApiController@getDumps');
 Route::get('/dumps/{id}', 'AdminApiController@getDump');
 
 // Deletes a game dump
-Route::delete('/dumps/{id}', 'AdminApiController@deleteDump');
+Route::delete('/dumps/{id}', 'AdminApiController@destroyDump');
 
 // Restores a game dump (restores the most recent slot)
 Route::post('/dumps/{id}/restore', 'AdminApiController@restoreDump');

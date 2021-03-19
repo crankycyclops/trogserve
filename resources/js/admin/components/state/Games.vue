@@ -45,6 +45,34 @@
 
 		</v-dialog>
 
+		<v-dialog class="error"
+			v-model="dialog.showError"
+			overlay-opacity="0.8"
+			max-width="500px"
+			@keydown.esc="dialog.showError = false;"
+		>
+
+			<v-card>
+
+				<v-card-text class="restore">{{ dialog.errorMessage }}</v-card-text>
+
+				<v-card-actions>
+
+					<v-btn class="restore"
+						text
+						x-large
+						color="primary"
+						@click="dialog.showError = false;"
+					>
+						OK
+					</v-btn>
+
+				</v-card-actions>
+
+			</v-card>
+
+		</v-dialog>
+
 		<v-card-title>Dumped Games</v-card-title>
 
 		<v-card-subtitle>
@@ -103,6 +131,7 @@
 										<v-btn
 											text
 											color="primary"
+											:disabled="status.disableButtons"
 											@click.stop="confirmRestore(game.id)"
 										>
 											Restore
@@ -111,6 +140,7 @@
 										<v-btn
 											text
 											color="error"
+											:disabled="status.disableButtons"
 											@click.stop="confirmDestroy(game.id)"
 										>
 											Destroy
@@ -175,13 +205,22 @@
 					operation: 'destroy',
 
 					// The id of whichever dumped game has been selected
-					selectedId: null
+					selectedId: null,
+
+					// Show or hide the error dialog
+					showError: false,
+
+					// Error message to display in the error dialog
+					errorMessage: ''
 				},
 
 				status: {
 
 					// Gets set to false when the page has finished loading
-					loading: true
+					loading: true,
+
+					// When set to true, the restore and destroy buttons will be disabled
+					disableButtons: false
 				},
 
 				// Games retrieved by load()
@@ -254,13 +293,35 @@
 			// Restore a dumped game
 			restore(id) {
 
-				alert('TODO: restore(' + id + ')');
+				alert('TODO: restore ' + id + "!");
 			},
 
 			// Destroy a dumped game
 			destroy(id) {
 
-				alert('TODO: destroy(' + id + ')');
+				this.status.disableButtons = true;
+
+				axios.delete("/admin/api/dumps/" + id)
+
+					.then(response => {
+
+						this.load();
+					})
+
+					.catch(error => {
+
+						if ('undefined' !== typeof(error.response)) {
+							this.dialog.errorMessage = error.message;
+						} else {
+							this.dialog.errorMessage = 'An unknown error occurred. Please try again.';
+						}
+
+						this.dialog.showError = true;
+					})
+
+					.finally(() => {
+						this.status.disableButtons = false;
+					});
 			},
 
 			// Display the details of a game's dump history
