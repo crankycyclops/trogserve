@@ -10,29 +10,16 @@
 
 		<v-card-text>
 
-			<!-- Loading progress -->
-			<v-row align="center" justify="start" v-if="status.loading">
-				<v-col cols="12">
-					<v-progress-linear :active="true" :indeterminate="true" />
-				</v-col>
-			</v-row>
+			<progress-bar :show="status.loading" />
 
 			<!-- Display this after loading the page (or an error occurred) -->
-			<template v-else>
+			<template v-if="!status.loading">
 
-				<v-row align="center" justify="start" v-if="status.error">
-					<v-col cols="12">
-						<span class="error">Unable to connect to trogdord.</span>
-					</v-col>
-				</v-row>
+				<message v-if="status.error" type="error" message="Unable to connect to trogdord" />
 
 				<template v-else>
 
-					<v-row align="center" justify="start" v-if="!stateEnabled">
-						<v-col cols="12">
-							<span class="error">State was disabled in trogdord.ini. To enable it and activate this panel, set "state.enabled" to "true," restart the server, and click "Refresh."</span>
-						</v-col>
-					</v-row>
+					<message v-if="!stateEnabled" type="error" message='State was disabled in trogdord.ini. To enable it and activate this panel, set "state.enabled" to "true," restart the server, and click "Refresh."' />
 
 					<template v-else>
 
@@ -104,6 +91,8 @@
 
 <script>
 
+	import Progress from './ui/Progress';
+	import Message from './ui/Message';
 	import FeatureButton from './ui/FeatureButton';
 
 	export default {
@@ -164,7 +153,9 @@
 		},
 
 		components: {
-			FeatureButton
+			'message': Message,
+			'progress-bar': Progress,
+			'feature-button': FeatureButton
 		}
 	};
 

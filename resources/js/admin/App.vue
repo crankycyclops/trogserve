@@ -114,11 +114,12 @@
 		computed: {
 
 			// This is how I suck data in from Laravel
-			title: function () {return window.title;},
-			username: function () {return window.username}
+			title() {return window.title;},
+			username() {return window.username}
 		},
 
-		data: function () {
+		data() {
+
 			return {
 
 				// Navigation drawer links for each route
@@ -161,7 +162,7 @@
 
 			// Returns true if the specified route points to the current page
 			// and false if not.
-			isLinkToSelf: function (route) {
+			isLinkToSelf(route) {
 
 				return route == this.$route.path ? true : false;
 			},
@@ -170,7 +171,7 @@
 			// If you have an error message you need to display at the top of
 			// the page, do not use this method. Instead, call
 			// this.$router.push() directly.
-			navigate: function (route) {
+			navigate(route) {
 
 				if (!this.isLinkToSelf(route)) {
 					this.$store.commit('setError', null);

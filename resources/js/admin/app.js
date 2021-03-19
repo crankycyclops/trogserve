@@ -138,7 +138,7 @@ const app = new Vue({
 		mutations: {
 
 			// Sets the error to display at the top of the admin panel.
-			setError: function (state, payload) {
+			setError(state, payload) {
 				state.error = payload;
 			}
 		},

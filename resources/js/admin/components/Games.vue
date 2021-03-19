@@ -89,12 +89,12 @@
 
 	export default {
 
-		mounted: function () {
+		mounted() {
 
 			this.loadGames();
 		},
 
-		data: function () {
+		data() {
 
 			return {
 
@@ -145,7 +145,7 @@
 			},
 
 			// View the specified game's admin console
-			viewGame: function (id) {
+			viewGame(id) {
 
 				this.$emit('navigate', '/admin/games/' + id);
 			},
