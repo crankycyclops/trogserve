@@ -2,6 +2,49 @@
 
 	<v-card flat>
 
+		<!-- Dialog to confirm destruction or restoration of a dumped game -->
+		<v-dialog
+			v-model="dialog.show"
+			overlay-opacity="0.8"
+			max-width="500px"
+			@keydown.esc="dialog.show = false;"
+		>
+
+			<v-card>
+
+				<v-card-title>{{ 'destroy' == dialog.operation ? 'Destroy' : 'Restore' }} Game</v-card-title>
+
+				<v-card-text>
+					Are you <strong>*sure*</strong> you want to {{ 'destroy' == dialog.operation ? 'destroy' : 'restore' }}
+					this dumped game? This action is permanent and cannot be undone{{
+						'destroy' == dialog.operation ? ', and all entities and players will be lost.' : '. If a game with the same id already exists, it will be overwritten, removing any players or other entities that were added since the game was last dumped.'
+					}}
+				</v-card-text>
+
+				<v-card-actions>
+
+					<v-btn
+						text
+						color="primary"
+						@click="dialog.show = false;"
+					>
+						Cancel
+					</v-btn>
+
+					<v-btn
+						text
+						color="error"
+						@click="proceed()"
+					>
+						Proceed
+					</v-btn>
+
+				</v-card-actions>
+
+			</v-card>
+
+		</v-dialog>
+
 		<v-card-title>Dumped Games</v-card-title>
 
 		<v-card-subtitle>
@@ -60,7 +103,7 @@
 										<v-btn
 											text
 											color="primary"
-											@click.stop="restore(game.id)"
+											@click.stop="confirmRestore(game.id)"
 										>
 											Restore
 										</v-btn>
@@ -68,7 +111,7 @@
 										<v-btn
 											text
 											color="error"
-											@click.stop="destroy(game.id)"
+											@click.stop="confirmDestroy(game.id)"
 										>
 											Destroy
 										</v-btn>
@@ -123,6 +166,18 @@
 
 			return {
 
+				dialog: {
+
+					// Show the dialog confirming restoration or destruction of a dumped game
+					show: false,
+
+					// Will be set to one of the following strings: 'destroy' or 'restore'
+					operation: 'destroy',
+
+					// The id of whichever dumped game has been selected
+					selectedId: null
+				},
+
 				status: {
 
 					// Gets set to false when the page has finished loading
@@ -168,6 +223,34 @@
 					});
 			},
 
+			// Confirm restoration of a dumped game
+			confirmRestore(id) {
+
+				this.dialog.selectedId = id;
+				this.dialog.operation = 'restore';
+				this.dialog.show = true;
+			},
+
+			// Confirm destruction of a dumped game
+			confirmDestroy(id) {
+
+				this.dialog.selectedId = id;
+				this.dialog.operation = 'destroy';
+				this.dialog.show = true;
+			},
+
+			// If an operation was confirmed, carry it out
+			proceed() {
+
+				if ('destroy' == this.dialog.operation) {
+					this.destroy(this.dialog.selectedId);
+				} else {
+					this.restore(this.dialog.selectedId);
+				}
+
+				this.dialog.show = false;
+			},
+
 			// Restore a dumped game
 			restore(id) {
 
@@ -189,13 +272,7 @@
 			// Display a string representation of a UNIX timestamp
 			showCreated(timestamp) {
 
-				let date = new Date(timestamp * 1000);
-				let timeStr = date.getHours() + ':' +
-					('0' + date.getMinutes()).slice(-2) + ':' +
-					('0' + date.getSeconds()).slice(-2);
-				let dateStr = 'TODO';
-
-				return dateStr + ' ' + timeStr;
+				return (new Date(timestamp * 1000)).toString();
 			}
 		}
 	};

@@ -36,7 +36,11 @@
 		<v-card-text>
 
             <v-row style="font-size: 1.1rem;">
-				<v-col xs="12">Clicking the button below will restore all dumped games from disk. <strong>If any games exist with overlapping ids, they will be overwritten. This operation cannot be undone.</strong></v-col>
+				<v-col xs="12">
+					Clicking the button below will restore all dumped games from disk.
+					<strong>If any games exist with overlapping ids, they *will*
+					be overwritten. This operation *cannot* be undone.</strong>
+				</v-col>
 			</v-row>
 
             <v-row style="text-align: center;">
