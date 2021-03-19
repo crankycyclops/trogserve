@@ -85,6 +85,7 @@
 
 	import Message from './ui/Message';
 	import Progress from './ui/Progress';
+	import RequestMixin from '../mixins/Request.vue';
 
 	export default {
 
@@ -164,17 +165,7 @@
 					})
 
 					.catch(error => {
-
-						if ('undefined' !== typeof(error.response)) {
-							this.games.error = error.response.data.error;
-						} else {
-							this.games.error = error.message;
-						}
-
-						// Only display message for 5 seconds
-						setTimeout(() => {
-							this.games.error = '';
-						}, 5000);
+						this.games.error = this.getResponseError(error);
 					})
 
 					.finally(() => {
@@ -186,7 +177,11 @@
 		components: {
 			'message': Message,
 			'progress-bar': Progress
-		}
+		},
+
+		mixins: [
+			RequestMixin
+		]
 	};
 
 </script>
