@@ -2,59 +2,68 @@
 
 	<v-card>
 
-		<v-card-title>Games</v-card-title>
+		<v-card-title>{{ crud.showEditForm ? 'Edit Details' : 'Games' }}</v-card-title>
 
 		<v-card-subtitle>
-			Edit, delete, or manage the state of a game.
+			{{ crud.showEditForm ? "Change basic details such as the game's title and author." : "Edit, delete, or manage the state of a game." }}
 		</v-card-subtitle>
 
 		<v-card-text>
 
 			<progress-bar :show="games.loading" />
 
-			<!-- Display this after games have loaded (or an error occurred) -->
 			<template v-if="!games.loading">
 
 				<message type="error" :message="games.error" />
 
-				<game-crud
+				<!-- Allows editing and deleting games in the table -->
+				<game-crud ref="crud"
 					:id="crud.gameId"
+					:data="crud.game"
+					:definitions="crud.definitions"
 					:confirmDestroy="crud.showDestroyDialog"
+					:showForm="crud.showEditForm"
 					@destroy="onDestroy"
+					@edit="onEdit"
 					@cancel="onCancelCrud"
 					@error="onErrorCrud"
 				/>
 
-				<!-- Clickable list of games -->
-				<v-text-field
-					v-model="table.search"
-					append-icon="search"
-					label="Search any field to narrow down the list"
-					single-line
-					hide-details
-				/>
+				<!-- List of games -->
+				<template v-if="!crud.showEditForm">
 
-				<v-data-table
-					:headers="table.headers"
-					:search="table.search"
-					:items="games.data"
-					multi-sort
-				>
+					<v-text-field
+						v-model="table.search"
+						append-icon="search"
+						label="Search any field to narrow down the list"
+						single-line
+						hide-details
+					/>
 
-					<template v-slot:item.actions="{ item }">
-						<v-icon small @click="destroy(item.id)">delete</v-icon>
-						<v-icon small @click="viewGame(item.id)">view_list</v-icon>
-					</template>
+					<v-data-table
+						:headers="table.headers"
+						:search="table.search"
+						:items="games.data"
+						multi-sort
+					>
 
-					<template v-slot:no-data>
-						<v-row align="center" justify="start" v-if="!games.length">
-							<v-col cols="12">
-								<span class="warning">There aren't any games yet.</span>
-							</v-col>
-						</v-row>
-					</template>
+						<template v-slot:item.actions="{ item }">
+							<v-icon small @click="edit(item.id)">edit</v-icon>
+							<v-icon small @click="destroy(item.id)">delete</v-icon>
+							<v-icon small @click="viewGame(item.id)">view_list</v-icon>
+						</template>
 
-				</v-data-table>
+						<template v-slot:no-data>
+							<v-row align="center" justify="start" v-if="!games.length">
+								<v-col cols="12">
+									<span class="warning">There aren't any games yet.</span>
+								</v-col>
+							</v-row>
+						</template>
+
+					</v-data-table>
+
+				</template>
 
 			</template>
 
@@ -62,18 +71,34 @@
 
 		<v-card-actions v-if="!games.loading">
 
-				<v-btn text color="primary" @click="loadGames()">
-					Refresh
-				</v-btn>
+				<template v-if="crud.showEditForm">
 
-				<v-btn
-					text
-					color="primary"
-					:disabled="games.error ? true : false"
-					@click="$emit('navigate', '/admin/games/new');"
-				>
-					Create Game
-				</v-btn>
+					<v-btn text color="primary" @click="crud.showEditForm = false;">
+						Cancel
+					</v-btn>
+
+					<v-btn text color="primary" @click="$refs.crud.submit();">
+						Finish
+					</v-btn>
+
+				</template>
+
+				<template v-else>
+
+					<v-btn text color="primary" @click="loadGames()">
+						Refresh
+					</v-btn>
+
+					<v-btn
+						text
+						color="primary"
+						:disabled="games.error ? true : false"
+						@click="$emit('navigate', '/admin/games/new');"
+					>
+						Create Game
+					</v-btn>
+
+				</template>
 
 		</v-card-actions>
 
@@ -134,7 +159,12 @@
 					error: '',
 
 					// This is the data that's returned from the API call.
-					data: []
+					data: [],
+
+					// Maps game ids to keys in the data property above.
+					// This is necessary because I can't make data an
+					// Object; the data table component requires an array.
+					keys: {}
 				},
 
 				crud: {
@@ -143,8 +173,20 @@
 					// that gets passed into the CRUD component
 					gameId: 0,
 
+					// If we're editing a game, this object will contain its
+					// data
+					game: {},
+
+					// If we're editing a game, this will be an array with a
+					// single value: the definition file used to create it.
+					// This will populate the disabled drop-down.
+					definitions: [],
+
 					// Toggles the game destruction confirmation dialog
-					showDestroyDialog: false
+					showDestroyDialog: false,
+
+					// Toggles the edit form for a game
+					showEditForm: false
 				}
 			};
 		},
@@ -183,6 +225,10 @@
 					.then(response => {
 
 						this.games.data = response.data;
+
+						response.data.forEach((game, i) => {
+							this.games.keys[game.id] = i;
+						});
 					})
 
 					.catch(error => {
@@ -192,6 +238,28 @@
 					.finally(() => {
 						this.games.loading = false;
 					});
+			},
+
+			// Initiate an edit operation
+			edit(id) {
+
+				let game = this.games.data[this.games.keys[id]];
+
+				this.crud.gameId = id;
+				this.crud.definitions = [game.definition];
+				this.crud.game = game;
+				this.crud.showEditForm = true;
+			},
+
+			// Called when a game is successfully edited
+			onEdit(id, isChanged) {
+
+				// TODO: display confirmation message
+				this.crud.showEditForm = false;
+
+				if (isChanged) {
+					this.loadGames();
+				}
 			},
 
 			// Initiate a destroy operation pending confirmation
@@ -226,11 +294,16 @@
 			// Called when a CRUD operation results in an error
 			onErrorCrud(type, id, message) {
 
-				this.games.error = message;
+				// If we're editing, we'll let the component display the error
+				// above the form
+				if ('edit' != type) {
 
-				setTimeout(() => {
-					this.games.error = '';
-				}, 5000);
+					this.games.error = message;
+
+					setTimeout(() => {
+						this.games.error = '';
+					}, 5000);
+				}
 			}
 		},
 

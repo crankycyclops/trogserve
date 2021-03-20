@@ -6,7 +6,7 @@
 		<v-card-title>{{ form.show ? 'Edit Details' : getGameTitleStr }}</v-card-title>
 
 		<v-card-subtitle>
-			{{ form.show ? 'Change basic details such as the game\'s title and author.' : getGameByLine }}
+			{{ form.show ? "Change basic details such as the game's title and author." : getGameByLine }}
 		</v-card-subtitle>
 
 		<v-card-text>
@@ -186,16 +186,7 @@
 			getGameByLine() {
 				return this.author ?
 					'By ' + this.author : '';
-			},
-
-			titleMaxLen() {return window.titleMaxLen;},
-			authorMaxLen() {return window.authorMaxLen;},
-			synopsisMaxLen() {return window.synopsisMaxLen;},
-
-			nameMaxLenMsg() {return window.nameMaxLenMsg;},
-			titleMaxLenMsg() {return window.titleMaxLenMsg;},
-			authorMaxLenMsg() {return window.authorMaxLenMsg;},
-			synopsisMaxLenMsg() {return window.synopsisMaxLenMsg;}
+			}
 		},
 
 		data() {
