@@ -2,46 +2,6 @@
 
 	<v-card flat>
 
-		<!-- Dialog to confirm deletion of a game -->
-		<v-dialog
-			v-model="showDestroyDialog"
-			overlay-opacity="0.8"
-			max-width="500px"
-			@keydown.esc="cancelDestroy()"
-		>
-
-			<v-card>
-
-				<v-card-title>Destroy Game</v-card-title>
-
-				<v-card-text>
-					Are you <strong>*sure*</strong> you want to destroy this game? This action is permanent and cannot be undone. All entities and players will be lost.
-				</v-card-text>
-
-				<v-card-actions>
-
-					<v-btn
-						text
-						color="primary"
-						@click="cancelDestroy()"
-					>
-						Cancel
-					</v-btn>
-
-					<v-btn
-						text
-						color="error"
-						@click="destroy()"
-					>
-						Destroy Game
-					</v-btn>
-
-				</v-card-actions>
-
-			</v-card>
-
-		</v-dialog>
-
 		<!-- The game details tab contents -->
 		<v-card-title>{{ form.show ? 'Edit Details' : getGameTitleStr }}</v-card-title>
 
@@ -52,6 +12,14 @@
 		<v-card-text>
 
 			<message type="error" :message="form.error" />
+
+			<game-crud
+				:id="getId()"
+				:confirmDestroy="showDestroyDialog"
+				@destroy="onDestroy"
+				@cancel="onCancelCrud"
+				@error="onErrorCrud"
+			/>
 
 			<!-- Provide an interface for the user to edit basic game details -->
 			<v-row align="center" justify="start" v-if="form.show">
@@ -131,7 +99,7 @@
 					Edit
 				</v-btn>
 
-				<v-btn text color="error" @click="promptDestroy()">
+				<v-btn text color="error" @click="showDestroyDialog = true;">
 					Destroy
 				</v-btn>
 
@@ -163,6 +131,8 @@
 
 	import Message from '../../ui/Message';
 	import GameForm from '../../forms/Game.vue';
+
+	import GameCrud from '../../crud/Game';
 	import RequestMixin from '../../../mixins/Request.vue';
 
 	export default {
@@ -293,6 +263,12 @@
 
 		methods: {
 
+			// Returns the id portion of the route as an integer
+			getId() {
+
+				return parseInt(this.$router.currentRoute.params.id);
+			},
+
 			// Resets the form to reflect the values associated with the game
 			resetForm() {
 
@@ -301,39 +277,34 @@
 				this.form.values.synopsis = this.synopsis;
 			},
 
-			// Prompts the user for confirmation before destroying the game
-			promptDestroy() {
+			// Called when a user cancels a CRUD operation
+			onCancelCrud(type, id) {
 
-				this.showDestroyDialog = true;
-			},
+				switch (type) {
 
-			// During confirmation, user decided not to destroy the game
-			cancelDestroy() {
-
-				this.showDestroyDialog = false;
-			},
-
-			// Call the API to destroy the game
-			destroy() {
-
-				axios.delete('/admin/api/games/' + this.$router.currentRoute.params.id) 
-
-					// After successful update, reset the form and hide it.
-					.then(response => {
+					case 'destroy':
 						this.showDestroyDialog = false;
-						this.$emit('navigate', '/admin/games');
-					})
+						break;
 
-					.catch(error => {
+					default:
+						break;
+				};
+			},
 
-						this.form.error = this.getResponseError(error);
+			// Called when a CRUD operation results in an error
+			onErrorCrud(type, id, message) {
 
-						setTimeout(() => {
-							this.form.error = '';
-						}, 5000);
+				this.form.error = message;
 
-						this.cancelDestroy();
-					});
+				setTimeout(() => {
+					this.form.error = '';
+				}, 5000);
+			},
+
+			// Called when a Game is successfully destroyed
+			onDestroy(id) {
+
+				this.$emit('navigate', '/admin/games');
 			},
 
 			// Provide an interface for the user to edit the game's details
@@ -437,7 +408,8 @@
 
 		components: {
 			'message': Message,
-			'game-form': GameForm
+			'game-form': GameForm,
+			'game-crud': GameCrud
 		},
 
 		mixins: [
