@@ -252,12 +252,12 @@
 			},
 
 			// Called when a game is successfully edited
-			onEdit(id, isChanged) {
+			onEdit(id, changed) {
 
 				// TODO: display confirmation message
 				this.crud.showEditForm = false;
 
-				if (isChanged) {
+				if (0 === Object.keys(changed).length) {
 					this.loadGames();
 				}
 			},

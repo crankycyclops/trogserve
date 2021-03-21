@@ -97,18 +97,6 @@
             definitions: Array
         },
 
-        computed: {
-
-			titleMaxLen() {return window.titleMaxLen;},
-			authorMaxLen() {return window.authorMaxLen;},
-			synopsisMaxLen() {return window.synopsisMaxLen;},
-
-			nameMaxLenMsg() {return window.nameMaxLenMsg;},
-			titleMaxLenMsg() {return window.titleMaxLenMsg;},
-			authorMaxLenMsg() {return window.authorMaxLenMsg;},
-			synopsisMaxLenMsg() {return window.synopsisMaxLenMsg;}
-        },
-
         watch: {
 
             data(obj) {
@@ -127,10 +115,6 @@
 
 			return {
 
-                // If an error occurs while editing or creating, set this to
-                // the message to display it above the form
-                error: '',
-
                 form: {
 
 					// Set this to true whenever the form is in the process
@@ -146,6 +130,10 @@
 					synopsis: 'undefined' == typeof data || 'undefined' == typeof data.synopsis ? '' : data.synopsis,
 					autostart: false, // only used for new games
 				},
+
+                // If an error occurs while editing or creating, set this to
+                // the message to display it above the form
+                error: ''
 			};
 		},
 
@@ -171,17 +159,14 @@
 					});
 			},
 
-            // Update or create a game
-            submit() {
+            // Creates a new game
+            create() {
 
-                if ('undefined' == this.id) {
-                    throw new Error("Creating new games isn't supported yet!");
-                }
+                throw new Error("Creating new games isn't supported yet!");
+            },
 
-				if (!this.$refs.form.validate()) {
-                    this.$emit('error', 'validation', this.id);
-                    return;
-				}
+            // Updates an existing game
+            update() {
 
 				let modified = {};
 
@@ -205,7 +190,7 @@
 
 					// After successful update, reset the form and hide it.
 					.then(response => {
-						this.$emit('edit', this.id, true);
+						this.$emit('edit', this.id, modified);
 					})
 
 					.catch(error => {
@@ -221,6 +206,21 @@
 					.finally(() => {
 						this.form.submitting = false;
 					});
+            },
+
+            // Called when the form is submitted
+            submit() {
+
+				if (!this.$refs.form.validate()) {
+                    this.$emit('error', 'validation', this.id);
+                    return;
+				}
+
+                if ('undefined' == this.id) {
+                    this.create();
+                } else {
+                    this.update();
+                }
             }
 		},
 

@@ -11,32 +11,19 @@
 
 		<v-card-text>
 
-			<message type="error" :message="form.error" />
-
-			<game-crud
+			<game-crud ref="crud"
 				:id="getId()"
+				:data="form.values"
+				:definitions="form.definitions"
 				:confirmDestroy="showDestroyDialog"
+				:showForm="form.show"
 				@destroy="onDestroy"
+				@edit="onEdit"
 				@cancel="onCancelCrud"
 				@error="onErrorCrud"
 			/>
 
-			<!-- Provide an interface for the user to edit basic game details -->
-			<v-row align="center" justify="start" v-if="form.show">
-				<v-col cols="12">
-					<game-form ref="form"
-						:name="name"
-						:definition="definition"
-						:title.sync="form.values.title"
-						:author.sync="form.values.author"
-						:synopsis.sync="form.values.synopsis"
-						:definitionList="[definition]"
-						:submitting="form.submitting"
-					/>
-				</v-col>
-			</v-row>
-
-			<template v-else>
+			<template v-if="!form.show">
 
 				<!-- Details about the game -->
 				<v-row align="center" justify="start">
@@ -79,11 +66,11 @@
 
 			<template v-if="form.show">
 
-				<v-btn text color="primary" @click="cancelEditDetails()">
+				<v-btn text color="primary" @click="form.show = false;">
 					Cancel
 				</v-btn>
 
-				<v-btn text color="primary" @click="submitDetails()">
+				<v-btn text color="primary" @click="$refs.crud.submit();">
 					Finish
 				</v-btn>
 
@@ -91,11 +78,11 @@
 
 			<template v-else>
 
-				<v-btn text color="primary" @click="$emit('refresh')">
+				<v-btn text color="primary" @click="$emit('refresh');">
 					Refresh
 				</v-btn>
 
-				<v-btn text color="primary" @click="editDetails()">
+				<v-btn text color="primary" @click="edit();">
 					Edit
 				</v-btn>
 
@@ -110,6 +97,7 @@
 	</v-card>
 
 </template>
+
 
 <style>
 
@@ -127,6 +115,7 @@
 
 </style>
 
+
 <script>
 
 	import Message from '../../ui/Message';
@@ -136,13 +125,6 @@
 	import RequestMixin from '../../../mixins/Request.vue';
 
 	export default {
-
-		// The first time the component is mounted, the game data has already
-		// been loaded, so make sure we initialize the form.
-		mounted() {
-
-			this.resetForm();
-		},
 
 		props: {
 
@@ -220,36 +202,17 @@
 				// These are the bits of game data we can update
 				form: {
 
-					// Set this to true whenever we begin submitting the
-					// form. This will deactivate the form until submission
-					// is complete (or there's an error.)
-					submitting: false,
-
-					// If an error occurs during submission, set it here
-					error: '',
-
 					// Whether or not to display the form for editing game
 					// meta values
 					show: false,
 
-					// Syncs with the values entered into the form by the
-					// user
-					values: {
-						title: null,
-						author: null,
-						synopsis: null
-					}
+					// Used to initialize the read-only drop-down for the game editing form
+					definitions: [this.definition],
+
+					// Populates the game editing form
+					values: {}
 				}
 			};
-		},
-
-		watch: {
-
-			// Reset the form whenever a new game is loaded
-			loaded() {
-
-				this.resetForm();
-			}
 		},
 
 		methods: {
@@ -260,12 +223,17 @@
 				return parseInt(this.$router.currentRoute.params.id);
 			},
 
-			// Resets the form to reflect the values associated with the game
-			resetForm() {
+			edit() {
 
-				this.form.values.title = this.title;
-				this.form.values.author = this.author;
-				this.form.values.synopsis = this.synopsis;
+				this.form.values = {
+					name: this.name,
+					definition: this.definition,
+					title: this.title,
+					author: this.author,
+					synopsis: this.synopsis
+				};
+
+				this.form.show = true;
 			},
 
 			// Called when a user cancels a CRUD operation
@@ -285,11 +253,16 @@
 			// Called when a CRUD operation results in an error
 			onErrorCrud(type, id, message) {
 
-				this.form.error = message;
+				// If we're editing, we'll let the component display the error
+				// above the form
+				if ('edit' != type) {
 
-				setTimeout(() => {
-					this.form.error = '';
-				}, 5000);
+					this.form.error = message;
+
+					setTimeout(() => {
+						this.form.error = '';
+					}, 5000);
+				}
 			},
 
 			// Called when a Game is successfully destroyed
@@ -298,68 +271,14 @@
 				this.$emit('navigate', '/admin/games');
 			},
 
-			// Provide an interface for the user to edit the game's details
-			editDetails() {
+			// Called when a Game is successfully edited
+			onEdit(id, changed) {
 
-				this.form.show = true;
-			},
-
-			// Submit updated game details
-			submitDetails() {
-
-				this.form.error = '';
-
-				if (!this.$refs.form.validate()) {
-					return false;
-				}
-
-				let data = {};
-
-				['title', 'author', 'synopsis'].forEach(field => {
-					if (this[field] !== this.form.values[field]) {
-						data[field] = this.form.values[field];
-					}
+				Object.keys(changed).forEach(key => {
+					console.log('update:' + key);
+					this.$emit('update:' + key, changed[key]);
 				});
 
-				// Nothing actually needs to be updated, so we don't have to
-				// make a request :)
-				if (!Object.keys(data).length) {
-					this.form.show = false;
-					return;
-				}
-
-				this.form.submitting = true;
-
-				axios.post('/admin/api/games/' + this.$router.currentRoute.params.id + '/meta', data)
-
-					// After successful update, reset the form and hide it.
-					.then(response => {
-						this.$emit('update', {payload: data, callback: () => {
-							this.$nextTick(() => {
-								this.resetForm();
-								this.form.show = false;
-							});
-						}});
-					})
-
-					.catch(error => {
-
-						this.form.error = this.getResponseError(error);
-
-						setTimeout(() => {
-							this.form.error = '';
-						}, 5000);
-					})
-
-					.finally(() => {
-						this.form.submitting = false;
-					});
-			},
-
-			// The user started editing the game's details but decided to cancel
-			cancelEditDetails() {
-
-				this.resetForm();
 				this.form.show = false;
 			},
 
