@@ -42,12 +42,12 @@
 
         </v-dialog>
 
+        <!-- Form to create or update a game -->
         <template v-if="showForm">
 
             <!-- If an error occurred during editing or creating, display it above the form -->
             <message type="error" :message="error" />
 
-            <!-- Form to create or update a game -->
             <v-row align="center" justify="start">
                 <v-col cols="12">
                     <game-form ref="form"
