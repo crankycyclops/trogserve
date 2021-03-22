@@ -48,9 +48,28 @@
 					>
 
 						<template v-slot:item.actions="{ item }">
-							<v-icon small @click="edit(item.id)">edit</v-icon>
-							<v-icon small @click="destroy(item.id)">delete</v-icon>
-							<v-icon small @click="viewGame(item.id)">view_list</v-icon>
+
+							<v-tooltip bottom>
+								<template v-slot:activator="{ on, attrs }">
+									<v-icon small v-bind="attrs" v-on="on" @click="edit(item.id)">edit</v-icon>
+								</template>
+								<span>Edit</span>
+							</v-tooltip>
+
+							<v-tooltip bottom>
+								<template v-slot:activator="{ on, attrs }">
+									<v-icon small v-bind="attrs" v-on="on" @click="destroy(item.id)">delete</v-icon>
+								</template>
+								<span>Delete</span>
+							</v-tooltip>
+
+							<v-tooltip bottom>
+								<template v-slot:activator="{ on, attrs }">
+									<v-icon small v-bind="attrs" v-on="on" @click="viewGame(item.id)">view_list</v-icon>
+								</template>
+								<span>Manage</span>
+							</v-tooltip>
+
 						</template>
 
 						<template v-slot:no-data>
