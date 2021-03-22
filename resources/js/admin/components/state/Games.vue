@@ -80,9 +80,28 @@
 					</template>
 
 					<template v-slot:item.actions="{ item }">
-						<v-icon small @click="confirmRestore(item.id)">restore</v-icon>
-						<v-icon small @click="confirmDestroy(item.id)">delete</v-icon>
-						<v-icon small @click="expand(item.id)">view_list</v-icon>
+
+						<v-tooltip bottom>
+							<template v-slot:activator="{ on, attrs }">
+								<v-icon small v-bind="attrs" v-on="on" @click="confirmRestore(item.id)">restore</v-icon>
+							</template>
+							<span>Restore</span>
+						</v-tooltip>
+
+						<v-tooltip bottom>
+							<template v-slot:activator="{ on, attrs }">
+								<v-icon small v-bind="attrs" v-on="on" @click="confirmDestroy(item.id)">delete</v-icon>
+							</template>
+							<span>Delete</span>
+						</v-tooltip>
+
+						<v-tooltip bottom>
+							<template v-slot:activator="{ on, attrs }">
+								<v-icon small v-bind="attrs" v-on="on" @click="expand(item.id)">view_list</v-icon>
+							</template>
+							<span>View Slots</span>
+						</v-tooltip>
+
 					</template>
 
 					<template v-slot:no-data>
