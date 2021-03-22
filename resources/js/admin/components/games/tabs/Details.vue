@@ -86,6 +86,10 @@
 					Edit
 				</v-btn>
 
+				<v-btn text color="primary" @click="dump();">
+					Dump
+				</v-btn>
+
 				<v-btn text color="error" @click="showDestroyDialog = true;">
 					Destroy
 				</v-btn>
@@ -223,6 +227,13 @@
 				return parseInt(this.$router.currentRoute.params.id);
 			},
 
+			// Dump the game
+			dump() {
+
+				alert('TODO: dump()');
+			},
+
+			// Display the edit game details form
 			edit() {
 
 				this.form.values = {

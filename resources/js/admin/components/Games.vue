@@ -58,6 +58,13 @@
 
 							<v-tooltip bottom>
 								<template v-slot:activator="{ on, attrs }">
+									<v-icon small v-bind="attrs" v-on="on" @click="dump(item.id)">file_download</v-icon>
+								</template>
+								<span>Dump</span>
+							</v-tooltip>
+
+							<v-tooltip bottom>
+								<template v-slot:activator="{ on, attrs }">
 									<v-icon small v-bind="attrs" v-on="on" @click="destroy(item.id)">delete</v-icon>
 								</template>
 								<span>Delete</span>
@@ -257,6 +264,12 @@
 					.finally(() => {
 						this.games.loading = false;
 					});
+			},
+
+			// Dump the game
+			dump(id) {
+
+				alert('TODO: dump(' + id + ')');
 			},
 
 			// Initiate an edit operation
