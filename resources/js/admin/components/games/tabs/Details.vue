@@ -11,12 +11,15 @@
 
 		<v-card-text>
 
+			<message :type="messageType" :message="message" />
+
 			<game-crud ref="crud"
 				:id="getId()"
 				:data="form.values"
 				:definitions="form.definitions"
 				:confirmDestroy="showDestroyDialog"
 				:showForm="form.show"
+				@dump="onDump"
 				@destroy="onDestroy"
 				@edit="onEdit"
 				@cancel="onCancelCrud"
@@ -86,8 +89,8 @@
 					Edit
 				</v-btn>
 
-				<v-btn text color="primary" @click="dump();">
-					Dump
+				<v-btn text color="primary" :disabled="disableDump" @click="dump();">
+					{{ disableDump ? 'Dumping...' : 'Dump' }}
 				</v-btn>
 
 				<v-btn text color="error" @click="showDestroyDialog = true;">
@@ -179,8 +182,18 @@
 
 			return {
 
+				// If set to a string, this is a message to display at the top of the v-card
+				message: '',
+
+				// One of 'error' or 'success'
+				messageType: 'error',
+
 				// Toggles the "Destroy Game" confirmation dialog
 				showDestroyDialog: false,
+
+				// Setting this to true disables the dump button and displays
+				// "Dumping..." instead of "Dump" as the button label
+				disableDump: false,
 
 				toggleStartData: {
 
@@ -227,10 +240,10 @@
 				return parseInt(this.$router.currentRoute.params.id);
 			},
 
-			// Dump the game
 			dump() {
 
-				alert('TODO: dump()');
+				this.disableDump = true;
+				this.$refs.crud.dump();
 			},
 
 			// Display the edit game details form
@@ -268,12 +281,29 @@
 				// above the form
 				if ('edit' != type) {
 
-					this.form.error = message;
+					this.message = message;
+					this.messageType = 'error';
 
 					setTimeout(() => {
-						this.form.error = '';
+						this.message = '';
 					}, 5000);
 				}
+
+				if ('dump' == type) {
+					this.disableDump = false;
+				}
+			},
+
+			// Called when the game has been successfully dumped
+			onDump(id) {
+
+				this.message = 'Game dumped';
+				this.messageType = 'success';
+				this.disableDump = false;
+
+				setTimeout(() => {
+					this.message = '';
+				}, 5000);
 			},
 
 			// Called when a Game is successfully destroyed
