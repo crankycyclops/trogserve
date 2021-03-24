@@ -326,9 +326,9 @@ class AdminApiController extends Controller {
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function dumpGame(): \Illuminate\Http\JsonResponse {
+	public function dumpGame(int $id): \Illuminate\Http\JsonResponse {
 
-		// TODO
+		$this->trogdord->getGame($id)->dump();
 		return response()->json([], 204);
 	}
 

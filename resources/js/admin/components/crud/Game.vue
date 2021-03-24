@@ -144,6 +144,20 @@
                 this.$emit('cancel', type, this.id);
 			},
 
+            // Calls the API to dump the game
+            dump() {
+
+				axios.post('/admin/api/games/' + this.id + '/dump')
+
+					.then(response => {
+                        this.$emit('dump', this.id);
+					})
+
+					.catch(error => {
+                        this.$emit('error', 'dump', this.id, this.getResponseError(error));
+					});
+            },
+
 			// Call the API to destroy the game
 			destroy() {
 

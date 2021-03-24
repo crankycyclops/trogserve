@@ -14,7 +14,7 @@
 
 			<template v-if="!games.loading">
 
-				<message type="error" :message="games.error" />
+				<message :type="games.messageType" :message="games.message" />
 
 				<!-- Allows editing and deleting games in the table -->
 				<game-crud ref="crud"
@@ -23,6 +23,7 @@
 					:definitions="crud.definitions"
 					:confirmDestroy="crud.showDestroyDialog"
 					:showForm="crud.showEditForm"
+					@dump="onDump"
 					@destroy="onDestroy"
 					@edit="onEdit"
 					@cancel="onCancelCrud"
@@ -118,7 +119,7 @@
 					<v-btn
 						text
 						color="primary"
-						:disabled="games.error ? true : false"
+						:disabled="games.loadFailed ? true : false"
 						@click="$emit('navigate', '/admin/games/new');"
 					>
 						Create Game
@@ -180,9 +181,16 @@
 					// API.
 					loading: true,
 
-					// If an error occurred during loading, that error
-					// message will be set here.
-					error: '',
+					// Set this to true if loading the list of games failed.
+					loadFailed: false,
+
+					// Setting this to a string displays an error or
+					// confirmation message after some operation, or 
+					// after the page has loaded if there wre problems.
+					message: '',
+
+					// One of 'error' or 'success'
+					messageType: 'error',
 
 					// This is the data that's returned from the API call.
 					data: [],
@@ -242,8 +250,9 @@
 			// Loads list of games via the API.
 			loadGames() {
 
+				this.games.data = [];
 				this.games.loading = true;
-				this.games.error = '';
+				this.games.message = '';
 
 				axios
 					.get('/admin/api/games')
@@ -255,10 +264,14 @@
 						response.data.forEach((game, i) => {
 							this.games.keys[game.id] = i;
 						});
+
+						this.games.loadFailed = false;
 					})
 
 					.catch(error => {
-						this.games.error = this.getResponseError(error);
+						this.games.message = this.getResponseError(error);
+						this.games.messageType = 'error';
+						this.games.loadFailed = true;
 					})
 
 					.finally(() => {
@@ -269,7 +282,8 @@
 			// Dump the game
 			dump(id) {
 
-				alert('TODO: dump(' + id + ')');
+				this.crud.gameId = id;
+				this.$refs.crud.dump();
 			},
 
 			// Initiate an edit operation
@@ -281,6 +295,17 @@
 				this.crud.definitions = [game.definition];
 				this.crud.game = game;
 				this.crud.showEditForm = true;
+			},
+
+			// Called when the game has been successfully dumped
+			onDump(id) {
+
+				this.games.message = 'Game dumped';
+				this.games.messageType = 'success';
+
+				setTimeout(() => {
+					this.games.message = '';
+				}, 5000);
 			},
 
 			// Called when a game is successfully edited
@@ -330,10 +355,11 @@
 				// above the form
 				if ('edit' != type) {
 
-					this.games.error = message;
+					this.games.message = message;
+					this.games.messageType = 'error';
 
 					setTimeout(() => {
-						this.games.error = '';
+						this.games.message = '';
 					}, 5000);
 				}
 			}
