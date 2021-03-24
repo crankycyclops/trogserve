@@ -244,6 +244,7 @@
 			// View the specified game's admin console
 			viewGame(id) {
 
+				this.games.message = '';
 				this.$emit('navigate', '/admin/games/' + id);
 			},
 
@@ -282,6 +283,7 @@
 			// Dump the game
 			dump(id) {
 
+				this.games.message = '';
 				this.crud.gameId = id;
 				this.$refs.crud.dump();
 			},
@@ -291,6 +293,7 @@
 
 				let game = this.games.data[this.games.keys[id]];
 
+				this.games.message = '';
 				this.crud.gameId = id;
 				this.crud.definitions = [game.definition];
 				this.crud.game = game;
@@ -322,6 +325,7 @@
 			// Initiate a destroy operation pending confirmation
 			destroy(id) {
 
+				this.games.message = '';
 				this.crud.gameId = id;
 				this.crud.showDestroyDialog = true;
 			},

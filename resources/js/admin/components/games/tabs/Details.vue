@@ -93,7 +93,7 @@
 					{{ disableDump ? 'Dumping...' : 'Dump' }}
 				</v-btn>
 
-				<v-btn text color="error" @click="showDestroyDialog = true;">
+				<v-btn text color="error" @click="destroy();">
 					Destroy
 				</v-btn>
 
@@ -240,14 +240,25 @@
 				return parseInt(this.$router.currentRoute.params.id);
 			},
 
+			// Dump the game
 			dump() {
 
+				this.message = '';
 				this.disableDump = true;
 				this.$refs.crud.dump();
 			},
 
+			// Destroy the game
+			destroy() {
+
+				this.message = '';
+				this.showDestroyDialog = true;
+			},
+
 			// Display the edit game details form
 			edit() {
+
+				this.message = '';
 
 				this.form.values = {
 					name: this.name,
