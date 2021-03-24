@@ -29,7 +29,7 @@
         "vue": "^2.6.12",
         "vue-router": "^3.5.1",
         "vue-template-compiler": "^2.6.12",
-        "vuetify": "^2.4.7",
+        "vuetify": "^2.4.8",
         "vuex": "^3.6.2"
     },
     "comments": {
