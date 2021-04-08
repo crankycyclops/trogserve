@@ -16,7 +16,7 @@
     "dependencies": {
         "axios": "^0.21.1",
         "cross-env": "^6.0",
-        "laravel-mix": "^6.0",
+        "laravel-mix": "^6.0.16",
         "laravel-mix-merge-manifest": "^2.0",
         "lodash": "^4.17.21",
         "material-design-icons-iconfont": "^5.0.1",
