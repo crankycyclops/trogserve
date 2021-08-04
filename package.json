@@ -23,7 +23,7 @@
         "minimist": ">=1.2.3",
         "reset-css": "^5.0.1",
         "resolve-url-loader": "^3.1.4",
-        "sass": "^1.37.0",
+        "sass": "^1.37.5",
         "sass-loader": "7.*",
         "typeit": "^7.0.4",
         "vue": "^2.6.14",
