@@ -21,7 +21,6 @@ services:
               source: ./sockserve/config.env
               target: /sockserve/config.env
               read_only: true
-        command: tail -f /dev/null
 
     # TODO: I still need containers for the following services: PHP, Nginx, Redis, and MySQL
 
