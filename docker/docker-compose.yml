@@ -5,6 +5,12 @@ services:
     # Trogdord
     trogdord:
         image: crankycyclops/trogdord:0.90.0
+        volumes:
+            - type: volume
+              source: trogdord_dumped_games
+              target: /usr/var/trogdord/state
+              volume:
+                nocopy: true
 
     # Web socket server (the glue between the PHP application and trogdord)
     sockserve:
@@ -18,3 +24,8 @@ services:
         command: tail -f /dev/null
 
     # TODO: I still need containers for the following services: PHP, Nginx, Redis, and MySQL
+
+volumes:
+    # trogdord will dump games here so that they can be restored later, even if the
+    # container that dumped the game is destroyed
+    trogdord_dumped_games:
