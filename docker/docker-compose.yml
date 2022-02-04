@@ -42,6 +42,7 @@ services:
     trogdord:
         image: crankycyclops/trogdord:0.90.0
         volumes:
+            - ../games:/usr/share/trogdor
             - type: volume
               source: trogdord_dumped_games
               target: /usr/var/trogdord/state
@@ -51,6 +52,9 @@ services:
     # Web socket server (the glue between the PHP application and trogdord)
     sockserve:
         image: crankycyclops/trogserve-websocket:master
+        depends_on:
+            - "trogdord"
+            - "redis"
         volumes:
             - type: bind
               source: ./sockserve/config.env

@@ -24,8 +24,10 @@ RUN apt-get remove -y wget unzip
 WORKDIR /sockserve
 RUN npm install
 
-COPY ./entrypoint.sh /
-RUN chmod 0700 /entrypoint.sh
+# Create a non-root user to execute sockserve
+RUN groupadd -r trogserve && useradd -r -g trogserve -d /home/trogserve -s /sbin/nologin -c "Docker image user" trogserve
 
-WORKDIR /
-ENTRYPOINT ["/entrypoint.sh"]
+USER trogserve
+WORKDIR /sockserve
+
+ENTRYPOINT ["node", "index"]
