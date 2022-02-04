@@ -7,6 +7,12 @@ services:
     redis:
         image: redis:latest
 
+    # Php-fpm + trogdord extension
+    php:
+        image: crankycyclops/php8.1-fpm-trogdord-ext:0.90.0
+        volumes:
+            - ..:/var/www/trogserve
+
     # Trogdord
     #
     # TODO: should the directory where game definitions are stored be
@@ -31,13 +37,12 @@ services:
     sockserve:
         image: crankycyclops/trogserve-websocket:master
         volumes:
-        volumes:
             - type: bind
               source: ./sockserve/config.env
               target: /sockserve/config.env
               read_only: true
 
-    # TODO: I still need containers for the following services: PHP, Nginx, and MySQL
+    # TODO: I still need containers for the following services: Nginx and MySQL
 
 volumes:
     # trogdord will dump games here so that they can be restored later, even if the
