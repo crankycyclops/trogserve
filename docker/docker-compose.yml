@@ -13,6 +13,21 @@ services:
         volumes:
             - ..:/var/www/trogserve
 
+    # Database for the PHP application
+    database:
+        image: mariadb:latest
+        environment:
+            MARIADB_RANDOM_ROOT_PASSWORD: 'yes'
+            MARIADB_DATABASE: trogserve
+            MARIADB_USER: trogserve
+            MARIADB_PASSWORD: trogserve
+        volumes:
+            - type: volume
+              source: trogserve_mysql
+              target: /var/lib/mysql
+              volume:
+                nocopy: true
+
     # Trogdord
     #
     # TODO: should the directory where game definitions are stored be
@@ -42,9 +57,13 @@ services:
               target: /sockserve/config.env
               read_only: true
 
-    # TODO: I still need containers for the following services: Nginx and MySQL
+    # TODO: I still need to create a container for Nginx
 
 volumes:
+
+    # Trogserve's database will persist here
+    trogserve_mysql:
+
     # trogdord will dump games here so that they can be restored later, even if the
     # container that dumped the game is destroyed
     trogdord_dumped_games:
