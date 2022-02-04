@@ -1,0 +1,20 @@
+version: '3.3'
+
+services:
+
+    # Trogdord
+    trogdord:
+        image: crankycyclops/trogdord:0.90.0
+
+    # Web socket server (the glue between the PHP application and trogdord)
+    sockserve:
+        image: crankycyclops/trogserve-websocket:master
+        volumes:
+        volumes:
+            - type: bind
+              source: ./sockserve/config.env
+              target: /sockserve/config.env
+              read_only: true
+        command: tail -f /dev/null
+
+    # TODO: I still need containers for the following services: PHP, Nginx, Redis, and MySQL

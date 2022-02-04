@@ -24,5 +24,7 @@ RUN apt-get remove -y wget unzip
 WORKDIR /sockserve
 RUN npm install
 
-WORKDIR /
-ENTRYPOINT ["node", "/sockserve/index"]
+# Right now, config.env is only read from the current directory. I should
+# fix fhis, but for now, changing the working directory works.
+WORKDIR /sockserve
+ENTRYPOINT ["node", "index"]
