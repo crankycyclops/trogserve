@@ -2,7 +2,22 @@ version: '3.3'
 
 services:
 
+    # Trogdord and the web socket server will use redis to send and receive
+    # messages to each other
+    redis:
+        image: redis:latest
+
     # Trogdord
+    #
+    # TODO: should the directory where game definitions are stored be
+    # a bind mount or a volume? I'm leaning toward a bind-mount so that
+    # games can be easily added just by moving files into the right
+    # directory on the host, but I'll think about this a little more.
+    #
+    # TODO: once I modify trogdord to allow includes from the root
+    # trogdord.ini, I should then bind to a directory containing a
+    # default container-specific configuration that can be modified
+    # directly on the host.
     trogdord:
         image: crankycyclops/trogdord:0.90.0
         volumes:
@@ -22,7 +37,7 @@ services:
               target: /sockserve/config.env
               read_only: true
 
-    # TODO: I still need containers for the following services: PHP, Nginx, Redis, and MySQL
+    # TODO: I still need containers for the following services: PHP, Nginx, and MySQL
 
 volumes:
     # trogdord will dump games here so that they can be restored later, even if the
