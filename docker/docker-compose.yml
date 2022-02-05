@@ -1,3 +1,7 @@
+# To start, issue the following command:
+# DOCKER_UID=xxx docker-compose up, where DOCKER_UID is the UID that owns the
+# files bind-mounted into the php container.
+
 version: '3.3'
 
 services:
@@ -25,6 +29,7 @@ services:
     # Php-fpm + trogdord extension
     php:
         image: crankycyclops/php8.1-fpm-trogdord-ext:0.90.0
+        user: "${DOCKER_UID}"
         depends_on:
             - "database"
         volumes:
