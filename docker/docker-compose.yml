@@ -34,6 +34,7 @@ services:
             - "database"
         volumes:
             - ..:/var/www/trogserve
+            - ./env:/var/www/trogserve/.env
 
     # Trogdord
     #
