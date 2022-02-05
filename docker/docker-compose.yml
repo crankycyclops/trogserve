@@ -7,12 +7,6 @@ services:
     redis:
         image: redis:latest
 
-    # Php-fpm + trogdord extension
-    php:
-        image: crankycyclops/php8.1-fpm-trogdord-ext:0.90.0
-        volumes:
-            - ..:/var/www/trogserve
-
     # Database for the PHP application
     database:
         image: mariadb:latest
@@ -28,12 +22,15 @@ services:
               volume:
                 nocopy: true
 
+    # Php-fpm + trogdord extension
+    php:
+        image: crankycyclops/php8.1-fpm-trogdord-ext:0.90.0
+        depends_on:
+            - "database"
+        volumes:
+            - ..:/var/www/trogserve
+
     # Trogdord
-    #
-    # TODO: should the directory where game definitions are stored be
-    # a bind mount or a volume? I'm leaning toward a bind-mount so that
-    # games can be easily added just by moving files into the right
-    # directory on the host, but I'll think about this a little more.
     #
     # TODO: once I modify trogdord to allow includes from the root
     # trogdord.ini, I should then bind to a directory containing a
@@ -61,7 +58,16 @@ services:
               target: /sockserve/config.env
               read_only: true
 
-    # TODO: I still need to create a container for Nginx
+    # Web server for the frontned application
+    nginx:
+        image: nginx:stable
+        depends_on:
+            - "php"
+        ports:
+            - 8080:80
+        volumes:
+            - ../:/var/www/trogserve
+            - ./nginx:/etc/nginx/conf.d
 
 volumes:
 
