@@ -19,7 +19,7 @@ let typeit = new TypeIt('#console', {
 	}
 })
 	.pause(1000)
-	.type('You sit at a polished oak desk to browse GitHub repositories on your laptop when an interesting project catches your eye.', {speed: 1})
+	.type('You sit before a polished oak desk to browse GitHub repositories. An interesting project catches your eye.', {speed: 1})
 	.break()
 	.break()
 	.type('"Trogserve," the title reads, "A multi-player text adventure server built on top of Trogdor-pp and PHP."', {speed: 1})
