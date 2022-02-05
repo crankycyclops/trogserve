@@ -28,7 +28,7 @@ services:
 
     # Php-fpm + trogdord extension
     php:
-        image: crankycyclops/php8.1-fpm-trogdord-ext:0.90.0
+        image: crankycyclops/php8.1-fpm-trogdord-ext-npm:0.90.0
         user: "${DOCKER_UID}"
         depends_on:
             - "database"
