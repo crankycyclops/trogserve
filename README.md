@@ -45,9 +45,32 @@ Laravel 8, Laravel Passport 10, PHP 7.4+, composer, npm, Vue.js, Vuetify, [trogd
 
 The PHP extension has been tested with and is known to build against PHP 7.2, 7.3, 7.4, 8.0, and 8.1.
 
-## Installation
+## Installation with Docker
 
-1. Make sure you've built, installed, and configured the trogdor-pp library, trogdord daemon, and trogdord PHP extension. You can find more information about those dependencies here: https://github.com/crankycyclops/trogdor-pp
+1. `git clone git@github.com:crankycyclops/trogserve.git && cd trogserve`
+2. `cd docker`
+3. `DOCKER_UID=<your uid on the host> docker-compose up`. If you don't execute the container with the same UID as you on the host, you're going to have issues.
+4. `docker container ls` and look for the container using the `crankycyclops/php8.1-fpm-trogdord-ext-npm` image.
+5. `docker exec -it <container id> /bin/bash`
+
+The next steps are executed inside the container:
+
+6. `source /etc/profile`. This file doesn't automatically get executed when you attach to the container and you need to incldue it before you can run npm.
+7. `cd /var/www/trogserve`
+8. `composer install`
+9. `npm install --cache /tmp && cd sockserve && npm install --cache /tmp && cd ..`. If you don't execute these commands with the `--cache /tmp` argument, you're going to get an error about a directory owned by root. I'm eventually going to fix this, but for now, this kludge works.
+10. `php artisan migrate && php artisan db:seed`
+11. `php artisan passport:keys`
+12. `php artisan passport:client --password --provider admins`. Accept the default and press enter.
+13. `make dev`. You can also type `make prod` if you want smaller bundles, but you won't have as much information if things go wrong.
+
+At this point, you can exit the container and test your environment by browsing to `http://localhost:8080`. You should also be able to browse to `http://localhost:8080/admin` and login with username `admin` and default password `password`. At some point (certainly before I make a Docker environment that's considered safe for production), I'm going to simplify/automate a lot of these steps.
+
+Note that the `docker-compose.yml` file that currently comes with Trogserve is intended for a development environment. It shouldn't be considered a stable or secure application. Also, note that it bind-mounts the web root to the host's cloned repository so that changes made on the host filesystem will be immediately visible to the container.
+
+## Installation Without Docker
+
+1. Make sure you've built, installed, and configured the trogdor-pp library, trogdord daemon, and trogdord PHP extension. Furthermore, make sure that the `trogdord` daemon is running in the background and listening on `localhost`. You can find more information about those dependencies here: https://github.com/crankycyclops/trogdor-pp
 2. `cd webroot && git clone git@github.com:crankycyclops/trogserve.git`
 3. `cp webroot/.env.example webroot/.env` and configure according to your environment
 4. `composer install`
@@ -56,6 +79,8 @@ The PHP extension has been tested with and is known to build against PHP 7.2, 7.
 7. `php artisan passport:keys && php artisan passport:client --password --provider admins`
 8. `make prod` to build frontend (or `make dev` if not a production server)
 9. To test your installation, fire up the Laravel development server: `php artisan serve`
+
+These instructions do not currently cover the installation of a real HTTP server.
 
 ## Configuration
 
