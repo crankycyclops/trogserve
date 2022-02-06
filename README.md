@@ -68,6 +68,8 @@ At this point, you can exit the container and test your environment by browsing 
 
 Note that the `docker-compose.yml` file that currently comes with Trogserve is intended for a development environment. It shouldn't be considered a stable or secure application. Also, note that it bind-mounts the web root to the host's cloned repository so that changes made on the host filesystem will be immediately visible to the container.
 
+The required Docker containers have already been pushed to Docker Hub and get updated regularly.
+
 ## Installation Without Docker
 
 1. Make sure you've built, installed, and configured the trogdor-pp library, trogdord daemon, and trogdord PHP extension. Furthermore, make sure that the `trogdord` daemon is running in the background and listening on `localhost`. You can find more information about those dependencies here: https://github.com/crankycyclops/trogdor-pp
