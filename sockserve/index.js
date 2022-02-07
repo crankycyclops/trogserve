@@ -108,7 +108,7 @@ class SockServe {
 
 				// Socket will listen for input from the player
 				socket.on('message', message => {
-					this.#processCommand(socket, message);
+					this.#processCommand(socket, message.toString());
 				});
 
 				socket.send(HANDSHAKE_SUCCESSFUL);
