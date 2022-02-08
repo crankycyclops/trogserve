@@ -37,14 +37,10 @@ services:
             - ./env:/var/www/trogserve/.env
 
     # Trogdord
-    #
-    # TODO: once I modify trogdord to allow includes from the root
-    # trogdord.ini, I should then bind to a directory containing a
-    # default container-specific configuration that can be modified
-    # directly on the host.
     trogdord:
         image: crankycyclops/trogdord:0.90.0
         volumes:
+            - ./trogdord/trogdord.ini:/usr/etc/trogdord/trogdord.ini
             - ../games:/usr/share/trogdor
             - type: volume
               source: trogdord_dumped_games
