@@ -136,19 +136,12 @@ class SockServe {
 	 */
 	constructor() {
 
-		this.#outputSubscriber = Redis.createClient(
-			Config.redis.output.port,
-			Config.redis.output.host
-		);
-
 		this.#trogdord = new Trogdord(Config.trogdord.host, Config.trogdord.port);
 
 		// TODO: support https
 		this.#wss = new WebSocketServer({
 			port: Config.socket.port
 		});
-
-		this.#outputSubscriber.subscribe(Config.redis.output.channel);
 
 		console.log('Connecting to trogdord...');
 
@@ -200,36 +193,46 @@ class SockServe {
 			process.exit(EXIT_FAILURE);
 		});
 
-		// Send output messages from trogdord to the client
-		this.#outputSubscriber.on('message', (channel, message) => {
+		this.#outputSubscriber = Redis.createClient(
+			Config.redis.output.port,
+			Config.redis.output.host
+		);
 
-			let json = JSON.parse(message);
+		(async () => {
 
-			// We've received a signal that the player has been removed from
-			// the game
-			if ('removed' == json.channel && this.#sockets[json.game_id][json.entity]) {
-				this.#sockets[json.game_id][json.entity].close(1000, 'removed');
-				delete this.#sockets[json.game_id][json.entity];
-			}
+			// An error occurred when attempting to connect to redis
+			// TODO: is just exiting a good idea? Attempting to re-connect might be better
+			this.#outputSubscriber.on('error', error => {
+				console.log(error);
+				process.exit(EXIT_FAILURE);
+			});
 
-			else if (this.#sockets[json.game_id] &&
-			this.#sockets[json.game_id][json.entity]) {
-				this.#sockets[json.game_id][json.entity].send(message);
-			}
-	
-			// A player has just been created, resulting in messages we can't send right away
-			else if (this.#messageBuffer[json.game_id] &&
-			this.#messageBuffer[json.game_id][json.entity]) {
-				this.#messageBuffer[json.game_id][json.entity].push(message);
-			}
-		});
+			await this.#outputSubscriber.connect();
 
-		// An error occurred when attempting to connect to redis
-		// TODO: is just exiting a good idea? Attempting to re-connect might be better
-		this.#outputSubscriber.on('error', error => {
-			console.log(error);
-			process.exit(EXIT_FAILURE);
-		});
+			// Send output messages from trogdord to the client
+			await this.#outputSubscriber.subscribe(Config.redis.output.channel, message => {
+
+				let json = JSON.parse(message);
+
+				// We've received a signal that the player has been removed from
+				// the game
+				if ('removed' == json.channel && this.#sockets[json.game_id][json.entity]) {
+					this.#sockets[json.game_id][json.entity].close(1000, 'removed');
+					delete this.#sockets[json.game_id][json.entity];
+				}
+
+				else if (this.#sockets[json.game_id] &&
+					this.#sockets[json.game_id][json.entity]) {
+					this.#sockets[json.game_id][json.entity].send(message);
+				}
+
+				// A player has just been created, resulting in messages we can't send right away
+				else if (this.#messageBuffer[json.game_id] &&
+					this.#messageBuffer[json.game_id][json.entity]) {
+					this.#messageBuffer[json.game_id][json.entity].push(message);
+				}
+			});
+		})();
 	}
 
 	/**
