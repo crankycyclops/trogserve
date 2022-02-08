@@ -43,7 +43,7 @@ services:
             - ./trogdord/trogdord.ini:/usr/etc/trogdord/trogdord.ini
             - ../games:/usr/share/trogdor
             - type: volume
-              source: trogdord_dumped_games
+              source: trogdord_dump_dir
               target: /usr/var/trogdord/state
               volume:
                 nocopy: true
@@ -80,4 +80,4 @@ volumes:
 
     # trogdord will dump games here so that they can be restored later, even if the
     # container that dumped the game is destroyed
-    trogdord_dumped_games:
+    trogdord_dump_dir:
