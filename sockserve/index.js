@@ -147,7 +147,7 @@ class SockServe {
 
 		this.#trogdord.on('connect', () => {
 		
-			console.log('Connected.');
+			console.log('Connected to trogdord.');
 
 			this.#wss.on('connection', socket => {
 
@@ -193,21 +193,37 @@ class SockServe {
 			process.exit(EXIT_FAILURE);
 		});
 
-		this.#outputSubscriber = Redis.createClient(
-			Config.redis.output.port,
-			Config.redis.output.host
-		);
+		this.#outputSubscriber = Redis.createClient({
+			username: Config.redis.output.username,
+			password: Config.redis.output.password,
+			socket: {
+				host: Config.redis.output.host,
+				port: Config.redis.output.port,
+				connectTimeout: Config.redis.output.connectTimeout
+			}
+		});
 
 		(async () => {
 
-			// An error occurred when attempting to connect to redis
-			// TODO: is just exiting a good idea? Attempting to re-connect might be better
+			// An error occurred when attempting to query Redis
+			// TODO: is just exiting on connection failure a good idea? Attempting to re-connect might be better
 			this.#outputSubscriber.on('error', error => {
 				console.log(error);
 				process.exit(EXIT_FAILURE);
 			});
 
-			await this.#outputSubscriber.connect();
+			console.log('Connecting to redis...');
+
+			try {
+				await this.#outputSubscriber.connect();
+				console.log('Connected to redis.');
+			}
+
+			// TODO: is just exiting on connection failure a good idea? Attempting to re-connect might be better
+			catch (error) {
+				console.log(error);
+				process.exit(EXIT_FAILURE);
+			}
 
 			// Send output messages from trogdord to the client
 			await this.#outputSubscriber.subscribe(Config.redis.output.channel, message => {

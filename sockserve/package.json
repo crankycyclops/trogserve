@@ -1,6 +1,6 @@
 {
   "name": "SockServe",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "WebSocket server for Trogserve",
   "main": "index.js",
   "scripts": {

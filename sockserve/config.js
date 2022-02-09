@@ -23,6 +23,9 @@ module.exports = {
 
 			host: 'REDIS_OUTPUT_HOST' in process.env ? process.env.REDIS_OUTPUT_HOST : 'localhost',
 			port: 'REDIS_OUTPUT_PORT' in process.env ? +process.env.REDIS_OUTPUT_PORT : 6379,
+			username: 'REDIS_OUTPUT_USERNAME' in process.env ? process.env.REDIS_OUTPUT_USERNAME : '',
+			password: 'REDIS_OUTPUT_PASSWORD' in process.env ? process.env.REDIS_OUTPUT_PASSWORD : '',
+			connectTimeout: 'REDIS_OUTPUT_CONNECT_TIMEOUT' in process.env ? +process.env.REDIS_OUTPUT_CONNECT_TIMEOUT : 3000,
 			channel: 'REDIS_OUTPUT_CHANNEL' in process.env ? process.env.REDIS_OUTPUT_CHANNEL : 'trogdord:out'
 		}
 	}
