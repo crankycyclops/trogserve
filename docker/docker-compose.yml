@@ -6,6 +6,24 @@ version: '3.3'
 
 services:
 
+    # This delightful gem comes from here:
+    # https://github.com/moby/moby/issues/2259#issuecomment-917702737
+    # @yuriyyakym, thank you! You are my hero. And yes, that's right. The only way
+    # I can truly mount a named volume in a non-root container automatically via
+    # docker-compose is to start a temporary service whose sole reason for being is
+    # to mount and then chown the volume to the same user as the container that's
+    # going to use it. Fun times. The trogdord user in the trogdord container uses
+    # UID 999, GID 999, so that's what I'm passing to chown.
+    volume-permissions-manager:
+        image: ubuntu:20.04
+        command: sh -c "chown 999:999 /trogdord_dump_dir"
+        volumes:
+            - type: volume
+              source: trogdord_dump_dir
+              target: /trogdord_dump_dir
+              volume:
+                nocopy: true
+
     # Trogdord and the web socket server will use redis to send and receive
     # messages to each other
     redis:
@@ -39,6 +57,8 @@ services:
     # Trogdord
     trogdord:
         image: crankycyclops/trogdord:0.90.0
+        depends_on:
+            - "volume-permissions-manager"
         volumes:
             - ./trogdord/trogdord.ini:/usr/etc/trogdord/trogdord.ini
             - ../games:/usr/share/trogdor
