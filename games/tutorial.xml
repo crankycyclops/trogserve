@@ -2,6 +2,34 @@
 
 <game>
 
+	<script lang="lua">
+
+		function onTicketTake(player, ticket)
+
+			if not player:isTagSet("ticketTaken") then
+				player:setTag("ticketTaken")
+				player:out("Congratulations, you've got your ticket! Now, all you have to do to graduate and complete this tutorial is go to the auditorium and attend your ceremony. To see a list of all items you're currently carrying, type \"inventory\" or just \"inv.\" If you want to leave your ticket behind, type \"drop ticket\" (but remember that you can't complete the tutorial without it!)\n")
+				player:out("\n")
+			end
+
+			return true, true
+
+		end
+
+		function onTicketDrop(player, ticket)
+
+			if not player:isTagSet("ticketDropped") then
+				player:setTag("ticketDropped")
+				player:out("If you want to leave your ticket behind, that's up to you. Just remember: you can't get into the graduation ceremony and complete this tutorial without it! To pick it up again, return to the main office and type \"take ticket\" or \"get ticket.\"\n")
+				player:out("\n")
+			end
+
+			return true, true
+
+		end
+
+	</script>
+
 	<introduction>
 
 		<enabled>1</enabled>
@@ -88,40 +116,8 @@ Principle Buttsavich
 			</meta>
 
 			<events>
-
-				<script>
-
-					-- Triggers when a player takes the ticket
-					function onTake(player, ticket)
-
-						if not player:isTagSet("ticketTaken") then
-							player:setTag("ticketTaken")
-							player:out("Congratulations, you've got your ticket! Now, all you have to do to graduate and complete this tutorial is go to the auditorium and attend your ceremony. To see a list of all items you're currently carrying, type \"inventory\" or just \"inv.\" If you want to leave your ticket behind, type \"drop ticket\" (but remember that you can't complete the tutorial without it!)\n")
-							player:out("\n")
-						end
-
-						return true, true
-
-					end
-
-					-- Triggers when a player drops the ticket
-					function onDrop(player, ticket)
-
-						if not player:isTagSet("ticketDropped") then
-							player:setTag("ticketDropped")
-							player:out("If you want to leave your ticket behind, that's up to you. Just remember: you can't get into the graduation ceremony and complete this tutorial without it! To pick it up again, return to the main office and type \"take ticket\" or \"get ticket.\"\n")
-							player:out("\n")
-						end
-
-						return true, true
-
-					end
-
-				</script>
-
-				<event name="afterTakeResource">onTake</event>
-				<event name="beforeDropResource">onDrop</event>
-
+				<event name="afterTakeResource">onTicketTake</event>
+				<event name="beforeDropResource">onTicketDrop</event>
 			</events>
 
 			<messages>
