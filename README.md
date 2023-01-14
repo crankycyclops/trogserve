@@ -41,9 +41,9 @@ This list will be updated as I complete more features.
 
 ## Dependencies
 
-Laravel 8, Laravel Passport 10, PHP 7.4+, composer, npm, Vue.js, Vuetify, [trogdord](https://github.com/crankycyclops/trogdor-pp "trogdord") 0.60.1+, the [trogdord npm module](https://github.com/crankycyclops/trogdor-pp/tree/master/src/nodejs/trogdord "trogdord npm module") 0.5.0+, and the [trogdord PHP extension](https://github.com/crankycyclops/trogdor-pp/tree/master/src/trogdord "trogdord PHP extension") 0.3.0+.
+Laravel 9, Laravel Passport 10, PHP 8.0+, composer, npm, Vue.js, Vuetify, [trogdord](https://github.com/crankycyclops/trogdor-pp "trogdord") 0.60.1+, the [trogdord npm module](https://github.com/crankycyclops/trogdor-pp/tree/master/src/nodejs/trogdord "trogdord npm module") 0.5.0+, and the [trogdord PHP extension](https://github.com/crankycyclops/trogdor-pp/tree/master/src/trogdord "trogdord PHP extension") 0.3.0+.
 
-The PHP extension has been tested with and is known to build against PHP 7.2, 7.3, 7.4, 8.0, and 8.1.
+The PHP extension has been tested with and is known to build against PHP 8.0, 8.1, and 8.2.
 
 ## Installation with Docker
 
