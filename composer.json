@@ -9,7 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0|^8.1|^8.2",
-	"ext-trogdord": "*",
+	    "ext-trogdord": "*",
         "fideloper/proxy": "^4.4",
         "laravel/framework": "^9.0",
         "laravel/passport": "^11",
