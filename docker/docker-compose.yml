@@ -56,7 +56,7 @@ services:
 
     # Trogdord
     trogdord:
-        image: crankycyclops/trogdord:0.91.0
+        image: crankycyclops/trogdord:0.91
         environment:
             TROGDORD_LISTEN_IPS: '["0.0.0.0"]'
             TROGDORD_OUTPUT_DRIVER: 'redis'
@@ -64,7 +64,7 @@ services:
             TROGDORD_REDIS_CONNECTION_TIMEOUT: '3000'
             TROGDORD_STATE_ENABLED: 'true'
             TROGDORD_STATE_FORMAT: 'json'
-            TROGDORD_STATE_PATH: '/usr/var/trogdord/state'
+            TROGDORD_STATE_PATH: '/var/trogdord/state'
             TROGDORD_STATE_MAX_DUMPS_PER_GAME: '3'
             TROGDORD_STATE_AUTORESTORE_ENABLED: 'true'
             TROGDORD_STATE_DUMP_SHUTDOWN_ENABLED: 'true'
@@ -75,7 +75,7 @@ services:
             - ../games:/usr/share/trogdor
             - type: volume
               source: trogdord_dump_dir
-              target: /usr/var/trogdord/state
+              target: /var/trogdord/state
               volume:
                 nocopy: true
 
