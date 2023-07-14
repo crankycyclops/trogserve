@@ -1,9 +1,9 @@
 # This docker file defines a container for the web socket server portion of the
 # trogserve project.
 
-# To build, be sure to specify a node version: docker build --build-arg NODE_VER=16 -t crankycyclops/trogserve-websocket:master .
+# To build, be sure to specify a node version: docker build --build-arg NODE_VER=18 -t crankycyclops/trogserve-websocket:master .
 
-ARG NODE_VER=16
+ARG NODE_VER=18
 FROM node:${NODE_VER}
 
 # Pre-configure environment and install build dependencies
